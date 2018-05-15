@@ -1,5 +1,5 @@
 //
-//  BitskiSDK.swift
+//  Bitski.swift
 //  BitskiSDK
 //
 //  Created by Patrick Tescher on 5/5/18.
@@ -10,6 +10,11 @@ import AppAuth
 import Web3
 
 public class Bitski {
+    
+    public enum AuthorizationError: Error {
+        case noAccessToken
+    }
+    
     let issuer = URL(string: "https://account.bitski.com")!
     let apiBaseURL = URL(string: "https://api.bitski.com/")!
 
@@ -66,6 +71,7 @@ public class Bitski {
                 self.signIn(viewController: viewController, configuration: configuration, completion: completion)
             } else if let error = error {
                 print("Error signing in:", error)
+                completion(nil, error)
             }
         }
     }
@@ -86,17 +92,14 @@ public class Bitski {
         )
 
         authorizationFlowSession = OIDAuthState.authState(byPresenting: request, presenting: viewController, callback: { (authState, error) in
-            if let authState = authState {
-                if let accessToken = authState.lastTokenResponse?.accessToken {
-                    self.accessToken = accessToken
-                    completion(accessToken, nil)
-                } else {
-                    print("No access token")
-                }
-            }
-
-            if let error = error {
+            if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken {
+                self.accessToken = accessToken
+                completion(accessToken, nil)
+            } else if let error = error {
                 completion(nil, error)
+            } else {
+                print("No access token found")
+                completion(nil, AuthorizationError.noAccessToken)
             }
         })
     }

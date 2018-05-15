@@ -108,8 +108,8 @@ public class BitskiHTTPProvider: Web3Provider {
         }
     }
 
-    //todo: handle success and dismissal somehow. ideally find a way to do this without relying on SFAuthenticationSession.
-    public func sendViaWeb<Params, Result>(request: RPCRequest<Params>, encodedPayload: Data, response: @escaping Web3ResponseCompletion<Result>) {
+    //todo: ideally find a way to do this without relying on SFAuthenticationSession.
+    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, encodedPayload: Data, response: @escaping Web3ResponseCompletion<Result>) {
         let accessToken = headers["Authorization"]?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
         let base64String = encodedPayload.base64EncodedString()
         
@@ -142,16 +142,16 @@ public class BitskiHTTPProvider: Web3Provider {
         }
         
         DispatchQueue.main.async {
-            self.currentSession = SFAuthenticationSession(url: ethSendTransactionUrl, callbackURLScheme: self.redirectURL?.scheme) { (url, error) in
+            self.currentSession = SFAuthenticationSession(url: ethSendTransactionUrl, callbackURLScheme: self.redirectURL?.scheme) { url, error in
                 if error != nil {
                     let err = Web3Response<Result>(status: .serverError)
                     response(err)
                     return
                 }
-
+                
                 if let url = url {
                     let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-
+                    
                     guard let data = urlComponents?.queryItems?.filter( { (item) -> Bool in
                         item.name == "result"
                     }).compactMap({ (queryItem) -> Data? in
@@ -161,7 +161,7 @@ public class BitskiHTTPProvider: Web3Provider {
                         response(err)
                         return
                     }
-
+                    
                     do {
                         let rpcResponse = try self.decoder.decode(RPCResponse<Result>.self, from: data)
                         let res = Web3Response(status: .ok, rpcResponse: rpcResponse)

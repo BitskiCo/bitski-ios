@@ -1,3 +1,4 @@
+platform :ios, '11.0'
 use_frameworks!
 
 target 'Bitski_Example' do
@@ -5,7 +6,5 @@ target 'Bitski_Example' do
 
   target 'Bitski_Tests' do
     inherit! :search_paths
-
-    
   end
 end

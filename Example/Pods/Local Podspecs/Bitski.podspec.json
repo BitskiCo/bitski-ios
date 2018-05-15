@@ -1,7 +1,7 @@
 {
   "name": "Bitski",
   "version": "0.1.0",
-  "summary": "A short description of Bitski.",
+  "summary": "Bitski SDK for iOS. Interact with Ethereum wallets using simple OpenID auth.",
   "description": "TODO: Add long description of the pod here.",
   "homepage": "https://github.com/BitskiCo/BitskiSDK",
   "license": {
@@ -12,11 +12,11 @@
     "pixelmatrix": "joshpyles@gmail.com"
   },
   "source": {
-    "git": "https://github.com/pixelmatrix/Bitski.git",
+    "git": "https://github.com/BitskiCo/BitskiSDK.git",
     "tag": "0.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "11.0"
   },
   "source_files": "Bitski/Classes/**/*",
   "dependencies": {

@@ -30,7 +30,6 @@ public struct ContractTransaction: Codable {
 }
 
 public extension Web3.Eth {
-    //todo: Add transaction watcher similar to: https://github.com/ethereum/web3.js/blob/1.0/packages/web3-core-method/src/index.js#L412
     public func sendTransaction(transaction: ContractTransaction, response: @escaping Web3.Web3ResponseCompletion<EthereumData>) {
         let req = ContractRPCRequest(
             id: properties.rpcId,
@@ -40,6 +39,7 @@ public extension Web3.Eth {
         )
         properties.provider.send(request: req, response: response)
     }
+    
     public func sendTransaction(transaction: ContractTransaction) -> Promise<EthereumData> {
         return Promise { seal in
             self.sendTransaction(transaction: transaction) { response in
