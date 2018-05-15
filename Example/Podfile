@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'Bitski_Example' do
+  pod 'Bitski', :path => '../'
+
+  target 'Bitski_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
