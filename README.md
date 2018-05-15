@@ -44,9 +44,10 @@ firstly {
 }.firstValue { accounts in
     accounts
 }.then { account in
-    web3.eth.getTransactionCount(address: privateKey.address, block: .latest)
-}.done { transactionCount
-    print("\(transactionCount.quantity) transactions!")
+    let transaction = BitskiTransaction(to: EthereumAddress(hex: "SOME ADDRESS", eip55: false), from: account, value: 0, gasLimit: 20000)
+    return web3.eth.sendTransaction(transaction: transaction)
+}.done { transactionHash in
+    print("Received transaction hash!", transactionHash.hex())
 }
 ```
 

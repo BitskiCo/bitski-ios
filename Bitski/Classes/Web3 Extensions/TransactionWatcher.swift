@@ -63,7 +63,6 @@ public class TransactionWatcher {
     
     private func getTransactionReceipt() {
         guard self.transactionReceipt == nil else { return }
-        print("Looking for receipt \(transactionHash.hex())")
         firstly {
             return web3.eth.getTransactionReceipt(transactionHash: transactionHash)
         }.done { receipt in
@@ -81,7 +80,6 @@ public class TransactionWatcher {
     }
     
     private func setTransactionReceipt(_ receipt: EthereumTransactionReceiptObject) {
-        print("Receipt found")
         self.transactionReceipt = receipt
         self.blockNumber = receipt.blockNumber
         let timer = Timer(timeInterval: pollInterval, repeats: true, block: { [weak self] _ in
@@ -92,7 +90,6 @@ public class TransactionWatcher {
     }
     
     private func checkForBlocks() {
-        print("Checking for new blocks")
         firstly {
             web3.eth.blockNumber()
         }.done { blockNumber in
@@ -117,6 +114,7 @@ public class TransactionWatcher {
                 return assertionFailure()
             }
             let confirmationCount = blockNumber.quantity - receiptBlockNumber.quantity
+            //todo: validate gasUsed
             self.setConfirmationCount(Int(confirmationCount) + 1)
         } else {
             print("Transaction reverted")

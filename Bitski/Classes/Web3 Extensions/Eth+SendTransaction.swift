@@ -10,27 +10,31 @@ import Foundation
 import PromiseKit
 import Web3
 
-public typealias ContractRPCRequest = RPCRequest<[ContractTransaction]>
+public typealias ContractRPCRequest = RPCRequest<[BitskiTransaction]>
 
 // EthereumTransaction requires all fields when we don't need or want all of them
-public struct ContractTransaction: Codable {
-    public let to: EthereumAddress
+public struct BitskiTransaction: Codable {
+    public let nonce: EthereumQuantity?
+    public let to: EthereumAddress?
     public let from: EthereumAddress
     public let value: EthereumQuantity
     public let gas: EthereumQuantity
+    public let gasPrice: EthereumQuantity?
     public let data: EthereumData?
     
-    public init(to: EthereumAddress, from: EthereumAddress, value: EthereumQuantity, gasLimit: EthereumQuantity, data: EthereumData) {
+    public init(nonce: EthereumQuantity? = nil, to: EthereumAddress, from: EthereumAddress, value: EthereumQuantity = 0, gasLimit: EthereumQuantity, gasPrice: EthereumQuantity? = nil, data: EthereumData? = nil) {
+        self.nonce = nonce
         self.to = to
         self.from = from
         self.value = value
         self.gas = gasLimit
+        self.gasPrice = gasPrice
         self.data = data
     }
 }
 
 public extension Web3.Eth {
-    public func sendTransaction(transaction: ContractTransaction, response: @escaping Web3.Web3ResponseCompletion<EthereumData>) {
+    public func sendTransaction(transaction: BitskiTransaction, response: @escaping Web3.Web3ResponseCompletion<EthereumData>) {
         let req = ContractRPCRequest(
             id: properties.rpcId,
             jsonrpc: Web3.jsonrpc,
@@ -40,7 +44,7 @@ public extension Web3.Eth {
         properties.provider.send(request: req, response: response)
     }
     
-    public func sendTransaction(transaction: ContractTransaction) -> Promise<EthereumData> {
+    public func sendTransaction(transaction: BitskiTransaction) -> Promise<EthereumData> {
         return Promise { seal in
             self.sendTransaction(transaction: transaction) { response in
                 response.sealPromise(seal: seal)

@@ -23,7 +23,7 @@ public extension EthereumContract {
     public func send(functionName: String, parameters: [EthereumValueConvertible], fromAddress from: EthereumAddress) -> Promise<EthereumData> {
         do {
             let data = try EthereumData(functionName: functionName, parameters: parameters)
-            let transaction = ContractTransaction(to: type(of: self).contractAddress, from: from, value: 0, gasLimit: 7000000, data: data)
+            let transaction = BitskiTransaction(to: type(of: self).contractAddress, from: from, value: 0, gasLimit: 7000000, data: data)
             return self.web3.eth.sendTransaction(transaction: transaction)
         } catch {
             return Promise(error: error)
