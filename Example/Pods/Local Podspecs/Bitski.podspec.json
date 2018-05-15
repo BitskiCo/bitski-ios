@@ -1,0 +1,42 @@
+{
+  "name": "Bitski",
+  "version": "0.1.0",
+  "summary": "A short description of Bitski.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/BitskiCo/BitskiSDK",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "pixelmatrix": "joshpyles@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/pixelmatrix/Bitski.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "Bitski/Classes/**/*",
+  "dependencies": {
+    "Web3": [
+      "~> 0.1"
+    ],
+    "Web3/PromiseKit": [
+      "~> 0.1"
+    ],
+    "AppAuth": [
+      "~> 0.92"
+    ],
+    "BigInt.swift": [
+      "~> 1.0"
+    ],
+    "secp256k1.swift": [
+      "~> 0.1"
+    ],
+    "PromiseKit/CorePromise": [
+      "~> 6.0"
+    ]
+  }
+}

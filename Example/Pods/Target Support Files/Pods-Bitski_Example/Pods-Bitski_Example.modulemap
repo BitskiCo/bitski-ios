@@ -1,0 +1,6 @@
+framework module Pods_Bitski_Example {
+  umbrella header "Pods-Bitski_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

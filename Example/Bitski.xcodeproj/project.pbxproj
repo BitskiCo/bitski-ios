@@ -28,8 +28,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2DE2B0617BA2D976085FABB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		3329C404751489B0794EFF31 /* Bitski.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = Bitski.podspec; path = ../Bitski.podspec; sourceTree = "<group>"; };
+		2DE2B0617BA2D976085FABB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		3329C404751489B0794EFF31 /* Bitski.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Bitski.podspec; path = ../Bitski.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		55929A306966C2BEF89C945E /* Pods-Bitski_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		5B01EBB666A437DDE5606A35 /* Pods-Bitski_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Bitski_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitski_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,7 +46,7 @@
 		73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitski_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -286,11 +286,23 @@
 			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BigInt.swift/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/Bitski/Bitski.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Web3/Web3.framework",
+				"${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bitski.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Web3.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
