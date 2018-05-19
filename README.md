@@ -19,7 +19,7 @@ pod 'Bitski'
 
 ## Usage
 
-First, request a client ID by signing up here: https://developer.bitski.com.
+First, request a client ID by signing up here: https://developer.bitski.com. Make sure you request an offline scope.
 
 Then, you'll initialize an instance of Bitski:
 
@@ -27,13 +27,30 @@ Then, you'll initialize an instance of Bitski:
 // Replace redirect URL with an url scheme that will hit your native app
 let bitski = Bitski(clientID: "<YOUR CLIENT ID>", redirectURL: URL(string: "exampleapp://application/callback")!)
 ```
-Once you have an instance of Bitski, you'll need to sign in to get access to any Web3 methods:
+Once you have an instance of Bitski, you can check the signed in status. The user will need to be logged in before making any Web3 calls.
+
+```swift
+if bitski.isLoggedIn {
+    self.web3 = bitski.getWeb3(network: .kovan)
+    // show logged in state
+} else {
+    // show logged out state
+}
+```
+
+To sign in (this will open a browser window):
 
 ```swift
 bitski.signIn(viewController: self) { accessToken, error in
     // Currently we only support kovan and rinkeby. mainnet coming soon.
-    self.web3 = bitski.getWeb3(network: "kovan")
+    self.web3 = bitski.getWeb3(network: .kovan)
 }
+```
+
+A user will remain signed in indefinitely, unless the access token is revoked. To explicitly sign out:
+
+```swift
+bitski.signOut()
 ```
 
 Once you have an instance of Web3 intialized, you can use it to make Ethereum calls and transactions.

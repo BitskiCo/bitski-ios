@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'Bitski'
-  s.version          = '0.1.0'
+  s.version          = '0.1.1'
   s.summary          = 'Bitski SDK for iOS. Interact with Ethereum wallets using simple OpenID auth.'
 
 # This description is used to generate tags and improve search results.
@@ -30,7 +30,8 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/BitskiCo/BitskiSDK.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '11.0'
-
+  s.swift_version = '4.0'
+  
   s.source_files = 'Bitski/Classes/**/*'
 
   s.dependency 'Web3', '~> 0.1'
