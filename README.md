@@ -19,6 +19,9 @@ pod 'Bitski'
 
 ## Usage
 
+
+### Initialization
+
 First, request a client ID by signing up here: https://developer.bitski.com. Make sure you request an offline scope so that your access tokens can be refreshed.
 
 Then in your app, you'll initialize an instance of Bitski:
@@ -27,6 +30,9 @@ Then in your app, you'll initialize an instance of Bitski:
 // Replace redirect URL with an url scheme that will hit your native app
 Bitski.shared = Bitski(clientID: "<YOUR CLIENT ID>", redirectURL: URL(string: "exampleapp://application/callback")!)
 ```
+
+### Authentication
+
 Once you have an instance of Bitski, you can check the signed in status. The user will need to be logged in before making any Web3 calls.
 
 ```swift
@@ -53,6 +59,17 @@ A user will remain signed in indefinitely, unless the access token is revoked. T
 ```swift
 Bitski.shared?.signOut()
 ```
+
+### Handling Implicit Logouts
+
+Notifications will be posted when the user is signed in and signed out (`Bitski.LoggedInNotification` and `Bitski.LoggedOutNotification`) respectively.
+A user can be signed out either explicitly, or implicitly if the access token is revoked. Therefore, it's a good practice to respond to these notifications.
+
+```swift
+NotificationCenter.default.addObserver(self, selector: #selector(userDidLogout), name: Bitski.LoggedOutNotification, object: nil)
+```
+
+### Using Web3
 
 Once you have an instance of Web3 intialized, you can use it to make Ethereum calls and transactions.
 

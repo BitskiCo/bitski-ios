@@ -14,7 +14,15 @@ public class Bitski: NSObject {
     /// Shared instance of Bitski
     public static var shared: Bitski?
     
-    public enum AuthorizationError: Error {
+    /// Notification triggered when the user logs in
+    public static let LoggedInNotification = NSNotification.Name(rawValue: "BitskiUserDidLogIn")
+    
+    /// Notification triggered when the user logs out
+    public static let LoggedOutNotification = NSNotification.Name(rawValue: "BitskiUserDidLogOut")
+    
+    /// Standard Bitski errors
+    public enum AuthenticationError: Error {
+        case notLoggedIn
         case noAccessToken
     }
     
@@ -62,11 +70,8 @@ public class Bitski: NSObject {
     /// Base URL for Bitski's Web UI
     let webBaseURL = URL(string: "https://www.bitski.com")!
     
-    /// Bitski Client ID. This is
+    /// Bitski Client ID. You can aqcuire one from the developer portal (https://developer.bitski.com)
     let clientID: String
-    
-    /// Bitski Client Secret
-    let clientSecret: String?
     
     /// URL to use for redirects from the web back into the app
     let redirectURL: URL
@@ -115,9 +120,8 @@ public class Bitski: NSObject {
     ///   - clientID: Your client ID. From https://developer.bitski.com
     ///   - clientSecret: Your client secret. From https://developer.bitski.com
     ///   - redirectURL: URI for redirects back to the app. This must be a URI your app can handle (ie. myapp://application/callback).
-    public init(clientID: String, clientSecret: String? = nil, redirectURL: URL) {
+    public init(clientID: String, redirectURL: URL) {
         self.clientID = clientID
-        self.clientSecret = clientSecret
         self.redirectURL = redirectURL
         super.init()
         // Read access token from cache if still authorized
@@ -148,6 +152,7 @@ public class Bitski: NSObject {
     /// Clear out the current authorization state
     public func signOut() {
         setAuthState(nil)
+        NotificationCenter.default.post(name: Bitski.LoggedOutNotification, object: nil)
     }
     
     // MARK: - Web3
@@ -211,7 +216,7 @@ public class Bitski: NSObject {
         let request = OIDAuthorizationRequest(
             configuration: configuration,
             clientId: clientID,
-            clientSecret: clientSecret,
+            clientSecret: nil,
             scopes: [OIDScopeOpenID, "offline"],
             redirectURL: redirectURL,
             responseType: OIDResponseTypeCode,
@@ -222,11 +227,11 @@ public class Bitski: NSObject {
             self.setAuthState(authState)
             if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken {
                 completion(accessToken, nil)
+                NotificationCenter.default.post(name: Bitski.LoggedInNotification, object: nil)
             } else if let error = error {
                 completion(nil, error)
             } else {
-                print("No access token found")
-                completion(nil, AuthorizationError.noAccessToken)
+                completion(nil, AuthenticationError.noAccessToken)
             }
         }
     }
@@ -265,7 +270,7 @@ extension Bitski: BitskiAuthDelegate {
     /// Called before every JSON RPC request to get a fresh access token if needed
     public func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void) {
         guard let authState = authState else {
-            completion(nil, AuthorizationError.noAccessToken)
+            completion(nil, AuthenticationError.notLoggedIn)
             return
         }
         authState.performAction { (accessToken, _, error) in
