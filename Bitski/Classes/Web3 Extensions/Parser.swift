@@ -62,7 +62,7 @@ public class Parser {
         //todo: vary this based on type from ABI (uint256[] => uint256 => 32 bytes per item) - hardcoded for now
         let nestedStaticPartLength = T.byteLength
         
-        //todo: figure out what this does
+        //round to multiple of 32
         let roundedNestedStaticPartLength = Int(floor(Double(nestedStaticPartLength + 31) / 32) * 32)
         
         // array starts after length, convert to chars

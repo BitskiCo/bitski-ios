@@ -39,4 +39,16 @@ public extension String {
             return String(self.prefix(length))
         }
     }
+    
+    func paddingLeft(toMultipleOf base: Int, withPad character: Character) -> String {
+        // round up to the nearest multiple of base
+        let newLength = Int(ceil(Double(count) / Double(base))) * base
+        return self.paddingLeft(toLength: newLength, withPad: character)
+    }
+    
+    func padding(toMultipleOf base: Int, withPad character: Character) -> String {
+        // round up to the nearest multiple of base
+        let newLength = Int(ceil(Double(count) / Double(base))) * base
+        return self.padding(toLength: newLength, withPad: String(character), startingAt: 0)
+    }
 }
