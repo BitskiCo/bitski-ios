@@ -41,7 +41,8 @@ if Bitski.shared?.isLoggedIn == true {
 To sign in (this will open a browser window):
 
 ```swift
-Bitski.shared?.signIn(viewController: self) { accessToken, error in
+Bitski.shared?.signIn() { accessToken, error in
+    // Once signed in, get an instance of Web3 for the network you want
     // Currently we only support kovan and rinkeby. mainnet coming soon.
     self.web3 = Bitski.shared?.getWeb3(network: .kovan)
 }

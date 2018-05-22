@@ -131,14 +131,14 @@ public class Bitski: NSObject {
     /// - Parameters:
     ///   - viewController: viewController to present web interface from
     ///   - completion: A closure that includes either an access token, or an error
-    public func signIn(viewController: UIViewController, completion: @escaping ((String?, Error?) -> Void)) {
+    public func signIn(completion: @escaping ((String?, Error?) -> Void)) {
         if let authState = getAuthState(), authState.isAuthorized, let accessToken = authState.lastTokenResponse?.accessToken {
             completion(accessToken, nil)
             return
         }
         getConfiguration { configuration, error in
             if let configuration = configuration {
-                self.signIn(viewController: viewController, configuration: configuration, completion: completion)
+                self.signIn(configuration: configuration, completion: completion)
             } else if let error = error {
                 completion(nil, error)
             }
@@ -203,10 +203,9 @@ public class Bitski: NSObject {
     /// Performs the sign in request
     ///
     /// - Parameters:
-    ///   - viewController: viewController to present SFSafariViewController from (not necessary for iOS 11)
     ///   - configuration: configuration object for the authorization session
     ///   - completion: A closure that contains either a string for the access token, or an error
-    private func signIn(viewController: UIViewController, configuration: OIDServiceConfiguration, completion: @escaping ((String?, Error?) -> Void)) {
+    private func signIn(configuration: OIDServiceConfiguration, completion: @escaping ((String?, Error?) -> Void)) {
         authorizationFlowSession?.cancel()
 
         let request = OIDAuthorizationRequest(
@@ -219,7 +218,7 @@ public class Bitski: NSObject {
             additionalParameters: nil
         )
 
-        authorizationFlowSession = OIDAuthState.authState(byPresenting: request, presenting: viewController) { authState, error in
+        authorizationFlowSession = OIDAuthState.getAuthState(byPresenting: request) { authState, error in
             self.setAuthState(authState)
             if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken {
                 completion(accessToken, nil)
