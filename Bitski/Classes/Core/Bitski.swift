@@ -11,6 +11,9 @@ import Web3
 
 public class Bitski: NSObject {
     
+    /// Shared instance of Bitski
+    public static var shared: Bitski?
+    
     public enum AuthorizationError: Error {
         case noAccessToken
     }
