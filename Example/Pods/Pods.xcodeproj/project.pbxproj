@@ -294,6 +294,7 @@
 		E6C13EDBFB87B8E3507DDFECB69F5A7D /* OIDAuthState.h in Headers */ = {isa = PBXBuildFile; fileRef = 4E8F1D4E602210C79D93306BBFDB9B7F /* OIDAuthState.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E8811D6AAE10E346101641B065AD2AEE /* EthereumLogObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0636F71DC740A17D85DF3AB14A50E /* EthereumLogObject.swift */; };
 		E88A78B19D6BC1513EAFE3E173701455 /* scalar_low.h in Headers */ = {isa = PBXBuildFile; fileRef = ECFC4BF04FABF139D3D9804467609E4B /* scalar_low.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615220BE2A6200C12395 /* SolidityContract.swift */; };
 		E99534CB46D21742F42224E18849BC8D /* PKCS7Padding.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA448FD173B59AE7C6F3908136135471 /* PKCS7Padding.swift */; };
 		E9DF26773863B39F7482DDB339F467BF /* RPCRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05B92A2033346F57122C6AD8A82F88EF /* RPCRequest.swift */; };
 		EACD619D1C697EDCE98556B7FEE75D11 /* Data+BytesConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B6D3DBCBE26801B338A6FAE8F111F1C /* Data+BytesConvertible.swift */; };
@@ -829,6 +830,7 @@
 		E791B7AD519C244AF2EA3AF40EF9CDAC /* CryptoSwift.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = CryptoSwift.modulemap; sourceTree = "<group>"; };
 		E7B1F66981C2BACA3207556ACBF22E43 /* OIDAuthorizationResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = OIDAuthorizationResponse.m; path = Source/OIDAuthorizationResponse.m; sourceTree = "<group>"; };
 		E83FDACE45C17C2EF7BC3F24DE0670C9 /* AppAuth-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AppAuth-prefix.pch"; sourceTree = "<group>"; };
+		E88B615220BE2A6200C12395 /* SolidityContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityContract.swift; sourceTree = "<group>"; };
 		E9AF8343ECD0C17FCF55B4C959D488AC /* ZeroPadding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ZeroPadding.swift; path = Sources/CryptoSwift/ZeroPadding.swift; sourceTree = "<group>"; };
 		E9DCFBC22290717A680D7E6973892077 /* OIDAuthState+IOS.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "OIDAuthState+IOS.m"; path = "Source/iOS/OIDAuthState+IOS.m"; sourceTree = "<group>"; };
 		E9ECA607E3DC23A33DF145ABCF49716F /* scalar_low_impl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = scalar_low_impl.h; path = secp256k1/Classes/secp256k1/src/scalar_low_impl.h; sourceTree = "<group>"; };
@@ -1566,6 +1568,7 @@
 				B4394BE7D9CB8F3624623E8ECA6BDC01 /* ABIRepresentable.swift */,
 				41EFE71432B2C474147B256EAB863DCC /* SolidityEvent.swift */,
 				8D5A03F690CACD6411FBB28441A7A144 /* SolidityFunction.swift */,
+				E88B615220BE2A6200C12395 /* SolidityContract.swift */,
 				367BC4225666DFD8EAAA5B6AC4633286 /* Types.swift */,
 			);
 			name = ABI;
@@ -1972,6 +1975,7 @@
 				66BAB8A52E31A3261C8819453540A4DD /* RandomHex.swift in Sources */,
 				2F2D1B7FF5BD4C80886C8CAE49AE17B2 /* SolidityEvent.swift in Sources */,
 				36742FB0398529A6C4997B7CC254A0FC /* SolidityFunction.swift in Sources */,
+				E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */,
 				FA480CD9775A2C9323DEC0BEDD9BCF9B /* TransactionWatcher.swift in Sources */,
 				0BDEB4494DB5C9EB978629B097211FC1 /* Types.swift in Sources */,
 			);

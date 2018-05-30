@@ -6,43 +6,56 @@
 //
 
 import Foundation
+import Web3
+import BigInt
 
 public class ABIDecoder {
     
     struct Segment {
-        let type: SolidityValueType
+        let type: SolidityType
         var rawValue: ABIRepresentable?
         var dynamicOffset: Int?
         let staticString: String // hex string
         var dynamicString: String? // hex string, [32 byte padded length] + [value]
-    }
-    
-    public class func decode<T: ABIRepresentable>(_ type: SolidityValueType, from hexString: String) -> T? {
-        return T(hexString: hexString, type: type)
-    }
-    
-    public class func decodeArray(_ type: SolidityValueType, from hexString: String) -> [ABIRepresentable]? {
-        guard case let .array(elementType, staticLength) = type else { return nil }
-        var length = staticLength
-        if length == nil {
-            let lengthString = hexString.substr(0, 64)
-            length = Int(lengthString, radix: 16)
-        }
-        guard length != nil else { assertionFailure(); return nil }
-        let valueString = staticLength != nil ? hexString : String(hexString.dropFirst(64))
-        let elementSize = valueString.count / length!
-        if case .array = elementType {
-            return decodeArray(elementType, from: valueString)
-        } else {
-            guard let nativeType = elementType.nativeType as? ABIRepresentable.Type else { assertionFailure(); return nil }
-            return (0..<length!).compactMap { n in
-                let elementString = valueString.substr(n * elementSize, elementSize)
-                return nativeType.init(hexString: elementString, type: elementType)
+        
+        var valueString: String? {
+            if type.isDynamic {
+                return dynamicString
             }
+            return staticString
         }
     }
     
-    public class func decode(_ types: SolidityValueType..., from hexString: String) -> [Any]? {
+    public class func decode<T: ABIRepresentable>(_ type: T.Type, from hexString: String) -> T? {
+        return T(hexString: hexString)
+    }
+    
+    public class func decodeArray(elementType: SolidityType, length: Int?, from hexString: String) -> [Any]? {
+        if let length = length {
+            return decodeFixedArray(elementType: elementType, length: length, from: hexString)
+        } else {
+            return decodeDynamicArray(elementType: elementType, from: hexString)
+        }
+    }
+    
+    class func decodeDynamicArray(elementType: SolidityType, from hexString: String) -> [Any]? {
+        // split into parts
+        let lengthString = hexString.substr(0, 64)
+        let valueString = String(hexString.dropFirst(64))
+        // calculate length
+        guard let length = Int(lengthString, radix: 16) else { return nil }
+        return decodeFixedArray(elementType: elementType, length: length, from: valueString)
+    }
+    
+    class func decodeFixedArray(elementType: SolidityType, length: Int, from hexString: String) -> [Any]? {
+        let elementSize = hexString.count / length
+        return (0..<length).compactMap { n in
+            let elementString = hexString.substr(n * elementSize, elementSize)
+            return decodeType(type: elementType, hexString: elementString)
+        }
+    }
+    
+    public class func decode(_ types: SolidityType..., from hexString: String) -> [Any]? {
         let hexString = hexString.replacingOccurrences(of: "0x", with: "")
         let valueCount = types.count
         var segments = (0..<valueCount).map { i -> Segment in
@@ -81,18 +94,19 @@ public class ABIDecoder {
             return segment
         }
         return segments.compactMap { segment in
-            if case .array = segment.type {
-                let valueString = segment.type.isDynamic ? segment.dynamicString : segment.staticString
-                if let valueString = valueString {
-                    return decodeArray(segment.type, from: valueString)
-                }
-            } else {
-                guard let expectedType = segment.type.nativeType as? ABIRepresentable.Type else { assertionFailure(); return nil }
-                let valueString = segment.type.isDynamic ? segment.dynamicString : segment.staticString
-                if let valueString = valueString {
-                    return expectedType.init(hexString: valueString, type: segment.type)
-                }
-            }
+            guard let valueString = segment.valueString else { return nil }
+            return decodeType(type: segment.type, hexString: valueString)
+        }
+    }
+    
+    class func decodeType(type: SolidityType, hexString: String) -> Any? {
+        switch type {
+        case .type(let type):
+            return type.nativeType.init(hexString: hexString)
+        case .array(let elementType, let length):
+            return decodeArray(elementType: elementType, length: length, from: hexString)
+        case .tuple:
+            // tuple not yet supported
             return nil
         }
     }

@@ -48,6 +48,50 @@ class ABITests: XCTestCase {
         XCTAssertEqual(result, expected, "Encoded values should match")
     }
     
+    func testEncodeUInt() {
+        let test1 = UInt8(255)
+        let test2 = UInt16(255)
+        let test3 = UInt32(255)
+        let test4 = UInt64(255)
+        let test5 = BigUInt(255)
+        
+        let encoded1 = test1.abiEncode(dynamic: false)
+        let encoded2 = test2.abiEncode(dynamic: false)
+        let encoded3 = test3.abiEncode(dynamic: false)
+        let encoded4 = test4.abiEncode(dynamic: false)
+        let encoded5 = test5.abiEncode(dynamic: false)
+        
+        let expected = "00000000000000000000000000000000000000000000000000000000000000ff"
+        
+        XCTAssertEqual(encoded1, expected, "UInt8 should be correctly encoded")
+        XCTAssertEqual(encoded2, expected, "UInt16 should be correctly encoded")
+        XCTAssertEqual(encoded3, expected, "UInt32 should be correctly encoded")
+        XCTAssertEqual(encoded4, expected, "UInt64 should be correctly encoded")
+        XCTAssertEqual(encoded5, expected, "BigUInt should be correctly encoded")
+    }
+    
+    func testEncodeInt() {
+        let test1 = Int32(-1200).abiEncode(dynamic: false)
+        let expected1 = "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb50"
+        
+        XCTAssertEqual(test1, expected1, "Negative Int32 should be correctly encoded")
+        
+        let test2 = Int64(-600).abiEncode(dynamic: false)
+        let expected2 = "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffda8"
+        
+        XCTAssertEqual(test2, expected2, "Negative Int64 should be correctly encoded")
+        
+        let test3 = BigInt(240000000).abiEncode(dynamic: false)
+        let expected3 = "000000000000000000000000000000000000000000000000000000000e4e1c00"
+        
+        XCTAssertEqual(test3, expected3, "BigInt should be correctly encoded")
+        
+        let test4 = Int(32).abiEncode(dynamic: false)
+        let expected4 = "0000000000000000000000000000000000000000000000000000000000000020"
+        
+        XCTAssertEqual(test4, expected4, "Int should be correctly encoded")
+    }
+    
     func testDecodable() {
         let example0 = "0000000000000000000000000000000000000000000000000000000000000045"
         let example1 = "0000000000000000000000000000000000000000000000000000000000000001"

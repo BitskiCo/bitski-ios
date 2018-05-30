@@ -64,20 +64,6 @@ public enum SolidityMethodType {
     case fallback
 }
 
-public class SolidityContract {
-    let address: EthereumAddress
-    let web3: Web3
-    
-    init(web3: Web3, address: EthereumAddress) {
-        self.web3 = web3
-        self.address = address
-    }
-    
-    func method(_ name: String, inputs: [SolidityValueType], outputs: [SolidityValueType]) -> Constructor {
-        return SolidityMethod(name: name, inputs: inputs, outputs: outputs, contract: self).constructor
-    }
-}
-
 extension EthereumCall {
     init(contractAddress: EthereumAddress, data: String) {
         self.init(from: nil, to: contractAddress, gas: nil, gasPrice: nil, value: nil, data: EthereumData(bytes: data.toBytes()))
@@ -109,8 +95,15 @@ public struct SolidityInvocation {
         self.parameters = parameters
     }
     
+    private func wrapParameters() -> [WrappedValue] {
+        return zip(parameters, method.inputs).map { param, type in
+            return WrappedValue(value: param, type: type)
+        }
+    }
+    
     public var encodedData: EthereumData? {
-        if let hexString = ABIEncoder.encode(parameters, to: method.inputs) {
+        let wrapped = wrapParameters()
+        if let hexString = ABIEncoder.encode(wrapped) {
             return EthereumData(bytes: hexString.bytes)
         }
         return nil
@@ -133,9 +126,9 @@ public struct SolidityInvocation {
 
 public struct SolidityMethod {
     public let name: String
-    public let inputs: [SolidityValueType]
-    public let outputs: [SolidityValueType]
-    public let contract: SolidityContract!
+    public let inputs: [SolidityType]
+    public let outputs: [SolidityType]
+    public let contract: SolidityContract
     
     public var functionSignature: String {
         let inputTypes = inputs.map { $0.stringValue }.joined(separator: ",")
@@ -146,7 +139,7 @@ public struct SolidityMethod {
         return String(functionSignature.sha3(.keccak256).prefix(8))
     }
     
-    init(name: String, inputs: [SolidityValueType], outputs: [SolidityValueType], contract: SolidityContract?) {
+    init(name: String, inputs: [SolidityType], outputs: [SolidityType], contract: SolidityContract) {
         self.name = name
         self.inputs = inputs
         self.outputs = outputs
@@ -158,33 +151,4 @@ public struct SolidityMethod {
     }
 }
 
-
-
-//EXAMPLE
-
-typealias Constructor = (ABIRepresentable...) -> SolidityInvocation
-
-class MockContract: SolidityContract {
-    
-    var mintToken: Constructor {
-        return method("mintToken", inputs: [.string], outputs: [])
-    }
-    
-}
-
-struct MockViewController {
-    
-    let contract: MockContract
-    let web3: Web3
-    
-    init(web3: Web3, contract: MockContract) {
-        self.web3 = web3
-        self.contract = contract
-    }
-    
-    func mintToken(tokenID: String) -> Promise<EthereumData> {
-        let myAddress = try! EthereumAddress(hex: "0x00", eip55: false)
-        let transaction = contract.mintToken(tokenID).send(from: myAddress, gas: 12000)!
-        return web3.eth.sendTransaction(transaction: transaction)
-    }
-}
+public typealias Constructor = (ABIRepresentable...) -> SolidityInvocation
