@@ -1,6 +1,6 @@
 {
   "name": "Bitski",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "summary": "Bitski SDK for iOS. Interact with Ethereum wallets using simple OpenID auth.",
   "description": "Provides tools for connecting to Ethereum wallets,\ncreating transactions, and interacting with the Ethereum\nnetwork through Web3.swift and OpenID Connect.",
   "homepage": "https://github.com/BitskiCo/BitskiSDK",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/BitskiCo/BitskiSDK.git",
-    "tag": "0.1.1"
+    "tag": "0.1.2"
   },
   "platforms": {
     "ios": "11.0"

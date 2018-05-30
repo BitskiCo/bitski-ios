@@ -1,7 +1,7 @@
 PODS:
   - AppAuth (0.92.0)
   - BigInt.swift (1.0.0)
-  - Bitski (0.1.1):
+  - Bitski (0.1.2):
     - AppAuth (~> 0.92)
     - BigInt.swift (~> 1.0)
     - PromiseKit/CorePromise (~> 6.0)
@@ -25,7 +25,12 @@ PODS:
     - Web3/Core
 
 DEPENDENCIES:
+  - AppAuth
+  - BigInt.swift
   - Bitski (from `../`)
+  - PromiseKit/CorePromise
+  - Web3
+  - Web3/PromiseKit
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -43,12 +48,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: 3f4f1d6d85ad631d0bbf15ffcdc10c447face97a
   BigInt.swift: 1e0ddf08d82166e72dfb0fa8d40301d273081afc
-  Bitski: 0840134744e9949b1b73f2f4205287347f3149ea
+  Bitski: 61526bb169fe3123099e85a5b8ae2d39e75f9de4
   CryptoSwift: bca8c5b653dcc2d9734409242a070ff53bafac86
   PromiseKit: 8245cb2e3a8fe00453e580bd4aafb57e1671f501
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   Web3: 1f0c38c8508b8487948af1cb597653b018f4b5d3
 
-PODFILE CHECKSUM: 5f018b45e8c3b5a286cb34a0120e08e9dd0cdc3f
+PODFILE CHECKSUM: 1fe8a7505b2cafcc0c67b8db611ec79d567551d2
 
 COCOAPODS: 1.5.2

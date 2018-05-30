@@ -3,8 +3,18 @@ use_frameworks!
 
 target 'Bitski_Example' do
   pod 'Bitski', :path => '../'
+  pod 'Web3'
+  pod 'Web3/PromiseKit'
+  pod 'BigInt.swift'
+  pod 'AppAuth'
+  pod 'PromiseKit/CorePromise'
+end
 
-  target 'Bitski_Tests' do
-    inherit! :search_paths
-  end
+target 'Bitski_Tests' do
+    pod 'Bitski', :path => '../'
+    pod 'Web3'
+    pod 'Web3/PromiseKit'
+    pod 'BigInt.swift'
+    pod 'AppAuth'
+    pod 'PromiseKit/CorePromise'
 end
