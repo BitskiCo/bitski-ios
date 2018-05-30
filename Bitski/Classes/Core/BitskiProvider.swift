@@ -97,7 +97,7 @@ public class BitskiHTTPProvider: Web3Provider {
                 }
                 
                 if self.requiresAuthorization(request: request) {
-                    self.sendViaWeb(request: request, body: body, response: response)
+                    self.sendViaWeb(request: request, body: body, accessToken: accessToken, response: response)
                     return
                 }
                 
@@ -130,8 +130,9 @@ public class BitskiHTTPProvider: Web3Provider {
     /// - Parameters:
     ///   - request: The original RPCRequest
     ///   - body: The serialized body of the request
+    ///   - accessToken: A valid access token for the current user to add to the request
     ///   - response: callback with the result of the web request
-    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, body: Data, response: @escaping Web3ResponseCompletion<Result>) {
+    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, body: Data, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
         // Get base URL depending on the request
         guard let methodURL = self.urlForMethod(methodName: request.method, baseURL: self.webBaseURL) else {
             let err = Web3Response<Result>(status: .requestFailed)
@@ -139,12 +140,11 @@ public class BitskiHTTPProvider: Web3Provider {
             return
         }
         // Encode the request data into the url query params
-        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body) else {
+        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body, accessToken: accessToken) else {
             let error = Web3Response<Result>(status: .requestFailed)
             response(error)
             return
         }
-        
         // UI work must happen on the main queue, rather than our internal queue
         DispatchQueue.main.async {
             //todo: ideally find a way to do this without relying on SFAuthenticationSession.
@@ -199,15 +199,14 @@ public class BitskiHTTPProvider: Web3Provider {
     /// - Parameters:
     ///   - methodURL: The base URL for the request
     ///   - body: JSON-RPC request serialized as Data
+    ///   - accessToken: Valid access token
     /// - Returns: Web URL with necessary query parameters
-    private func queryEncodedRequestURL(methodURL: URL, body: Data) -> URL? {
+    private func queryEncodedRequestURL(methodURL: URL, body: Data, accessToken: String) -> URL? {
         guard var urlComponents = URLComponents(url: methodURL, resolvingAgainstBaseURL: true) else {
             return nil
         }
         
         var queryItems = urlComponents.queryItems ?? []
-        
-        let accessToken = headers["Authorization"]?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
         
         queryItems += [
             URLQueryItem(name: "network", value: network.rawValue),
