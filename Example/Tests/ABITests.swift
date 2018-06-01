@@ -8,44 +8,19 @@
 
 import XCTest
 import BigInt
+import Web3
 @testable import Bitski
 
 class ABITests: XCTestCase {
     
-    /// From Solidity's documentation examples
-    func testExampleOne() {
-        let uint = UInt32(69)
-        let bool = true
-        let signature = "0xcdcd77c0"
-        guard let encoded = ABIEncoder.encode(.uint(uint), .bool(bool)) else { return XCTFail("Values should be encoded") }
-        let result = signature + encoded
-        let expected = "0xcdcd77c000000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001"
-        XCTAssertEqual(result, expected, "Encoded values should match")
-    }
-    
-    /// From Solidity's documentation examples
-    func testExampleTwo() {
-        let bytes = [
-            Data("abc".utf8),
-            Data("def".utf8)
-        ]
-        let signature = "0xfce353f6"
-        guard let encoded = ABIEncoder.encode(.fixedArray(bytes, elementType: .bytes(length: 3), length: 2)) else { return XCTFail("Values should be encoded") }
-        let result = signature + encoded
-        let expected = "0xfce353f661626300000000000000000000000000000000000000000000000000000000006465660000000000000000000000000000000000000000000000000000000000"
-        XCTAssertEqual(result, expected, "Encoded values should match")
-    }
-    
-    /// From Solidity's documentation examples
-    func testExampleThree() {
-        let data = Data("dave".utf8)
-        let bool = true
-        let array = [BigInt(1), BigInt(2), BigInt(3)]
-        let signature = "0xa5643bf2"
-        guard let encoded = ABIEncoder.encode(.bytes(data), .bool(bool), .array(array, elementType: .uint256)) else { return XCTFail("Values should be encoded") }
-        let result = signature + encoded
-        let expected = "0xa5643bf20000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000464617665000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
-        XCTAssertEqual(result, expected, "Encoded values should match")
+    func testSolidityRepresentable() {
+        XCTAssertEqual(String.solidityType, .string)
+        XCTAssertEqual(Bool.solidityType, .bool)
+        XCTAssertEqual(UInt16.solidityType, .uint16)
+        XCTAssertEqual(BigUInt.solidityType, .uint256)
+        XCTAssertEqual(BigInt.solidityType, .int256)
+        XCTAssertEqual(Int8.solidityType, .int8)
+        XCTAssertEqual(EthereumAddress.solidityType, .address)
     }
     
     func testEncodeUInt() {
@@ -70,6 +45,26 @@ class ABITests: XCTestCase {
         XCTAssertEqual(encoded5, expected, "BigUInt should be correctly encoded")
     }
     
+    func testDecodeUInt() {
+        XCTAssertEqual(UInt8(hexString: "00000000000000000000000000000000000000000000000000000000000000ff"), 255, "UInt8 should be correctly decoded")
+        XCTAssertEqual(UInt16(hexString: "00000000000000000000000000000000000000000000000000000000000000ff"), 255, "UInt16 should be correctly decoded")
+        XCTAssertEqual(BigUInt(hexString: "00000000000000000000000000000000000000000000000000000000000000ff"), 255, "BigUInt should be correctly decoded")
+    }
+    
+    func testTwosComplement() {
+        //-01111111 => 10000000
+        let int = Int8(-128)
+        let positive = Int8(120)
+        
+        XCTAssertEqual(int.twosComplementRepresentation, 0, "Integers should have correct twos representation")
+        XCTAssertEqual(positive.twosComplementRepresentation, positive, "Positive integer twos representation should be same as value")
+        
+        XCTAssertEqual(Int8(twosComplementString: "10000000"), int, "Negative integers should be parsed from twos complement binary string")
+        XCTAssertEqual(Int8(twosComplementString: "01111111"), 127, "Positive integers should be parsed from twos complement binary string")
+        XCTAssertEqual(Int8(twosComplementString: "FF"), nil, "Twos complement should fail when not passed binary string")
+        XCTAssertEqual(BigInt(twosComplementString: "XYZZ"), nil, "Non-hex strings should not be decoded into BigInt")
+    }
+    
     func testEncodeInt() {
         let test1 = Int32(-1200).abiEncode(dynamic: false)
         let expected1 = "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb50"
@@ -90,34 +85,118 @@ class ABITests: XCTestCase {
         let expected4 = "0000000000000000000000000000000000000000000000000000000000000020"
         
         XCTAssertEqual(test4, expected4, "Int should be correctly encoded")
-    }
-    
-    func testDecodable() {
-        let example0 = "0000000000000000000000000000000000000000000000000000000000000045"
-        let example1 = "0000000000000000000000000000000000000000000000000000000000000001"
         
-        let decoded0 = UInt32(hexString: example0)
-        let decoded1 = Bool(hexString: example1)
+        let test5 = BigInt(-1).abiEncode(dynamic: false)
+        let expected5 = "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
         
-        XCTAssertEqual(decoded0, 69, "Number should be decoded correctly")
-        XCTAssertEqual(decoded1, true, "Boolean should be decoded correctly")
+        XCTAssertEqual(test5, expected5, "negative BigInt should be correctly encoded")
     }
     
-    func testDecoderOne() {
-        let example2 = "00000000000000000000000000000000000000000000000000000000000000450000000000000000000000000000000000000000000000000000000000000001"
-        guard let decodedValues = ABIDecoder.decode(.uint32, .bool, from: example2) else { return XCTFail("String failed to decode") }
-        XCTAssertEqual(decodedValues.count, 2, "Decoder should return 2 values")
-        XCTAssertEqual(decodedValues[0] as? UInt32, 69, "The first value should be 69")
-        XCTAssertEqual(decodedValues[1] as? Bool, true, "The second value should be true")
+    func testDecodeInt() {
+        XCTAssertEqual(Int(hexString: "0000000000000000000000000000000000000000000000000000000000000020"), 32, "Int should be correctly decoded")
+        
+        XCTAssertEqual(Int32(hexString: "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffb50"), -1200, "Negative Int32 should be correctly decoded")
+        
+        XCTAssertEqual(Int64(hexString: "fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffda8"), -600, "Negative Int64 should be correctly decoded")
+        
+        XCTAssertEqual(BigInt(hexString: "000000000000000000000000000000000000000000000000000000000e4e1c00"), BigInt(240000000), "BigInt should be correctly decoded")
+        
+        XCTAssertEqual(BigInt(hexString: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"), BigInt(-1), "Negative BigInt should be correctly decoded")
     }
     
-    func testDecoderTwo() {
-        let example3 = "0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000464617665000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
-        guard let decodedValues = ABIDecoder.decode(.string, .bool, .array(type: .uint256, length: nil), from: example3) else { return XCTFail("String failed to decode") }
-        XCTAssertEqual(decodedValues.count, 3, "3 values should be decoded")
-        XCTAssertEqual(decodedValues[0] as? String, "dave", "The first value should be dave")
-        XCTAssertEqual(decodedValues[1] as? Bool, true, "The second value should be false")
-        XCTAssertEqual(decodedValues[2] as? [BigUInt], [1, 2, 3])
+    func testEncodeBool() {
+        let test1 = true.abiEncode(dynamic: false)
+        let expected1 = "0000000000000000000000000000000000000000000000000000000000000001"
+        
+        XCTAssertEqual(test1, expected1, "true should be correctly encoded")
+        
+        let test2 = false.abiEncode(dynamic: false)
+        let expected2 = "0000000000000000000000000000000000000000000000000000000000000000"
+        
+        XCTAssertEqual(test2, expected2, "false should be correctly encoded")
+    }
+    
+    func testDecodeBool() {
+        XCTAssertEqual(Bool(hexString: "0000000000000000000000000000000000000000000000000000000000000001"), true, "True values should be decoded")
+        XCTAssertEqual(Bool(hexString: "0000000000000000000000000000000000000000000000000000000000000000"), false, "False values should be decoded")
+        XCTAssertEqual(Bool(hexString: "HI"), nil, "Non-hex strings should not be decoded")
+    }
+    
+    func testEncodeString() {
+        // Must use encoder to get offsets
+        let test1 = "Hello World!".abiEncode(dynamic: true)
+        let expected1 = "000000000000000000000000000000000000000000000000000000000000000c48656c6c6f20576f726c64210000000000000000000000000000000000000000"
+        
+        XCTAssertEqual(test1, expected1, "String should be correctly encoded")
+        
+        let test2 = "What‘s happening?".abiEncode(dynamic: true)
+        let expected2 = "000000000000000000000000000000000000000000000000000000000000001357686174e28098732068617070656e696e673f00000000000000000000000000"
+    
+        XCTAssertEqual(test2, expected2, "String should be correctly encoded")
+    }
+    
+    func testDecodeString() {
+        let helloWorldString = "000000000000000000000000000000000000000000000000000000000000000c48656c6c6f20576f726c64210000000000000000000000000000000000000000"
+        let whatsHappeningString = "000000000000000000000000000000000000000000000000000000000000001357686174e28098732068617070656e696e673f00000000000000000000000000"
+        XCTAssertEqual(String(hexString: helloWorldString), "Hello World!", "String should be correctly decoded")
+        XCTAssertEqual(String(hexString: whatsHappeningString), "What‘s happening?", "String should be correctly decoded")
+        
+        XCTAssertEqual(String(hexString: "00000"), nil, "Invalid hex data should not be decoded")
+    }
+    
+    func testEncodeAddress() {
+        let test = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false).abiEncode(dynamic: false)
+        let expected = "0000000000000000000000009f2c4ea0506eeab4e4dc634c1e1f4be71d0d7531"
+        
+        XCTAssertEqual(test, expected, "Address should be correctly encoded")
+    }
+    
+    func testDecodeAddress() {
+        let expected = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
+        XCTAssertEqual(EthereumAddress(hexString: "0000000000000000000000009f2c4ea0506eeab4e4dc634c1e1f4be71d0d7531"), expected, "Address should be correctly decoded")
+        XCTAssertEqual(EthereumAddress(hexString: "0000000000000000000000009f2c4ea0506eeab4e4dc634c1e1f4be71d0d75XX"), nil, "Invalid hex data should not be decoded")
+    }
+    
+    func testEncodeBytes() {
+        let bytes1 = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        let test1 = ABIEncoder.encode(.bytes(bytes1))
+        let expected1 = "000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000090102030405060708090000000000000000000000000000000000000000000000"
+        XCTAssertEqual(test1, expected1, "Bytes should be correctly encoded")
+        
+        let bytes2 = Data(bytes: [0, 111, 222])
+        let test2 = ABIEncoder.encode(.fixedBytes(bytes2))
+        let expected2 = "006fde0000000000000000000000000000000000000000000000000000000000"
+        
+        XCTAssertEqual(test2, expected2, "Fixed bytes should be correctly encoded")
+    }
+    
+    func testDecodeBytes() {
+        let expected1 = Data(bytes: [1, 2, 3, 4, 5, 6, 7, 8, 9])
+        let test1 = "00000000000000000000000000000000000000000000000000000000000000090102030405060708090000000000000000000000000000000000000000000000"
+        XCTAssertEqual(Data(hexString: test1), expected1, "Bytes should be correctly decoded")
+        
+        let expected2 = Data(bytes: [0, 111, 222])
+        let test2 = "006fde0000000000000000000000000000000000000000000000000000000000"
+        
+        XCTAssertEqual(Data(hexString: test2, length: 3), expected2, "Fixed bytes should be correctly encoded")
+    }
+    
+    func testEncodeArray() {
+        let array: [Int64] = [0, 1, 2, 3]
+        let fixedExpected = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
+        let dynamicExpected = "00000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
+        XCTAssertEqual(array.abiEncode(dynamic: false), fixedExpected, "Fixed array should be encoded correctly")
+        XCTAssertEqual(array.abiEncode(dynamic: true), dynamicExpected, "Dynamic array should be encoded correctly")
+    }
+    
+    func testDecodeArray() {
+        let fixedArray = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
+        let dynamicArray = "00000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000003"
+        let expected: [Int64] = [0, 1, 2, 3]
+        XCTAssertEqual([Int64].init(hexString: fixedArray, length: 4), expected, "Fixed array should be decoded correctly")
+        XCTAssertEqual([Int64].init(hexString: dynamicArray), expected, "Dynamic array should be decoded correctly")
+        XCTAssertEqual([Int64].init(hexString: fixedArray), nil, "Fixed array should not be decoded without passing a length")
+        XCTAssertEqual([Int64].init(hexString: "00000000000000", length: 100), nil, "Fixed array should not be decoded when not passing correct amount of bytes")
     }
     
 }

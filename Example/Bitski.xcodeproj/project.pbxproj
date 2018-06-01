@@ -16,6 +16,8 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		AB038E26F332FDEFD229CD17 /* Pods_Bitski_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */; };
 		E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615020BE0FCE00C12395 /* ABITests.swift */; };
+		E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */; };
+		E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		E88B615020BE0FCE00C12395 /* ABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABITests.swift; sourceTree = "<group>"; };
+		E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIDecoderTests.swift; sourceTree = "<group>"; };
+		E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIEncoderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,8 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */,
+				E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */,
 				E88B615020BE0FCE00C12395 /* ABITests.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
@@ -377,8 +383,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */,
 				E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -13,38 +13,52 @@ public class ABIEncoder {
     
     struct Segment {
         let type: SolidityType
-        var staticValue: String? // hex string
-        var dynamicValue: String? // hex string, [32 byte padded length] + [value]
+        let encodedValue: String
+        
+        init(type: SolidityType, value: String) {
+            self.type = type
+            self.encodedValue = value
+        }
+        
+        /// Byte count of static value
+        var staticLength: Int {
+            if !type.isDynamic {
+                // if we have a static value, return the length / 2 (assuming hex string)
+                return encodedValue.count / 2
+            }
+            // otherwise, this will be an offset value, padded to 32 bytes
+            return 32
+        }
     }
     
     /// Encode pairs of values and expected types to Solidity ABI compatible string
     public class func encode(_ values: [WrappedValue]) -> String? {
         // map segments
-        var segments = values.map { value -> Segment in
-            let encodedValue = encode(value.value, to: value.type)
-            if value.type.isDynamic {
-                return Segment(type: value.type, staticValue: nil, dynamicValue: encodedValue)
+        let segments = values.compactMap { wrapped -> Segment? in
+            // encode value portion
+            if let encodedValue = encode(wrapped.value, to: wrapped.type) {
+                return Segment(type: wrapped.type, value: encodedValue)
+            }
+            return nil
+        }
+        // calculate start of dynamic portion in bytes (combined length of all static parts)
+        let dynamicOffsetStart = segments.map { $0.staticLength }.reduce(0, +)
+        // reduce to static string and dynamic string
+        let (staticValues, dynamicValues) = segments.reduce(("", ""), { result, segment in
+            var (staticParts, dynamicParts) = result
+            if !segment.type.isDynamic {
+                staticParts += segment.encodedValue
             } else {
-                return Segment(type: value.type, staticValue: encodedValue, dynamicValue: nil)
+                // static portion for dynamic value represents offset in bytes
+                // offset is start of dynamic segment + length of current dynamic portion (in bytes)
+                let offset = dynamicOffsetStart + (result.1.count / 2)
+                staticParts += String(offset, radix: 16).paddingLeft(toLength: 64, withPad: "0")
+                dynamicParts += segment.encodedValue
             }
-        }
-        // calculate offsets in bytes
-        let dynamicOffsetStart = segments.count * 32 //todo: make sure this has to be 32 bytes
-        var nextOffset = dynamicOffsetStart
-        for (n, segment) in segments.enumerated() {
-            if segment.type.isDynamic, let dynamicValue = segment.dynamicValue {
-                // update item
-                var segment = segment
-                segment.staticValue = String(nextOffset, radix: 16).paddingLeft(toLength: 64, withPad: "0")
-                segments[n] = segment
-                // increment offset by length
-                nextOffset += (dynamicValue.count / 2) //assuming hex string
-            }
-        }
-        // combine into single string
-        let staticParts = segments.compactMap { return $0.staticValue }
-        let dynamicParts = segments.compactMap { return $0.dynamicValue }
-        return staticParts.joined() + dynamicParts.joined()
+            return (staticParts, dynamicParts)
+        })
+        // combine as single string (static parts, then dynamic parts)
+        return staticValues + dynamicValues
     }
     
     /// Encode with values inline
@@ -54,11 +68,16 @@ public class ABIEncoder {
     
     /// Encode a single wrapped value
     class func encode(_ wrapped: WrappedValue) -> String? {
-        return wrapped.value.abiEncode(dynamic: wrapped.type.isDynamic)
+        return encode([wrapped])
     }
     
     /// Encode a single value to a type
     class func encode(_ value: ABIRepresentable, to type: SolidityType) -> String? {
+        return value.abiEncode(dynamic: type.isDynamic)
+    }
+    
+    /// Encode a single value to a type
+    class func encodeArray<T: ABIRepresentable>(_ value: [T], to type: SolidityType) -> String? {
         return value.abiEncode(dynamic: type.isDynamic)
     }
 }
