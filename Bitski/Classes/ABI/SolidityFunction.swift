@@ -51,19 +51,6 @@ public struct SolidityMethodInput: SolidityInput {
     public let components: [Any]
 }
 
-public enum SolidityStateMutability: String {
-    case pure
-    case view
-    case nonpayable
-    case payable
-}
-
-public enum SolidityMethodType {
-    case function
-    case constructor
-    case fallback
-}
-
 extension EthereumCall {
     init(contractAddress: EthereumAddress, data: String) {
         self.init(from: nil, to: contractAddress, gas: nil, gasPrice: nil, value: nil, data: EthereumData(bytes: data.toBytes()))

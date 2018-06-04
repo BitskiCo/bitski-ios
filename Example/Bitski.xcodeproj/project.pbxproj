@@ -18,6 +18,9 @@
 		E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615020BE0FCE00C12395 /* ABITests.swift */; };
 		E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */; };
 		E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */; };
+		E8FE358820C3126C00DD799A /* SolidityTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */; };
+		E8FE358C20C5AE2B00DD799A /* JSONABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */; };
+		E8FE358F20C5B29500DD799A /* ERC721.json in Resources */ = {isa = PBXBuildFile; fileRef = E8FE358D20C5AE7500DD799A /* ERC721.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +56,9 @@
 		E88B615020BE0FCE00C12395 /* ABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABITests.swift; sourceTree = "<group>"; };
 		E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIDecoderTests.swift; sourceTree = "<group>"; };
 		E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIEncoderTests.swift; sourceTree = "<group>"; };
+		E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityTypeTests.swift; sourceTree = "<group>"; };
+		E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONABITests.swift; sourceTree = "<group>"; };
+		E8FE358D20C5AE7500DD799A /* ERC721.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ERC721.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +138,8 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */,
+				E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */,
 				E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */,
 				E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */,
 				E88B615020BE0FCE00C12395 /* ABITests.swift */,
@@ -145,6 +153,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACEA1AFB9204008FA782 /* Info.plist */,
+				E8FE358D20C5AE7500DD799A /* ERC721.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -265,6 +274,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8FE358F20C5B29500DD799A /* ERC721.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +394,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */,
+				E8FE358820C3126C00DD799A /* SolidityTypeTests.swift in Sources */,
+				E8FE358C20C5AE2B00DD799A /* JSONABITests.swift in Sources */,
 				E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 				E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */,

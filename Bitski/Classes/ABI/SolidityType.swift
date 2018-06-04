@@ -222,10 +222,6 @@ public extension SolidityValueType {
             
         }
     }
-    
-    public init?(string: String) {
-        fatalError("Not implemented")
-    }
 }
 
 extension SolidityValueType: Equatable {
