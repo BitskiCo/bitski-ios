@@ -53,7 +53,6 @@
 		2B1A2719F975A844F7EF5670A9C551EF /* OIDRegistrationResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = B78D53078A23CF2AA0726535EDE690EC /* OIDRegistrationResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2CD9906459B6E240CBDFE4819CDFE53B /* NoPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = E08DE61709255E146FFFD946530FC677 /* NoPadding.swift */; };
 		2D151E97FBE848AD1B1158D8FE5D0ACB /* AppAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 819EC9C07DB06353884D6CB7580A1C4E /* AppAuth.framework */; };
-		2F2D1B7FF5BD4C80886C8CAE49AE17B2 /* SolidityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41EFE71432B2C474147B256EAB863DCC /* SolidityEvent.swift */; };
 		2F9125C6900FAFFC4557CC389B1C873B /* OIDTokenResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 19F28A9010B1C2001AAB7E8CD7D5B4B9 /* OIDTokenResponse.m */; };
 		319A13FCABEDE5DEF6BA124A7BFAF014 /* HMAC+Foundation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A7D25830B861A7D922C69913D14D694 /* HMAC+Foundation.swift */; };
 		322FC6B82C4A6808526A17747E86EC23 /* lax_der_parsing.c in Sources */ = {isa = PBXBuildFile; fileRef = A2408E6D44E1A266BA211186362446C9 /* lax_der_parsing.c */; };
@@ -64,7 +63,6 @@
 		350532EF5F81F3AF9DE1A0B6300B671E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A7EA2FDA9C6FE70203CFF2DA3C81B54E /* Foundation.framework */; };
 		35796C60688C449437B2A759014829F6 /* num_gmp_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = D974D8A4242A6FFE685AF28999D13C59 /* num_gmp_impl.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		35CAE3FB321BEF870215FD31EA33701E /* PromiseKit.h in Headers */ = {isa = PBXBuildFile; fileRef = B1F863D956EBDCBF7CB9D3C60EAF8962 /* PromiseKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		36742FB0398529A6C4997B7CC254A0FC /* SolidityFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D5A03F690CACD6411FBB28441A7A144 /* SolidityFunction.swift */; };
 		378D3B8A460DB5563521B40D92BDFF47 /* num_gmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 4FB20D24855E9BFD8D0BFBC680F9601D /* num_gmp.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		379BC96824705BA71D86096A626C2BED /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = C42ED92BA6CF74A7A820FF3C8AB587AD /* Error.swift */; };
 		3880AB0A9D56991CD27834D093499AB2 /* RPCResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0575697B4296AEEE3D7E64EF6061A1CA /* RPCResponse.swift */; };
@@ -295,6 +293,12 @@
 		E8811D6AAE10E346101641B065AD2AEE /* EthereumLogObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0636F71DC740A17D85DF3AB14A50E /* EthereumLogObject.swift */; };
 		E88A78B19D6BC1513EAFE3E173701455 /* scalar_low.h in Headers */ = {isa = PBXBuildFile; fileRef = ECFC4BF04FABF139D3D9804467609E4B /* scalar_low.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615220BE2A6200C12395 /* SolidityContract.swift */; };
+		E8B1326A20C8579100DAA0A0 /* Eth+Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */; };
+		E8BD40A220C74E2D007FDD45 /* Invocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD409F20C74E28007FDD45 /* Invocation.swift */; };
+		E8BD40A420C74E32007FDD45 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD409D20C74E1E007FDD45 /* Function.swift */; };
+		E8BD40A620C74E52007FDD45 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD40A520C74E52007FDD45 /* Event.swift */; };
+		E8BD40A820C74EB3007FDD45 /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD40A720C74EB3007FDD45 /* Contract.swift */; };
+		E8BD40AA20C755B6007FDD45 /* ERC721.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD40A920C755B6007FDD45 /* ERC721.swift */; };
 		E8FE358420C1ED4A00DD799A /* WrappedValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358320C1ED4A00DD799A /* WrappedValue.swift */; };
 		E8FE358620C1EF8200DD799A /* DecodableContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358520C1EF8200DD799A /* DecodableContract.swift */; };
 		E8FE358A20C47A4D00DD799A /* SolidityType+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358920C47A4D00DD799A /* SolidityType+Codable.swift */; };
@@ -595,7 +599,6 @@
 		412573FC282548229BF04193FECF427B /* EthereumAddress.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EthereumAddress.swift; path = Web3/Classes/Core/Transaction/EthereumAddress.swift; sourceTree = "<group>"; };
 		4192AF612AED111A7FA82331A4BD4164 /* Pods-Bitski_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Bitski_Tests-dummy.m"; sourceTree = "<group>"; };
 		41A4D11D492592123601ED5FCC04B654 /* Bytes+UInt.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Bytes+UInt.swift"; path = "Web3/Classes/Core/Toolbox/Bytes+UInt.swift"; sourceTree = "<group>"; };
-		41EFE71432B2C474147B256EAB863DCC /* SolidityEvent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SolidityEvent.swift; sourceTree = "<group>"; };
 		4231CE0FC92B0A4B743AFE105F725BFD /* Web3-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Web3-prefix.pch"; sourceTree = "<group>"; };
 		44264C8688354A9602A3D3FA6C948D17 /* ecdsa_impl.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ecdsa_impl.h; path = secp256k1/Classes/secp256k1/src/ecdsa_impl.h; sourceTree = "<group>"; };
 		4494AC27BAD4EC13B29BCFCF35D84C03 /* OIDAuthorizationUICoordinator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = OIDAuthorizationUICoordinator.h; path = Source/OIDAuthorizationUICoordinator.h; sourceTree = "<group>"; };
@@ -710,7 +713,6 @@
 		8AD317EE4DAEE4FAD151C9FCACCAD213 /* SHA1.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SHA1.swift; path = Sources/CryptoSwift/SHA1.swift; sourceTree = "<group>"; };
 		8BEB07B998C0F86F4BFF347960A2215B /* Cryptors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Cryptors.swift; path = Sources/CryptoSwift/Cryptors.swift; sourceTree = "<group>"; };
 		8C19862BC23755EE5DA6397958395CF1 /* Shifts.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Shifts.swift; path = BigInt/Classes/Shifts.swift; sourceTree = "<group>"; };
-		8D5A03F690CACD6411FBB28441A7A144 /* SolidityFunction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SolidityFunction.swift; sourceTree = "<group>"; };
 		8EB8F69DF7A428DC44D5E3F865D905A4 /* scratch.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = scratch.h; path = secp256k1/Classes/secp256k1/src/scratch.h; sourceTree = "<group>"; };
 		8FD3D0A40F6394383EB533100C23E368 /* OIDScopeUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = OIDScopeUtilities.m; path = Source/OIDScopeUtilities.m; sourceTree = "<group>"; };
 		8FF1038EC0B358457332741DB5EAC048 /* CryptoSwift.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CryptoSwift.xcconfig; sourceTree = "<group>"; };
@@ -834,6 +836,12 @@
 		E83FDACE45C17C2EF7BC3F24DE0670C9 /* AppAuth-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AppAuth-prefix.pch"; sourceTree = "<group>"; };
 		E85AFE2720C091A50065B6D6 /* String+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Conversion.swift"; sourceTree = "<group>"; };
 		E88B615220BE2A6200C12395 /* SolidityContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityContract.swift; sourceTree = "<group>"; };
+		E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Eth+Contract.swift"; sourceTree = "<group>"; };
+		E8BD409D20C74E1E007FDD45 /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
+		E8BD409F20C74E28007FDD45 /* Invocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invocation.swift; sourceTree = "<group>"; };
+		E8BD40A520C74E52007FDD45 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		E8BD40A720C74EB3007FDD45 /* Contract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contract.swift; sourceTree = "<group>"; };
+		E8BD40A920C755B6007FDD45 /* ERC721.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ERC721.swift; sourceTree = "<group>"; };
 		E8FE358320C1ED4A00DD799A /* WrappedValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedValue.swift; sourceTree = "<group>"; };
 		E8FE358520C1EF8200DD799A /* DecodableContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DecodableContract.swift; sourceTree = "<group>"; };
 		E8FE358920C47A4D00DD799A /* SolidityType+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SolidityType+Codable.swift"; sourceTree = "<group>"; };
@@ -1572,11 +1580,15 @@
 				03022BCF3329BFECD8DE1D5CDEB8A5B9 /* ABIEncoder.swift */,
 				B4394BE7D9CB8F3624623E8ECA6BDC01 /* ABIRepresentable.swift */,
 				E85AFE2720C091A50065B6D6 /* String+Conversion.swift */,
-				41EFE71432B2C474147B256EAB863DCC /* SolidityEvent.swift */,
-				8D5A03F690CACD6411FBB28441A7A144 /* SolidityFunction.swift */,
 				E88B615220BE2A6200C12395 /* SolidityContract.swift */,
 				E8FE358920C47A4D00DD799A /* SolidityType+Codable.swift */,
 				E8FE358520C1EF8200DD799A /* DecodableContract.swift */,
+				E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */,
+				E8BD40A920C755B6007FDD45 /* ERC721.swift */,
+				E8BD409D20C74E1E007FDD45 /* Function.swift */,
+				E8BD40A720C74EB3007FDD45 /* Contract.swift */,
+				E8BD40A520C74E52007FDD45 /* Event.swift */,
+				E8BD409F20C74E28007FDD45 /* Invocation.swift */,
 				E8FE358320C1ED4A00DD799A /* WrappedValue.swift */,
 				367BC4225666DFD8EAAA5B6AC4633286 /* SolidityType.swift */,
 			);
@@ -1937,6 +1949,11 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0930;
 				LastUpgradeCheck = 0930;
+				TargetAttributes = {
+					85CF6253D4D5512DBE076648C47A10E5 = {
+						LastSwiftMigration = 0940;
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1972,24 +1989,28 @@
 				4ECCA631FA4C199E0C035604322C1364 /* ABIEncoder.swift in Sources */,
 				5D9C1B248F5267151A95F0144B4A9A21 /* ABIRepresentable.swift in Sources */,
 				D0401209EAC95D63C9BA5C42F3C90D23 /* BigUInt+Ethereum.swift in Sources */,
+				E8BD40A220C74E2D007FDD45 /* Invocation.swift in Sources */,
 				844F8C2C1623052295BCFB672B859428 /* Bitski-dummy.m in Sources */,
 				E8FE358A20C47A4D00DD799A /* SolidityType+Codable.swift in Sources */,
 				C6C77763218B747D43C1C27343C97439 /* Bitski.swift in Sources */,
+				E8BD40A620C74E52007FDD45 /* Event.swift in Sources */,
 				E85AFE2820C091A50065B6D6 /* String+Conversion.swift in Sources */,
+				E8BD40AA20C755B6007FDD45 /* ERC721.swift in Sources */,
 				01A3C61DFC966678353A1590E0DDD02D /* BitskiProvider.swift in Sources */,
 				26B32D28980278C23FCA43E1E45DD6FE /* Eth+SendTransaction.swift in Sources */,
 				E8FE358620C1EF8200DD799A /* DecodableContract.swift in Sources */,
 				E8FE358420C1ED4A00DD799A /* WrappedValue.swift in Sources */,
 				1CE9DCAE7C764A5BD1F48CA363EA8D03 /* EthereumCallFunction.swift in Sources */,
+				E8BD40A820C74EB3007FDD45 /* Contract.swift in Sources */,
 				A391523A55516083FDE2F41FD054E0D1 /* EthereumContract.swift in Sources */,
 				247FBE8A9BFD7070E947DD4309F2C0D0 /* OIDAuthorizationUICoordinator+Bitski.swift in Sources */,
 				51FA674D1A525C4AE9D1AB0E5C9BF22F /* OIDAuthState+Bitski.swift in Sources */,
 				66BAB8A52E31A3261C8819453540A4DD /* RandomHex.swift in Sources */,
-				2F2D1B7FF5BD4C80886C8CAE49AE17B2 /* SolidityEvent.swift in Sources */,
-				36742FB0398529A6C4997B7CC254A0FC /* SolidityFunction.swift in Sources */,
+				E8B1326A20C8579100DAA0A0 /* Eth+Contract.swift in Sources */,
 				E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */,
 				FA480CD9775A2C9323DEC0BEDD9BCF9B /* TransactionWatcher.swift in Sources */,
 				0BDEB4494DB5C9EB978629B097211FC1 /* SolidityType.swift in Sources */,
+				E8BD40A420C74E32007FDD45 /* Function.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2452,6 +2473,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 522C8450671DD4F8AB2A138361496EB1 /* AppAuth.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2949,6 +2971,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 522C8450671DD4F8AB2A138361496EB1 /* AppAuth.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -2969,6 +2992,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
