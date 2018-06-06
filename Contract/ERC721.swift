@@ -25,12 +25,15 @@ public protocol ERC721Contract: EthereumContract {
     func implementsERC721() -> ABIInvocation
 }
 
-/// Generic implementation class. Subclass to conveniently add your contract's events or methods.
-public class GenericERC721Contract: StaticContract, ERC721Contract {
+/// Generic implementation class. Use directly, or subclass to conveniently add your contract's events or methods.
+open class GenericERC721Contract: StaticContract, ERC721Contract {
     public let name: String
     public let address: EthereumAddress
     public let eth: Web3.Eth
-    public let events: [ABIEvent] = [Transfer, Approval]
+    
+    open var events: [ABIEvent] {
+        return [GenericERC721Contract.Transfer, GenericERC721Contract.Approval]
+    }
     
     public required init(name: String, address: EthereumAddress, eth: Web3.Eth) {
         self.name = name
@@ -112,7 +115,7 @@ public extension ERC721Contract {
             ABIParameter(name: "_to", type: .address),
             ABIParameter(name: "_tokenId", type: .uint256)
         ]
-        let method = ABIConstantFunction(name: "transfer", inputs: inputs, handler: self)
+        let method = ABINonPayableFunction(name: "transfer", inputs: inputs, handler: self)
         return method.invoke(to, tokenId)
     }
     

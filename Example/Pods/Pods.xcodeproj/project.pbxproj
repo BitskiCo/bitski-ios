@@ -36,7 +36,6 @@
 		1B4739F62D979849E5FF55892BBF6885 /* scalar_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = DA77243FE0A639F95C3085A75BC010EA /* scalar_impl.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1BEAE9C480915790AF1AA540A3908A2B /* AppAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = EEA7695640042864DD73E1D9A1A49A6A /* AppAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BFF2714D895832F513DB75643812D53 /* when.m in Sources */ = {isa = PBXBuildFile; fileRef = 46E9740C3BE63F321D239A47939CEC7B /* when.m */; };
-		1CE9DCAE7C764A5BD1F48CA363EA8D03 /* EthereumCallFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D3F783F97388F891FE6653F1207390 /* EthereumCallFunction.swift */; };
 		207AFAB8581B44C9A90417039010ED8C /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0927F7565168218E5E9A592E5B802A7D /* Array+Extension.swift */; };
 		209B7938DD52DF3F854C80D8EFAE5323 /* secp256k1.swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 401D3F841AE2C3F9987BA213CDC43971 /* secp256k1.swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22143E8A10FFE26CF01627732D9EE65F /* OIDAuthState+IOS.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DCFBC22290717A680D7E6973892077 /* OIDAuthState+IOS.m */; };
@@ -292,7 +291,6 @@
 		E85AFE2820C091A50065B6D6 /* String+Conversion.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85AFE2720C091A50065B6D6 /* String+Conversion.swift */; };
 		E8811D6AAE10E346101641B065AD2AEE /* EthereumLogObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C0636F71DC740A17D85DF3AB14A50E /* EthereumLogObject.swift */; };
 		E88A78B19D6BC1513EAFE3E173701455 /* scalar_low.h in Headers */ = {isa = PBXBuildFile; fileRef = ECFC4BF04FABF139D3D9804467609E4B /* scalar_low.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615220BE2A6200C12395 /* SolidityContract.swift */; };
 		E8B1326A20C8579100DAA0A0 /* Eth+Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */; };
 		E8BD40A220C74E2D007FDD45 /* Invocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD409F20C74E28007FDD45 /* Invocation.swift */; };
 		E8BD40A420C74E32007FDD45 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8BD409D20C74E1E007FDD45 /* Function.swift */; };
@@ -698,7 +696,6 @@
 		821F79FC2027A7A9F9BCE9A4D3EFA201 /* OIDAuthorizationService+IOS.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "OIDAuthorizationService+IOS.h"; path = "Source/iOS/OIDAuthorizationService+IOS.h"; sourceTree = "<group>"; };
 		825D9D067EF000CAFF3D8A2ECD24EB0C /* EthereumContract.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EthereumContract.swift; sourceTree = "<group>"; };
 		829599022E6C4659A63E4F4C6133DB99 /* OIDTokenRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = OIDTokenRequest.h; path = Source/OIDTokenRequest.h; sourceTree = "<group>"; };
-		83D3F783F97388F891FE6653F1207390 /* EthereumCallFunction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EthereumCallFunction.swift; sourceTree = "<group>"; };
 		83D418AEA99C998566A88E2D2958EA4C /* OIDServiceDiscovery.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = OIDServiceDiscovery.m; path = Source/OIDServiceDiscovery.m; sourceTree = "<group>"; };
 		8413A34FB0F5BDE8C2B39301E3562B84 /* ABIDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ABIDecoder.swift; sourceTree = "<group>"; };
 		84252B70FFDA531528D297E988BE992F /* Operators.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Operators.swift; path = Sources/CryptoSwift/Operators.swift; sourceTree = "<group>"; };
@@ -835,7 +832,6 @@
 		E7B1F66981C2BACA3207556ACBF22E43 /* OIDAuthorizationResponse.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = OIDAuthorizationResponse.m; path = Source/OIDAuthorizationResponse.m; sourceTree = "<group>"; };
 		E83FDACE45C17C2EF7BC3F24DE0670C9 /* AppAuth-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AppAuth-prefix.pch"; sourceTree = "<group>"; };
 		E85AFE2720C091A50065B6D6 /* String+Conversion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Conversion.swift"; sourceTree = "<group>"; };
-		E88B615220BE2A6200C12395 /* SolidityContract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityContract.swift; sourceTree = "<group>"; };
 		E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Eth+Contract.swift"; sourceTree = "<group>"; };
 		E8BD409D20C74E1E007FDD45 /* Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
 		E8BD409F20C74E28007FDD45 /* Invocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Invocation.swift; sourceTree = "<group>"; };
@@ -1143,10 +1139,9 @@
 			isa = PBXGroup;
 			children = (
 				CBFADB2A91ED48302C9487166197CAF1 /* BigUInt+Ethereum.swift */,
+				E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */,
 				0FCF5FE71C02CBCFC7093D5EECEE1264 /* Eth+SendTransaction.swift */,
-				83D3F783F97388F891FE6653F1207390 /* EthereumCallFunction.swift */,
 				089C052792BD55BD0816884025DB7FAF /* RandomHex.swift */,
-				3D4679F1D8DB507909581C97DC3DF5A5 /* TransactionWatcher.swift */,
 			);
 			name = "Web3 Extensions";
 			path = "Bitski/Classes/Web3 Extensions";
@@ -1155,6 +1150,7 @@
 		48A267AED7A1D87FFB7BA81BFF91FA6E /* Bitski */ = {
 			isa = PBXGroup;
 			children = (
+				E8B1326B20C8A92700DAA0A0 /* Contract */,
 				E5F1A9A73A834BF5863E35CC64A8756A /* ABI */,
 				D4AEC103C76F07F0EE5357BFE5CDB431 /* AppAuth Extensions */,
 				82C2CCA6B844F73F16337AB3CA2009AE /* Core */,
@@ -1580,20 +1576,26 @@
 				03022BCF3329BFECD8DE1D5CDEB8A5B9 /* ABIEncoder.swift */,
 				B4394BE7D9CB8F3624623E8ECA6BDC01 /* ABIRepresentable.swift */,
 				E85AFE2720C091A50065B6D6 /* String+Conversion.swift */,
-				E88B615220BE2A6200C12395 /* SolidityContract.swift */,
 				E8FE358920C47A4D00DD799A /* SolidityType+Codable.swift */,
+				E8FE358320C1ED4A00DD799A /* WrappedValue.swift */,
+				367BC4225666DFD8EAAA5B6AC4633286 /* SolidityType.swift */,
+				3D4679F1D8DB507909581C97DC3DF5A5 /* TransactionWatcher.swift */,
+			);
+			name = ABI;
+			path = Bitski/Classes/ABI;
+			sourceTree = "<group>";
+		};
+		E8B1326B20C8A92700DAA0A0 /* Contract */ = {
+			isa = PBXGroup;
+			children = (
 				E8FE358520C1EF8200DD799A /* DecodableContract.swift */,
-				E8B1326920C8579100DAA0A0 /* Eth+Contract.swift */,
 				E8BD40A920C755B6007FDD45 /* ERC721.swift */,
 				E8BD409D20C74E1E007FDD45 /* Function.swift */,
 				E8BD40A720C74EB3007FDD45 /* Contract.swift */,
 				E8BD40A520C74E52007FDD45 /* Event.swift */,
 				E8BD409F20C74E28007FDD45 /* Invocation.swift */,
-				E8FE358320C1ED4A00DD799A /* WrappedValue.swift */,
-				367BC4225666DFD8EAAA5B6AC4633286 /* SolidityType.swift */,
 			);
-			name = ABI;
-			path = Bitski/Classes/ABI;
+			path = Contract;
 			sourceTree = "<group>";
 		};
 		F0FFDB0DFCB45EE62C54B1A53D5F6A5A /* Pod */ = {
@@ -2000,14 +2002,12 @@
 				26B32D28980278C23FCA43E1E45DD6FE /* Eth+SendTransaction.swift in Sources */,
 				E8FE358620C1EF8200DD799A /* DecodableContract.swift in Sources */,
 				E8FE358420C1ED4A00DD799A /* WrappedValue.swift in Sources */,
-				1CE9DCAE7C764A5BD1F48CA363EA8D03 /* EthereumCallFunction.swift in Sources */,
 				E8BD40A820C74EB3007FDD45 /* Contract.swift in Sources */,
 				A391523A55516083FDE2F41FD054E0D1 /* EthereumContract.swift in Sources */,
 				247FBE8A9BFD7070E947DD4309F2C0D0 /* OIDAuthorizationUICoordinator+Bitski.swift in Sources */,
 				51FA674D1A525C4AE9D1AB0E5C9BF22F /* OIDAuthState+Bitski.swift in Sources */,
 				66BAB8A52E31A3261C8819453540A4DD /* RandomHex.swift in Sources */,
 				E8B1326A20C8579100DAA0A0 /* Eth+Contract.swift in Sources */,
-				E88B615320BE2A6200C12395 /* SolidityContract.swift in Sources */,
 				FA480CD9775A2C9323DEC0BEDD9BCF9B /* TransactionWatcher.swift in Sources */,
 				0BDEB4494DB5C9EB978629B097211FC1 /* SolidityType.swift in Sources */,
 				E8BD40A420C74E32007FDD45 /* Function.swift in Sources */,

@@ -7,12 +7,14 @@
 
 import Foundation
 import Web3
+import PromiseKit
 
 enum InvocationError: Error {
     case invalidConfiguration
     case invalidInvocation
 }
 
+/// Represents invoking a given contract method with parameters
 public protocol ABIInvocation {
     /// The function that was invoked
     var method: ABIFunction { get }
@@ -27,6 +29,9 @@ public protocol ABIInvocation {
     func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
 }
 
+// MARK: - Read Invocation
+
+/// An invocation that is read-only. Should only use .call()
 public struct ABIReadInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [ABIRepresentable]
@@ -47,6 +52,9 @@ public struct ABIReadInvocation: ABIInvocation {
     }
 }
 
+// MARK: - Payable Invocation
+
+/// An invocation that writes to the blockchain and can receive ETH. Should only use .send()
 public struct ABIPayableInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [ABIRepresentable]
@@ -68,6 +76,9 @@ public struct ABIPayableInvocation: ABIInvocation {
     }
 }
 
+// MARK: - Non Payable Invocation
+
+/// An invocation that writes to the blockchain and cannot receive ETH. Should only use .send().
 public struct ABINonPayableInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [ABIRepresentable]
@@ -87,4 +98,22 @@ public struct ABINonPayableInvocation: ABIInvocation {
         }
         handler.send(invocation: self, from: from, value: nil, gas: gas, gasPrice: gasPrice, completion: completion)
     }
+}
+
+// MARK: - PromiseKit convenience
+
+public extension ABIInvocation {
+    
+    public func call() -> Promise<[String: Any]> {
+        return Promise { seal in
+            self.call(completion: seal.resolve)
+        }
+    }
+    
+    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
+        return Promise { seal in
+            self.send(from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
+        }
+    }
+    
 }
