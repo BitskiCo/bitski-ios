@@ -18,3 +18,19 @@ target 'Bitski_Tests' do
     pod 'AppAuth'
     pod 'PromiseKit/CorePromise'
 end
+
+target 'ABITests' do
+    pod 'Bitski', :path => '../'
+    pod 'Web3'
+    pod 'Web3/PromiseKit'
+    pod 'BigInt.swift'
+    pod 'PromiseKit/CorePromise'
+end
+
+target 'ContractTests' do
+    pod 'Bitski', :path => '../'
+    pod 'Web3'
+    pod 'Web3/PromiseKit'
+    pod 'BigInt.swift'
+    pod 'PromiseKit/CorePromise'
+end

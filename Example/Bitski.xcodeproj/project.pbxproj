@@ -15,14 +15,19 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		AB038E26F332FDEFD229CD17 /* Pods_Bitski_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */; };
-		E86A544220C9DADE0026CD06 /* ContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544120C9DADE0026CD06 /* ContractTests.swift */; };
-		E86A544420C9DAEF0026CD06 /* WrappedValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */; };
-		E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615020BE0FCE00C12395 /* ABITests.swift */; };
-		E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */; };
-		E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */; };
-		E8FE358820C3126C00DD799A /* SolidityTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */; };
-		E8FE358C20C5AE2B00DD799A /* JSONABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */; };
-		E8FE358F20C5B29500DD799A /* ERC721.json in Resources */ = {isa = PBXBuildFile; fileRef = E8FE358D20C5AE7500DD799A /* ERC721.json */; };
+		D4DDC6DAA59E9F1E9F4EBAE4 /* Pods_ContractTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2448D7FA276DD028D01585A9 /* Pods_ContractTests.framework */; };
+		D70EE3278C9384993C1962A2 /* Pods_ABITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B97FCCD4E1517A9DD92D3060 /* Pods_ABITests.framework */; };
+		E86A547120C9F6120026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 607FACEA1AFB9204008FA782 /* Info.plist */; };
+		E86A547220C9F6990026CD06 /* JSONContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */; };
+		E86A547320C9F69D0026CD06 /* ContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544120C9DADE0026CD06 /* ContractTests.swift */; };
+		E86A547420C9F6AC0026CD06 /* ABITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E88B615020BE0FCE00C12395 /* ABITests.swift */; };
+		E86A547520C9F6AF0026CD06 /* ABIDecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */; };
+		E86A547620C9F6B30026CD06 /* ABIEncoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */; };
+		E86A547720C9F6B60026CD06 /* SolidityTypeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */; };
+		E86A547820C9F6B90026CD06 /* WrappedValueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */; };
+		E86A547920C9F72D0026CD06 /* ERC721.json in Resources */ = {isa = PBXBuildFile; fileRef = E8FE358D20C5AE7500DD799A /* ERC721.json */; };
+		E86A547D20C9F88E0026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E86A544E20C9F4830026CD06 /* Info.plist */; };
+		E86A547E20C9F8930026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E86A545C20C9F4940026CD06 /* Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,13 +38,31 @@
 			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
 			remoteInfo = Bitski;
 		};
+		E86A544F20C9F4830026CD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
+			remoteInfo = Bitski_Example;
+		};
+		E86A545D20C9F4940026CD06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
+			remoteInfo = Bitski_Example;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AF22D96BA8365F5682B7BDA /* Pods-ContractTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContractTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ContractTests/Pods-ContractTests.debug.xcconfig"; sourceTree = "<group>"; };
+		2448D7FA276DD028D01585A9 /* Pods_ContractTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ContractTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DE2B0617BA2D976085FABB0 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		3329C404751489B0794EFF31 /* Bitski.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Bitski.podspec; path = ../Bitski.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		3570F2A674E01B9992F4C9A3 /* Pods-ABITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ABITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ABITests/Pods-ABITests.debug.xcconfig"; sourceTree = "<group>"; };
 		55929A306966C2BEF89C945E /* Pods-Bitski_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		5B01EBB666A437DDE5606A35 /* Pods-Bitski_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		5B7099E422FDCBBAFF91B585 /* Pods-ABITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ABITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ABITests/Pods-ABITests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* Bitski_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Bitski_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -52,16 +75,22 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		627E7F951881880492F5040A /* Pods_Bitski_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitski_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitski_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8279A6077B292CAA3C288D31 /* Pods-ContractTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContractTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-ContractTests/Pods-ContractTests.release.xcconfig"; sourceTree = "<group>"; };
 		B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.release.xcconfig"; sourceTree = "<group>"; };
+		B97FCCD4E1517A9DD92D3060 /* Pods_ABITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		E86A544120C9DADE0026CD06 /* ContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractTests.swift; sourceTree = "<group>"; };
 		E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedValueTests.swift; sourceTree = "<group>"; };
+		E86A544A20C9F4830026CD06 /* ABITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ABITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E86A544E20C9F4830026CD06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E86A545820C9F4940026CD06 /* ContractTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContractTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E86A545C20C9F4940026CD06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E88B615020BE0FCE00C12395 /* ABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABITests.swift; sourceTree = "<group>"; };
 		E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIDecoderTests.swift; sourceTree = "<group>"; };
 		E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIEncoderTests.swift; sourceTree = "<group>"; };
 		E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityTypeTests.swift; sourceTree = "<group>"; };
-		E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONABITests.swift; sourceTree = "<group>"; };
+		E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONContractTests.swift; sourceTree = "<group>"; };
 		E8FE358D20C5AE7500DD799A /* ERC721.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ERC721.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,6 +111,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		E86A544720C9F4830026CD06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D70EE3278C9384993C1962A2 /* Pods_ABITests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86A545520C9F4940026CD06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4DDC6DAA59E9F1E9F4EBAE4 /* Pods_ContractTests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -92,6 +137,10 @@
 				B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */,
 				C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */,
 				55929A306966C2BEF89C945E /* Pods-Bitski_Tests.release.xcconfig */,
+				3570F2A674E01B9992F4C9A3 /* Pods-ABITests.debug.xcconfig */,
+				5B7099E422FDCBBAFF91B585 /* Pods-ABITests.release.xcconfig */,
+				1AF22D96BA8365F5682B7BDA /* Pods-ContractTests.debug.xcconfig */,
+				8279A6077B292CAA3C288D31 /* Pods-ContractTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -102,6 +151,8 @@
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACD21AFB9204008FA782 /* Example for Bitski */,
 				607FACE81AFB9204008FA782 /* Tests */,
+				E86A544B20C9F4830026CD06 /* ABITests */,
+				E86A545920C9F4940026CD06 /* ContractTests */,
 				607FACD11AFB9204008FA782 /* Products */,
 				0EFC9E0646A2B0CC54B26B13 /* Pods */,
 				A65372A1A22E820DD98771FD /* Frameworks */,
@@ -113,6 +164,8 @@
 			children = (
 				607FACD01AFB9204008FA782 /* Bitski_Example.app */,
 				607FACE51AFB9204008FA782 /* Bitski_Tests.xctest */,
+				E86A544A20C9F4830026CD06 /* ABITests.xctest */,
+				E86A545820C9F4940026CD06 /* ContractTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -142,24 +195,17 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */,
-				E86A544120C9DADE0026CD06 /* ContractTests.swift */,
-				E8FE358B20C5AE2B00DD799A /* JSONABITests.swift */,
-				E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */,
-				E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */,
-				E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */,
-				E88B615020BE0FCE00C12395 /* ABITests.swift */,
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
-			path = Tests;
+			name = Tests;
+			path = Tests/Tests;
 			sourceTree = "<group>";
 		};
 		607FACE91AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
 				607FACEA1AFB9204008FA782 /* Info.plist */,
-				E8FE358D20C5AE7500DD799A /* ERC721.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -179,8 +225,36 @@
 			children = (
 				73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */,
 				627E7F951881880492F5040A /* Pods_Bitski_Tests.framework */,
+				B97FCCD4E1517A9DD92D3060 /* Pods_ABITests.framework */,
+				2448D7FA276DD028D01585A9 /* Pods_ContractTests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E86A544B20C9F4830026CD06 /* ABITests */ = {
+			isa = PBXGroup;
+			children = (
+				E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */,
+				E8FE358720C3126C00DD799A /* SolidityTypeTests.swift */,
+				E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */,
+				E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */,
+				E88B615020BE0FCE00C12395 /* ABITests.swift */,
+				E86A544E20C9F4830026CD06 /* Info.plist */,
+			);
+			name = ABITests;
+			path = Tests/ABITests;
+			sourceTree = "<group>";
+		};
+		E86A545920C9F4940026CD06 /* ContractTests */ = {
+			isa = PBXGroup;
+			children = (
+				E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */,
+				E86A544120C9DADE0026CD06 /* ContractTests.swift */,
+				E8FE358D20C5AE7500DD799A /* ERC721.json */,
+				E86A545C20C9F4940026CD06 /* Info.plist */,
+			);
+			name = ContractTests;
+			path = Tests/ContractTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -225,13 +299,53 @@
 			productReference = 607FACE51AFB9204008FA782 /* Bitski_Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		E86A544920C9F4830026CD06 /* ABITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E86A545320C9F4830026CD06 /* Build configuration list for PBXNativeTarget "ABITests" */;
+			buildPhases = (
+				D9E7CBEA09AD773305C59BFC /* [CP] Check Pods Manifest.lock */,
+				E86A544620C9F4830026CD06 /* Sources */,
+				E86A544720C9F4830026CD06 /* Frameworks */,
+				E86A544820C9F4830026CD06 /* Resources */,
+				1FDE2C9CDA580E8E6BECCBB1 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E86A545020C9F4830026CD06 /* PBXTargetDependency */,
+			);
+			name = ABITests;
+			productName = ABITests;
+			productReference = E86A544A20C9F4830026CD06 /* ABITests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		E86A545720C9F4940026CD06 /* ContractTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E86A545F20C9F4940026CD06 /* Build configuration list for PBXNativeTarget "ContractTests" */;
+			buildPhases = (
+				9C4BDFC64A33570BACFABF13 /* [CP] Check Pods Manifest.lock */,
+				E86A545420C9F4940026CD06 /* Sources */,
+				E86A545520C9F4940026CD06 /* Frameworks */,
+				E86A545620C9F4940026CD06 /* Resources */,
+				49D9B2B5C4259F6EF8E6B273 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				E86A545E20C9F4940026CD06 /* PBXTargetDependency */,
+			);
+			name = ContractTests;
+			productName = ContractTests;
+			productReference = E86A545820C9F4940026CD06 /* ContractTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		607FACC81AFB9204008FA782 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0830;
+				LastSwiftUpdateCheck = 0940;
 				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = CocoaPods;
 				TargetAttributes = {
@@ -242,6 +356,18 @@
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
+						TestTargetID = 607FACCF1AFB9204008FA782;
+					};
+					E86A544920C9F4830026CD06 = {
+						CreatedOnToolsVersion = 9.4;
+						DevelopmentTeam = TM2623B5AA;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 607FACCF1AFB9204008FA782;
+					};
+					E86A545720C9F4940026CD06 = {
+						CreatedOnToolsVersion = 9.4;
+						DevelopmentTeam = TM2623B5AA;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
@@ -261,6 +387,8 @@
 			targets = (
 				607FACCF1AFB9204008FA782 /* Bitski_Example */,
 				607FACE41AFB9204008FA782 /* Bitski_Tests */,
+				E86A544920C9F4830026CD06 /* ABITests */,
+				E86A545720C9F4940026CD06 /* ContractTests */,
 			);
 		};
 /* End PBXProject section */
@@ -280,13 +408,60 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E8FE358F20C5B29500DD799A /* ERC721.json in Resources */,
+				E86A547120C9F6120026CD06 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86A544820C9F4830026CD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E86A547D20C9F88E0026CD06 /* Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86A545620C9F4940026CD06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E86A547E20C9F8930026CD06 /* Info.plist in Resources */,
+				E86A547920C9F72D0026CD06 /* ERC721.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1FDE2C9CDA580E8E6BECCBB1 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ABITests/Pods-ABITests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BigInt.swift/BigInt.framework",
+				"${BUILT_PRODUCTS_DIR}/Bitski/Bitski.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Web3/Web3.framework",
+				"${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bitski.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Web3.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ABITests/Pods-ABITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		46927113052B696C86C6C6DA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -303,6 +478,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		49D9B2B5C4259F6EF8E6B273 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${SRCROOT}/Pods/Target Support Files/Pods-ContractTests/Pods-ContractTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
+				"${BUILT_PRODUCTS_DIR}/BigInt.swift/BigInt.framework",
+				"${BUILT_PRODUCTS_DIR}/Bitski/Bitski.framework",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Web3/Web3.framework",
+				"${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/AppAuth.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BigInt.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Bitski.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Web3.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ContractTests/Pods-ContractTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		54A7E8553A2E61D02E98D07F /* [CP] Embed Pods Frameworks */ = {
@@ -335,6 +540,24 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		9C4BDFC64A33570BACFABF13 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ContractTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		C15928FD774CF1DCE187A962 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -363,6 +586,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D9E7CBEA09AD773305C59BFC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-ABITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F4C7D825A732DF6B24A28D64 /* [CP] Check Pods Manifest.lock */ = {
@@ -399,14 +640,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E86A544220C9DADE0026CD06 /* ContractTests.swift in Sources */,
-				E8FE358020C0B13B00DD799A /* ABIDecoderTests.swift in Sources */,
-				E8FE358820C3126C00DD799A /* SolidityTypeTests.swift in Sources */,
-				E8FE358C20C5AE2B00DD799A /* JSONABITests.swift in Sources */,
-				E88B615120BE0FCE00C12395 /* ABITests.swift in Sources */,
-				E86A544420C9DAEF0026CD06 /* WrappedValueTests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
-				E8FE358220C0B14900DD799A /* ABIEncoderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86A544620C9F4830026CD06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E86A547720C9F6B60026CD06 /* SolidityTypeTests.swift in Sources */,
+				E86A547620C9F6B30026CD06 /* ABIEncoderTests.swift in Sources */,
+				E86A547420C9F6AC0026CD06 /* ABITests.swift in Sources */,
+				E86A547820C9F6B90026CD06 /* WrappedValueTests.swift in Sources */,
+				E86A547520C9F6AF0026CD06 /* ABIDecoderTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E86A545420C9F4940026CD06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E86A547220C9F6990026CD06 /* JSONContractTests.swift in Sources */,
+				E86A547320C9F69D0026CD06 /* ContractTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -417,6 +672,16 @@
 			isa = PBXTargetDependency;
 			target = 607FACCF1AFB9204008FA782 /* Bitski_Example */;
 			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
+		};
+		E86A545020C9F4830026CD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 607FACCF1AFB9204008FA782 /* Bitski_Example */;
+			targetProxy = E86A544F20C9F4830026CD06 /* PBXContainerItemProxy */;
+		};
+		E86A545E20C9F4940026CD06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 607FACCF1AFB9204008FA782 /* Bitski_Example */;
+			targetProxy = E86A545D20C9F4940026CD06 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -583,7 +848,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -600,12 +865,128 @@
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = Tests/Info.plist;
+				INFOPLIST_FILE = Tests/Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		E86A545120C9F4830026CD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3570F2A674E01B9992F4C9A3 /* Pods-ABITests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = TM2623B5AA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/ABITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.outtherelabs.ABITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitski_Example.app/Bitski_Example";
+			};
+			name = Debug;
+		};
+		E86A545220C9F4830026CD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5B7099E422FDCBBAFF91B585 /* Pods-ABITests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TM2623B5AA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/ABITests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.outtherelabs.ABITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitski_Example.app/Bitski_Example";
+			};
+			name = Release;
+		};
+		E86A546020C9F4940026CD06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1AF22D96BA8365F5682B7BDA /* Pods-ContractTests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = TM2623B5AA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/ContractTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.outtherelabs.ContractTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitski_Example.app/Bitski_Example";
+			};
+			name = Debug;
+		};
+		E86A546120C9F4940026CD06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8279A6077B292CAA3C288D31 /* Pods-ContractTests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = TM2623B5AA;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				INFOPLIST_FILE = Tests/ContractTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.outtherelabs.ContractTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Bitski_Example.app/Bitski_Example";
 			};
 			name = Release;
 		};
@@ -635,6 +1016,24 @@
 			buildConfigurations = (
 				607FACF31AFB9204008FA782 /* Debug */,
 				607FACF41AFB9204008FA782 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E86A545320C9F4830026CD06 /* Build configuration list for PBXNativeTarget "ABITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E86A545120C9F4830026CD06 /* Debug */,
+				E86A545220C9F4830026CD06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E86A545F20C9F4940026CD06 /* Build configuration list for PBXNativeTarget "ContractTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E86A546020C9F4940026CD06 /* Debug */,
+				E86A546120C9F4940026CD06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

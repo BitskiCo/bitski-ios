@@ -46,7 +46,7 @@
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D674AFFBDB8113C79DB1490CF1F192CB"
+            BlueprintIdentifier = "B6CD83F69C70B5A6FD005F57BE80548A"
             BuildableName = "Bitski.framework"
             BlueprintName = "Bitski"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
@@ -60,6 +60,26 @@
                BlueprintIdentifier = "607FACE41AFB9204008FA782"
                BuildableName = "Bitski_Tests.xctest"
                BlueprintName = "Bitski_Tests"
+               ReferencedContainer = "container:Bitski.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E86A544920C9F4830026CD06"
+               BuildableName = "ABITests.xctest"
+               BlueprintName = "ABITests"
+               ReferencedContainer = "container:Bitski.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "E86A545720C9F4940026CD06"
+               BuildableName = "ContractTests.xctest"
+               BlueprintName = "ContractTests"
                ReferencedContainer = "container:Bitski.xcodeproj">
             </BuildableReference>
          </TestableReference>

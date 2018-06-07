@@ -11,7 +11,11 @@ import XCTest
 import BigInt
 import Web3
 
-class WrappedValueTests: XCTestCase {
+extension EthereumAddress {
+    static let testAddress = try! EthereumAddress(hex: "0x0000000000000000000000000000000000000000", eip55: false)
+}
+
+class SolidityWrappedValueTests: XCTestCase {
     
     func testUInt() {
         let uint8 = UInt8(0)

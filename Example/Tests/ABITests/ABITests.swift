@@ -11,7 +11,7 @@ import BigInt
 import Web3
 @testable import Bitski
 
-class ABITests: XCTestCase {
+class ABIValueTests: XCTestCase {
     
     func testSolidityRepresentable() {
         XCTAssertEqual(String.solidityType, .string)

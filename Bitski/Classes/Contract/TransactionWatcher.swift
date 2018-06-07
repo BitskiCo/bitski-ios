@@ -22,6 +22,10 @@ public class TransactionWatcher {
     public static let DidReceiveEvent = Notification.Name("TransactionDidReceiveEvent")
     public static let MatchedEventKey = "MatchedEvent"
     
+    public enum Error: Swift.Error {
+        case receiptNotFound
+    }
+    
     /// Represents various states of a transaction
     public enum Status: Equatable {
         /// A transaction that has not yet been mined
@@ -103,7 +107,7 @@ public class TransactionWatcher {
             if let receipt = receipt {
                 self.setTransactionReceipt(receipt)
             } else {
-                throw NSError()
+                throw Error.receiptNotFound
             }
         }.catch { error in
             print("Error getting receipt", error)

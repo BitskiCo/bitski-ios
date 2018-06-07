@@ -48,7 +48,7 @@ class TestContract: GenericERC721Contract {
     }
 }
 
-class JSONABITests: XCTestCase {
+class JSONContractTests: XCTestCase {
     
     func testDecodingABI() {
         let bundle = Bundle(for: type(of: self))

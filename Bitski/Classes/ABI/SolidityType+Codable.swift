@@ -7,13 +7,12 @@
 
 import Foundation
 
-
-let arrayMatch = try! NSRegularExpression(pattern: "^\\w*(?=(\\[\\d*\\])+)", options: [])
-let numberMatch = try! NSRegularExpression(pattern: "(u?int)(\\d+)?", options: [])
-let bytesMatch = try! NSRegularExpression(pattern: "bytes(\\d+)", options: [])
-let arrayTypeMatch = try! NSRegularExpression(pattern: "^(.+)(?:\\[(\\d*)\\]{1})$", options: [])
-
 extension NSRegularExpression {
+    
+    static let arrayMatch = try! NSRegularExpression(pattern: "^\\w*(?=(\\[\\d*\\])+)", options: [])
+    static let numberMatch = try! NSRegularExpression(pattern: "(u?int)(\\d+)?", options: [])
+    static let bytesMatch = try! NSRegularExpression(pattern: "bytes(\\d+)", options: [])
+    static let arrayTypeMatch = try! NSRegularExpression(pattern: "^(.+)(?:\\[(\\d*)\\]{1})$", options: [])
     
     func matches(_ string: String) -> Bool {
         let range = NSRange(location: 0, length: (string as NSString).length)
@@ -33,6 +32,10 @@ extension NSRegularExpression {
 }
 
 extension SolidityType: Codable {
+    
+    public enum Error: Swift.Error {
+        case typeMalformed
+    }
     
     init(_ string: String) throws {
         self = try SolidityType.typeFromString(string)
@@ -67,15 +70,15 @@ extension SolidityType: Codable {
         if isBytesType(string), let bytesType = bytesType(string) {
             return bytesType
         }
-        throw NSError()
+        throw Error.typeMalformed
     }
     
     static func isArrayType(_ string: String) -> Bool {
-        return arrayMatch.matches(string)
+        return NSRegularExpression.arrayMatch.matches(string)
     }
     
     static func arraySizeAndType(_ string: String) -> (String?, Int?) {
-        let capturedStrings = arrayTypeMatch.matches(in: string)
+        let capturedStrings = NSRegularExpression.arrayTypeMatch.matches(in: string)
         var strings = capturedStrings.dropFirst().makeIterator()
         let typeValue = strings.next()
         if let sizeValue = strings.next(), let intValue = Int(sizeValue) {
@@ -90,15 +93,15 @@ extension SolidityType: Codable {
             let innerType = try typeFromString(innerTypeString)
             return .array(type: innerType, length: arraySize)
         }
-        throw NSError()
+        throw Error.typeMalformed
     }
     
     static func isNumberType(_ string: String) -> Bool {
-        return numberMatch.matches(string)
+        return NSRegularExpression.numberMatch.matches(string)
     }
     
     static func numberType(_ string: String) -> SolidityType? {
-        let capturedStrings = numberMatch.matches(in: string)
+        let capturedStrings = NSRegularExpression.numberMatch.matches(in: string)
         var strings = capturedStrings.dropFirst().makeIterator()
         switch (strings.next(), strings.next()) {
         case ("uint", let bits):
@@ -123,11 +126,11 @@ extension SolidityType: Codable {
     }
     
     static func isBytesType(_ string: String) -> Bool {
-        return bytesMatch.matches(string)
+        return NSRegularExpression.bytesMatch.matches(string)
     }
     
     static func bytesType(_ string: String) -> SolidityType? {
-        let sizeMatches = bytesMatch.matches(in: string).dropFirst()
+        let sizeMatches = NSRegularExpression.bytesMatch.matches(in: string).dropFirst()
         if let sizeString = sizeMatches.first, let size = Int(sizeString) {
             return .bytes(length: size)
         }
