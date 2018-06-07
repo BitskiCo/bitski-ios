@@ -16,6 +16,23 @@ public class ABIDecoder {
         let name: String?
         var dynamicOffset: String.Index?
         let staticString: String
+        var decodedValue: Any? = nil
+        
+        init(type: SolidityType, name: String? = nil, dynamicOffset: String.Index? = nil, staticString: String) {
+            self.type = type
+            self.name = name
+            self.dynamicOffset = dynamicOffset
+            self.staticString = staticString
+        }
+        
+        mutating func decode(from hexString: String, ranges: inout [Range<String.Index>]) {
+            var substring = staticString
+            if type.isDynamic {
+                let range = ranges.removeFirst()
+                substring = String(hexString[range])
+            }
+            decodedValue = decodeType(type: type, hexString: substring)
+        }
     }
     
     // MARK: - Convenience
@@ -39,7 +56,7 @@ public class ABIDecoder {
     /// Decode a hex string with 3 types
     /// let (string, number, bool) = ABIDecoder.decode(String.self, Int.self, Bool.self, from: "...")
     public class func decode<A: SolidityTypeRepresentable, B: SolidityTypeRepresentable, C: SolidityTypeRepresentable>(_ a: A.Type, _ b: B.Type, _ c: C.Type, from hexString: String) -> (A?, B?, C?) {
-        var decoded = decode(A.solidityType, B.solidityType, from: hexString)?.makeIterator()
+        var decoded = decode(A.solidityType, B.solidityType, C.solidityType, from: hexString)?.makeIterator()
         let a = decoded?.next() as? A
         let b = decoded?.next() as? B
         let c = decoded?.next() as? C
@@ -49,7 +66,7 @@ public class ABIDecoder {
     /// Decode a hex string with 4 static types
     /// let (string, number, bool, address) = ABIDecoder.decode(String.self, Int.self, Bool.self, EthereumAddress.self, from: "...")
     public class func decode<A: SolidityTypeRepresentable, B: SolidityTypeRepresentable, C: SolidityTypeRepresentable, D: SolidityTypeRepresentable>(_ a: A.Type, _ b: B.Type, _ c: C.Type, _ d: D.Type, from hexString: String) -> (A?, B?, C?, D?) {
-        var decoded = decode(A.solidityType, B.solidityType, from: hexString)?.makeIterator()
+        var decoded = decode(A.solidityType, B.solidityType, C.solidityType, D.solidityType, from: hexString)?.makeIterator()
         let a = decoded?.next() as? A
         let b = decoded?.next() as? B
         let c = decoded?.next() as? C
@@ -67,7 +84,7 @@ public class ABIDecoder {
         }
     }
     
-    class func decodeDynamicArray(elementType: SolidityType, from hexString: String) -> [Any]? {
+    private class func decodeDynamicArray(elementType: SolidityType, from hexString: String) -> [Any]? {
         // split into parts
         let lengthString = hexString.substr(0, 64)
         let valueString = String(hexString.dropFirst(64))
@@ -76,7 +93,7 @@ public class ABIDecoder {
         return decodeFixedArray(elementType: elementType, length: length, from: valueString)
     }
     
-    class func decodeFixedArray(elementType: SolidityType, length: Int, from hexString: String) -> [Any]? {
+    private class func decodeFixedArray(elementType: SolidityType, length: Int, from hexString: String) -> [Any]? {
         let elementSize = hexString.count / length
         return (0..<length).compactMap { n in
             if let elementString = hexString.substr(n * elementSize, elementSize) {
@@ -87,6 +104,10 @@ public class ABIDecoder {
     }
     
     // MARK: - Decoding
+    
+    public class func decode(_ types: SolidityType..., from hexString: String) -> [Any]? {
+        return decode(types, from: hexString)
+    }
     
     public class func decode(_ types: [SolidityType], from hexString: String) -> [Any]? {
         // Strip out leading 0x if included
@@ -99,22 +120,12 @@ public class ABIDecoder {
                 if type.isDynamic, let offset = Int(staticPart, radix: 16) {
                     dynamicOffset = hexString.index(hexString.startIndex, offsetBy: offset * 2)
                 }
-                return Segment(type: type, name: nil, dynamicOffset: dynamicOffset, staticString: staticPart)
+                return Segment(type: type, dynamicOffset: dynamicOffset, staticString: staticPart)
             }
             return nil
         }
-        // Calculate ranges for dynamic parts
-        var ranges = getDynamicRanges(from: segments, forString: hexString)
-        // Parse each segment
-        return segments.compactMap { segment in
-            if segment.type.isDynamic {
-                let range = ranges.removeFirst()
-                let hexString = String(hexString[range])
-                return decodeType(type: segment.type, hexString: hexString)
-            } else {
-                return decodeType(type: segment.type, hexString: segment.staticString)
-            }
-        }
+        let decoded = decodeSegments(segments, from: hexString)
+        return decoded.compactMap { $0.decodedValue }
     }
     
     public class func decode(outputs: [ABIParameter], from hexString: String) -> [String: Any] {
@@ -133,27 +144,24 @@ public class ABIDecoder {
             }
             return nil
         }
-        // Calculate ranges for dynamic parts
-        var ranges = getDynamicRanges(from: segments, forString: hexString)
-        // Parse each segment
-        return segments.reduce([String: Any]()) { input, segment in
+        let decoded = decodeSegments(segments, from: hexString)
+        return decoded.reduce([String: Any]()) { input, segment in
             guard let name = segment.name else { return input }
             var dict = input
-            if segment.type.isDynamic {
-                let range = ranges.removeFirst()
-                let hexString = String(hexString[range])
-                let value = decodeType(type: segment.type, hexString: hexString)
-                dict[name] = value
-            } else {
-                let value = decodeType(type: segment.type, hexString: segment.staticString)
-                dict[name] = value
-            }
+            dict[name] = segment.decodedValue
             return dict
         }
     }
     
-    public class func decode(_ types: SolidityType..., from hexString: String) -> [Any]? {
-        return decode(types, from: hexString)
+    private static func decodeSegments(_ segments: [Segment], from hexString: String) -> [Segment] {
+        // Calculate ranges for dynamic parts
+        var ranges = getDynamicRanges(from: segments, forString: hexString)
+        // Parse each segment
+        return segments.compactMap { segment in
+            var segment = segment
+            segment.decode(from: hexString, ranges: &ranges)
+            return segment
+        }
     }
     
     private class func getDynamicRanges(from segments: [Segment], forString hexString: String) -> [Range<String.Index>] {
@@ -164,7 +172,7 @@ public class ABIDecoder {
         }
     }
     
-    class func decodeType(type: SolidityType, hexString: String) -> Any? {
+    private class func decodeType(type: SolidityType, hexString: String) -> Any? {
         switch type {
         case .type(let type):
             switch type {
@@ -184,5 +192,4 @@ public class ABIDecoder {
             return nil
         }
     }
-    
 }

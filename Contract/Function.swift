@@ -20,7 +20,7 @@ public struct ABIParameter {
     public let type: SolidityType
     public let components: [ABIParameter]?
     
-    public init(_ parameter: JSONABI.Parameter) {
+    public init(_ parameter: JSONContractObject.Parameter) {
         self.name = parameter.name
         self.type = parameter.type
         self.components = parameter.components?.map { ABIParameter($0) }
@@ -54,7 +54,7 @@ public protocol ABIFunction: class {
     /// First 4 bytes of Keccak hash of the signature
     var hashedSignature: String { get }
     
-    init?(abiObject: JSONABI.ABIObject)
+    init?(abiObject: JSONContractObject.ABIObject)
     init(name: String, inputs: [ABIParameter], outputs: [ABIParameter]?, handler: ABIFunctionHandler?)
     
     
@@ -62,7 +62,7 @@ public protocol ABIFunction: class {
     ///
     /// - Parameter inputs: Input values. Must be in the correct order.
     /// - Returns: Invocation object
-    func invoke(_ inputs: ABIRepresentable...) -> ABIInvocation
+    func invoke(_ inputs: ABIValue...) -> ABIInvocation
 }
 
 public extension ABIFunction {
@@ -87,7 +87,7 @@ public class ABIConstantFunction: ABIFunction {
     
     public var handler: ABIFunctionHandler?
     
-    public required init?(abiObject: JSONABI.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject) {
         guard abiObject.type == .function, abiObject.stateMutability?.isConstant == true else { return nil }
         self.name = abiObject.name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
@@ -101,7 +101,7 @@ public class ABIConstantFunction: ABIFunction {
         self.handler = handler
     }
     
-    public func invoke(_ inputs: ABIRepresentable...) -> ABIInvocation {
+    public func invoke(_ inputs: ABIValue...) -> ABIInvocation {
         return ABIReadInvocation(method: self, parameters: inputs, handler: handler)
     }
 }
@@ -114,7 +114,7 @@ public class ABIPayableFunction: ABIFunction {
     
     public var handler: ABIFunctionHandler?
     
-    public required init?(abiObject: JSONABI.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject) {
         guard abiObject.type == .function, abiObject.stateMutability == .payable else { return nil }
         self.name = abiObject.name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
@@ -126,7 +126,7 @@ public class ABIPayableFunction: ABIFunction {
         self.handler = handler
     }
     
-    public func invoke(_ inputs: ABIRepresentable...) -> ABIInvocation {
+    public func invoke(_ inputs: ABIValue...) -> ABIInvocation {
         return ABIPayableInvocation(method: self, parameters: inputs, handler: handler)
     }
 }
@@ -139,7 +139,7 @@ public class ABINonPayableFunction: ABIFunction {
     
     public var handler: ABIFunctionHandler?
     
-    public required init?(abiObject: JSONABI.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject) {
         guard abiObject.type == .function, abiObject.stateMutability == .nonpayable else { return nil }
         self.name = abiObject.name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
@@ -151,7 +151,7 @@ public class ABINonPayableFunction: ABIFunction {
         self.handler = handler
     }
     
-    public func invoke(_ inputs: ABIRepresentable...) -> ABIInvocation {
+    public func invoke(_ inputs: ABIValue...) -> ABIInvocation {
         return ABINonPayableInvocation(method: self, parameters: inputs, handler: handler)
     }
 }

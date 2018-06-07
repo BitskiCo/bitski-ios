@@ -32,7 +32,7 @@ public class ABIEncoder {
     }
     
     /// Encode pairs of values and expected types to Solidity ABI compatible string
-    public class func encode(_ values: [WrappedValue]) -> String? {
+    public class func encode(_ values: [SolidityWrappedValue]) -> String? {
         // map segments
         let segments = values.compactMap { wrapped -> Segment? in
             // encode value portion
@@ -62,22 +62,22 @@ public class ABIEncoder {
     }
     
     /// Encode with values inline
-    public class func encode(_ values: WrappedValue...) -> String? {
+    public class func encode(_ values: SolidityWrappedValue...) -> String? {
         return encode(values)
     }
     
     /// Encode a single wrapped value
-    class func encode(_ wrapped: WrappedValue) -> String? {
+    class func encode(_ wrapped: SolidityWrappedValue) -> String? {
         return encode([wrapped])
     }
     
     /// Encode a single value to a type
-    class func encode(_ value: ABIRepresentable, to type: SolidityType) -> String? {
+    class func encode(_ value: ABIValue, to type: SolidityType) -> String? {
         return value.abiEncode(dynamic: type.isDynamic)
     }
     
     /// Encode a single value to a type
-    class func encodeArray<T: ABIRepresentable>(_ value: [T], to type: SolidityType) -> String? {
+    class func encodeArray<T: ABIValue>(_ value: [T], to type: SolidityType) -> String? {
         return value.abiEncode(dynamic: type.isDynamic)
     }
 }

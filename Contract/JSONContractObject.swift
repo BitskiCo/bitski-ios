@@ -1,5 +1,5 @@
 //
-//  DecodableContract.swift
+//  JSONContractObject.swift
 //  Bitski
 //
 //  Created by Josh Pyles on 6/1/18.
@@ -8,7 +8,7 @@
 import Foundation
 import Web3
 
-public struct JSONABI: Codable {
+public struct JSONContractObject: Codable {
     
     /// Name of the contract
     let contractName: String

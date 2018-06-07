@@ -43,10 +43,36 @@ public class DynamicContract: EthereumContract {
     private(set) public var events: [ABIEvent] = []
     private(set) var methods: [String: ABIFunction] = [:]
     
-    public init(name: String, address: EthereumAddress, eth: Web3.Eth) {
-        self.name = name
+    public init(jsonABI: JSONContractObject, address: EthereumAddress, eth: Web3.Eth) {
+        self.name = jsonABI.contractName
         self.address = address
         self.eth = eth
+        self.parseABIObjects(abi: jsonABI.abi)
+    }
+    
+    private func parseABIObjects(abi: [JSONContractObject.ABIObject]) {
+        for abiObject in abi {
+            switch (abiObject.type, abiObject.stateMutability) {
+            case (.event, _):
+                if let event = ABIEvent(abiObject: abiObject) {
+                    add(event: event)
+                }
+            case (.function, let stateMutability?) where stateMutability.isConstant:
+                if let function = ABIConstantFunction(abiObject: abiObject) {
+                    add(method: function)
+                }
+            case (.function, .nonpayable?):
+                if let function = ABINonPayableFunction(abiObject: abiObject) {
+                    add(method: function)
+                }
+            case (.function, .payable?):
+                if let function = ABIPayableFunction(abiObject: abiObject) {
+                    add(method: function)
+                }
+            default:
+                print("Could not parse abi object: \(abiObject)")
+            }
+        }
     }
     
     /// Adds an event object to list of stored events. Generally this should be done automatically by Web3.
@@ -68,7 +94,7 @@ public class DynamicContract: EthereumContract {
     /// For example: `MyContract['balanceOf']?(address).call() { ... }`
     ///
     /// - Parameter name: Name of function to call
-    public subscript(_ name: String) -> ((ABIRepresentable...) -> ABIInvocation)? {
+    public subscript(_ name: String) -> ((ABIValue...) -> ABIInvocation)? {
         return methods[name]?.invoke
     }
 }
@@ -85,17 +111,15 @@ extension EthereumContract {
     public func call(invocation: ABIInvocation, completion: @escaping ([String: Any]?, Error?) -> Void) {
         let data = serializeData(invocation: invocation)
         let call = EthereumCall(from: nil, to: address, gas: nil, gasPrice: nil, value: nil, data: data)
-        eth.call(call: call, block: .latest) { response in
-            if response.status == .ok, let data = response.rpcResponse?.result {
-                if let outputs = invocation.method.outputs {
-                    let dictionary = ABIDecoder.decode(outputs: outputs, from: data.hex())
-                    completion(dictionary, nil)
-                } else {
-                    completion([:], nil)
-                }
-                return
+        eth.call(call: call, block: .latest).done { result in
+            if let outputs = invocation.method.outputs {
+                let dictionary = ABIDecoder.decode(outputs: outputs, from: result.hex())
+                completion(dictionary, nil)
+            } else {
+                completion([:], nil)
             }
-            completion(nil, response.rpcResponse?.error)
+        }.catch { error in
+            completion(nil, error)
         }
     }
     
@@ -111,52 +135,18 @@ extension EthereumContract {
     public func send(invocation: ABIInvocation, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
         let data = serializeData(invocation: invocation)
         let transaction = BitskiTransaction(to: address, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
-        eth.sendTransaction(transaction: transaction) { response in
-            if response.status == .ok {
-                completion(response.rpcResponse?.result, nil)
-            }
-            completion(nil, response.rpcResponse?.error)
+        eth.sendTransaction(transaction: transaction).done { hash in
+            completion(hash, nil)
+        }.catch { error in
+            completion(nil, error)
         }
     }
     
     private func serializeData(invocation: ABIInvocation) -> EthereumData? {
-        let wrappedValues = zip(invocation.method.inputs, invocation.parameters).map { parameter, value in
-            return WrappedValue(value: value, type: parameter.type)
-        }
-        guard let inputsString = ABIEncoder.encode(wrappedValues) else { return nil }
+        guard let inputsString = ABIEncoder.encode(invocation.parameters) else { return nil }
         let signatureString = invocation.method.hashedSignature
         let hexString = "0x" + signatureString + inputsString
         return try? EthereumData(ethereumValue: hexString)
     }
     
-}
-
-// MARK: - PromiseKit convenience
-
-public extension EthereumContract {
-    
-    /// Returns data by calling a constant function on the contract
-    ///
-    /// - Parameter invocation: ABIInvocation object
-    /// - Returns: Promise with a dictionary of values returned by the contract
-    public func call(_ invocation: ABIInvocation) -> Promise<[String: Any]> {
-        return Promise { seal in
-            self.call(invocation: invocation, completion: seal.resolve)
-        }
-    }
-    
-    /// Modifies the contract's data by sending a transaction
-    ///
-    /// - Parameters:
-    ///   - invocation: ABIInvocation object
-    ///   - from: EthereumAddress to send the transaction from
-    ///   - value: Amount of ETH to send, if applicable
-    ///   - gas: Maximum gas allowed for the transaction
-    ///   - gasPrice: Amount of wei to spend per unit of gas
-    /// - Returns: Promise of the transaction's hash
-    public func send(_ invocation: ABIInvocation, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
-        return Promise { seal in
-            self.send(invocation: invocation, from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
-        }
-    }
 }

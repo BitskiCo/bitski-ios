@@ -64,4 +64,61 @@ class ABIDecoderTests: XCTestCase {
         XCTAssertEqual(decodedValues[2] as? [BigUInt], [1, 2, 3])
     }
     
+    func testDecoderBytes() {
+        let bytes = Data("Hi!".utf8)
+        let encoded = ABIEncoder.encode(.bytes(bytes))!
+        let decoded = ABIDecoder.decode(.bytes(length: nil), from: encoded)
+        XCTAssertEqual(decoded?[0] as? Data, bytes)
+        
+        let encodedFixed = ABIEncoder.encode(.fixedBytes(bytes))!
+        let decodedFixed = ABIDecoder.decode(.bytes(length: bytes.count), from: encodedFixed)
+        XCTAssertEqual(decodedFixed?[0] as? Data, bytes)
+    }
+    
+    func testDecodingTuple() {
+        let encoded = "0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        let decoded = ABIDecoder.decode(SolidityType(tuple: .string, .int), from: encoded)
+        XCTAssert(decoded?.first == nil, "Tuple types cannot yet be decoded")
+    }
+    
+    func testGenericVariant() {
+        let int = BigInt(1)
+        let encoded = ABIEncoder.encode(.int(int))!
+        let decoded = ABIDecoder.decode(BigInt.self, from: encoded)
+        XCTAssertEqual(decoded, int)
+    }
+    
+    func testDoubleGenericVariant() {
+        let int = BigInt(1)
+        let string = "Hi!"
+        let encoded = ABIEncoder.encode(.int(int), .string(string))!
+        let (decodedInt, decodedString) = ABIDecoder.decode(BigInt.self, String.self, from: encoded)
+        XCTAssertEqual(decodedInt, int)
+        XCTAssertEqual(decodedString, string)
+    }
+    
+    func testTripleGenericVariant() {
+        let int = BigInt(1)
+        let string = "Hi!"
+        let bool = false
+        let encoded = ABIEncoder.encode(.int(int), .string(string), .bool(bool))!
+        let (decodedInt, decodedString, decodedBool) = ABIDecoder.decode(BigInt.self, String.self, Bool.self, from: encoded)
+        XCTAssertEqual(decodedInt, int)
+        XCTAssertEqual(decodedString, string)
+        XCTAssertEqual(decodedBool, bool)
+    }
+    
+    func testQuadGenericVariant() {
+        let int = BigInt(1)
+        let string = "Hi!"
+        let bool = false
+        let address = EthereumAddress.testAddress
+        let encoded = ABIEncoder.encode(.int(int), .string(string), .bool(bool), .address(address))!
+        let (decodedInt, decodedString, decodedBool, decodedAddress) = ABIDecoder.decode(BigInt.self, String.self, Bool.self, EthereumAddress.self, from: encoded)
+        XCTAssertEqual(decodedInt, int)
+        XCTAssertEqual(decodedString, string)
+        XCTAssertEqual(decodedBool, bool)
+        XCTAssertEqual(decodedAddress, address)
+    }
+    
 }

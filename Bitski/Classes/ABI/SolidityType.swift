@@ -55,6 +55,7 @@ public indirect enum SolidityType {
     
     // ABI Helpers
     
+    /// Whether or not the type is considered dynamic
     public var isDynamic: Bool {
         switch self {
         case .type(let type):
@@ -68,6 +69,7 @@ public indirect enum SolidityType {
         }
     }
     
+    /// String representation for JSON encoding
     public var stringValue: String {
         switch self {
         case .type(let type):
@@ -145,7 +147,7 @@ public enum SolidityValueType {
 
 public extension SolidityValueType {
     
-    public var nativeType: ABIRepresentable.Type {
+    public var nativeType: ABIValue.Type {
         switch self {
         case .uint(let bits):
             switch bits {
@@ -178,6 +180,7 @@ public extension SolidityValueType {
         }
     }
     
+    /// Whether or not the type is considered dynamic
     public var isDynamic: Bool {
         switch self {
         case .string:
@@ -191,6 +194,7 @@ public extension SolidityValueType {
         }
     }
     
+    /// String representation used for JSON encoding
     public var stringValue: String {
         switch self {
         case .uint(let bits):

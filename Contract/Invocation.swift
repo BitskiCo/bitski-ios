@@ -20,23 +20,35 @@ public protocol ABIInvocation {
     var method: ABIFunction { get }
     
     /// Parameters method was invoked with
-    var parameters: [ABIRepresentable] { get }
+    var parameters: [SolidityWrappedValue] { get }
+    
+    /// Handler for submitting calls and sends
+    var handler: ABIFunctionHandler? { get }
     
     /// Read data from the blockchain. Only available for constant functions.
     func call(completion: @escaping ([String: Any]?, Error?) -> Void)
     
     /// Write data to the blockchain. Only available for non-constant functions
     func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
+    
+    init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?)
 }
 
 // MARK: - Read Invocation
 
 /// An invocation that is read-only. Should only use .call()
 public struct ABIReadInvocation: ABIInvocation {
-    public let method: ABIFunction
-    public let parameters: [ABIRepresentable]
     
-    let handler: ABIFunctionHandler?
+    public let method: ABIFunction
+    public let parameters: [SolidityWrappedValue]
+    
+    public let handler: ABIFunctionHandler?
+    
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+        self.method = method
+        self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
+        self.handler = handler
+    }
     
     public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
         guard let handler = handler else {
@@ -57,9 +69,15 @@ public struct ABIReadInvocation: ABIInvocation {
 /// An invocation that writes to the blockchain and can receive ETH. Should only use .send()
 public struct ABIPayableInvocation: ABIInvocation {
     public let method: ABIFunction
-    public let parameters: [ABIRepresentable]
+    public let parameters: [SolidityWrappedValue]
     
-    let handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler?
+    
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+        self.method = method
+        self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
+        self.handler = handler
+    }
     
     public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
         //Cannot invoke call() with this type of function. use send() instead.
@@ -81,9 +99,15 @@ public struct ABIPayableInvocation: ABIInvocation {
 /// An invocation that writes to the blockchain and cannot receive ETH. Should only use .send().
 public struct ABINonPayableInvocation: ABIInvocation {
     public let method: ABIFunction
-    public let parameters: [ABIRepresentable]
+    public let parameters: [SolidityWrappedValue]
     
-    let handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler?
+    
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+        self.method = method
+        self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
+        self.handler = handler
+    }
     
     public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
         //Cannot invoke call() with this type of function. use send() instead.

@@ -35,7 +35,7 @@ public struct ABIEvent {
         /// of their value instead of the actual value.
         public let indexed: Bool
         
-        public init(_ abi: JSONABI.Parameter) {
+        public init(_ abi: JSONContractObject.Parameter) {
             self.name = abi.name
             self.type = abi.type
             self.components = abi.components?.map { Parameter($0) }
@@ -78,7 +78,7 @@ public struct ABIEvent {
         return inputs.filter { !$0.indexed }
     }
     
-    public init?(abiObject: JSONABI.ABIObject) {
+    public init?(abiObject: JSONContractObject.ABIObject) {
         guard abiObject.type == .event else { return nil }
         self.anonymous = abiObject.anonymous ?? false
         self.inputs = abiObject.inputs.map { Parameter($0) }
@@ -113,7 +113,7 @@ public struct ABIEvent {
                 let trimmedHexString = topicData.hex().replacingOccurrences(of: "0x", with: "")
                 if !input.type.isDynamic {
                     // decode actual value from topic
-                    values[input.name] = ABIDecoder.decodeType(type: input.type, hexString: trimmedHexString)
+                    values[input.name] = ABIDecoder.decode(input.type, from: trimmedHexString)?.first
                 } else {
                     // indexed dynamic types are the Keccak hash of the value instead of the value itself
                     values[input.name] = trimmedHexString

@@ -40,6 +40,14 @@ class MockHTTPProvider: Web3Provider {
     }
 }
 
+class TestContract: GenericERC721Contract {
+    
+    func buyToken() -> ABIInvocation {
+        let method = ABIPayableFunction(name: "buyToken", inputs: [], outputs: nil, handler: self)
+        return method.invoke()
+    }
+}
+
 class JSONABITests: XCTestCase {
     
     func testDecodingABI() {
@@ -49,7 +57,7 @@ class JSONABITests: XCTestCase {
         let data = try! Data(contentsOf: jsonURL)
         
         do {
-            let decodedABI = try JSONDecoder().decode(JSONABI.self, from: data)
+            let decodedABI = try JSONDecoder().decode(JSONContractObject.self, from: data)
             
             XCTAssertEqual(decodedABI.contractName, "ERC721", "ABI name should be decoded")
             XCTAssertEqual(decodedABI.abi.count, 10, "ABI should be completely decoded")
@@ -91,24 +99,4 @@ class JSONABITests: XCTestCase {
             XCTFail(error.localizedDescription)
         }
     }
-    
-    func testStaticContract() {
-        let provider = MockHTTPProvider()
-        let web3 = Web3(provider: provider)
-        
-        provider.result = "0x0000000000000000000000000000000000000000000000000000000000000001"
-            
-        let erc721 = web3.eth.Contract(type: GenericERC721Contract.self, name: "ERC721", address: EthereumAddress.testAddress)
-        let balanceExpectation = expectation(description: "Balance should be returned")
-        erc721.balanceOf(address: EthereumAddress.testAddress).call { (response, error) in
-            if let response = response, let balance = response["_balance"] as? BigUInt {
-                XCTAssertEqual(balance, 1)
-                balanceExpectation.fulfill()
-            } else {
-                XCTFail(error?.localizedDescription ?? "Empty response")
-            }
-        }
-        waitForExpectations(timeout: 1.0, handler: nil)
-    }
-    
 }

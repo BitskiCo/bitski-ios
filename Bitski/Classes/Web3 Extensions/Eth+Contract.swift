@@ -19,31 +19,8 @@ public extension Web3.Eth {
     /// - Throws: Error when the ABI data cannot be decoded
     func Contract(abi data: Data, address: EthereumAddress) throws -> DynamicContract {
         let decoder = JSONDecoder()
-        let jsonABI = try decoder.decode(JSONABI.self, from: data)
-        let contract = DynamicContract(name: jsonABI.contractName, address: address, eth: self)
-        for abiObject in jsonABI.abi {
-            switch (abiObject.type, abiObject.stateMutability) {
-            case (.event, _):
-                if let event = ABIEvent(abiObject: abiObject) {
-                    contract.add(event: event)
-                }
-            case (.function, let stateMutability?) where stateMutability.isConstant:
-                if let function = ABIConstantFunction(abiObject: abiObject) {
-                    contract.add(method: function)
-                }
-            case (.function, .nonpayable?):
-                if let function = ABINonPayableFunction(abiObject: abiObject) {
-                    contract.add(method: function)
-                }
-            case (.function, .payable?):
-                if let function = ABIPayableFunction(abiObject: abiObject) {
-                    contract.add(method: function)
-                }
-            default:
-                print("Could not parse abi object: \(abiObject)")
-            }
-        }
-        return contract
+        let jsonABI = try decoder.decode(JSONContractObject.self, from: data)
+        return DynamicContract(jsonABI: jsonABI, address: address, eth: self)
     }
     
     /// Initialize an instance of a staticly typed EthereumContract

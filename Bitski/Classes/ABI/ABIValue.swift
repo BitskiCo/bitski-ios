@@ -15,7 +15,7 @@ public protocol SolidityTypeRepresentable {
 }
 
 /// A type that can be converted to and from Solidity ABI bytes
-public protocol ABIRepresentable {
+public protocol ABIValue {
     
     /// Initialize with a hex string from Solidity
     ///
@@ -109,7 +109,7 @@ extension FixedWidthInteger where Self: SignedInteger {
     }
 }
 
-extension BigInt: ABIRepresentable {
+extension BigInt: ABIValue {
     
     public init?(hexString: String) {
         let binaryString = hexString.hexToBinary()
@@ -150,7 +150,7 @@ extension BigInt: SolidityTypeRepresentable {
     }
 }
 
-extension BigUInt: ABIRepresentable {
+extension BigUInt: ABIValue {
     
     public init?(hexString: String) {
         self.init(hexString, radix: 16)
@@ -169,7 +169,7 @@ extension BigUInt: SolidityTypeRepresentable {
 
 // Boolean
 
-extension Bool: ABIRepresentable {
+extension Bool: ABIValue {
     
     public init?(hexString: String) {
         if let numberValue = UInt(hexString, radix: 16) {
@@ -195,7 +195,7 @@ extension Bool: SolidityTypeRepresentable {
 
 // String
 
-extension String: ABIRepresentable {
+extension String: ABIValue {
     
     public init?(hexString: String) {
         if let data = Data(hexString: hexString) {
@@ -219,7 +219,7 @@ extension String: SolidityTypeRepresentable {
 
 // Array
 
-extension Array: ABIRepresentable where Element: ABIRepresentable {
+extension Array: ABIValue where Element: ABIValue {
     
     public init?(hexString: String) {
         let lengthString = hexString.substr(0, 64)
@@ -265,7 +265,7 @@ extension Array: ABIRepresentable where Element: ABIRepresentable {
 
 // Bytes
 
-extension Data: ABIRepresentable {
+extension Data: ABIValue {
     
     public init?(hexString: String) {
         //split segments
@@ -307,7 +307,7 @@ extension Data: ABIRepresentable {
 
 // Address
 
-extension EthereumAddress: ABIRepresentable {
+extension EthereumAddress: ABIValue {
     
     public init?(hexString: String) {
         // trim whitespace to 160 bytes
@@ -335,14 +335,14 @@ extension EthereumAddress: SolidityTypeRepresentable {
 
 // MARK: - Explicit protocol conformance
 
-extension Int: ABIRepresentable, SolidityTypeRepresentable {}
-extension Int8: ABIRepresentable, SolidityTypeRepresentable {}
-extension Int16: ABIRepresentable, SolidityTypeRepresentable {}
-extension Int32: ABIRepresentable, SolidityTypeRepresentable {}
-extension Int64: ABIRepresentable, SolidityTypeRepresentable {}
+extension Int: ABIValue, SolidityTypeRepresentable {}
+extension Int8: ABIValue, SolidityTypeRepresentable {}
+extension Int16: ABIValue, SolidityTypeRepresentable {}
+extension Int32: ABIValue, SolidityTypeRepresentable {}
+extension Int64: ABIValue, SolidityTypeRepresentable {}
 
-extension UInt: ABIRepresentable, SolidityTypeRepresentable {}
-extension UInt8: ABIRepresentable, SolidityTypeRepresentable {}
-extension UInt16: ABIRepresentable, SolidityTypeRepresentable {}
-extension UInt32: ABIRepresentable, SolidityTypeRepresentable {}
-extension UInt64: ABIRepresentable, SolidityTypeRepresentable {}
+extension UInt: ABIValue, SolidityTypeRepresentable {}
+extension UInt8: ABIValue, SolidityTypeRepresentable {}
+extension UInt16: ABIValue, SolidityTypeRepresentable {}
+extension UInt32: ABIValue, SolidityTypeRepresentable {}
+extension UInt64: ABIValue, SolidityTypeRepresentable {}
