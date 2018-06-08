@@ -17,6 +17,13 @@
 		AB038E26F332FDEFD229CD17 /* Pods_Bitski_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */; };
 		D4DDC6DAA59E9F1E9F4EBAE4 /* Pods_ContractTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2448D7FA276DD028D01585A9 /* Pods_ContractTests.framework */; };
 		D70EE3278C9384993C1962A2 /* Pods_ABITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B97FCCD4E1517A9DD92D3060 /* Pods_ABITests.framework */; };
+		E80D4B7520CB2DB200224A77 /* sendTransaction.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7420CB2DB200224A77 /* sendTransaction.json */; };
+		E80D4B7720CB2DC600224A77 /* getTransactionReceipt.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7620CB2DC600224A77 /* getTransactionReceipt.json */; };
+		E80D4B7920CB2DD900224A77 /* getBlock3.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7820CB2DD900224A77 /* getBlock3.json */; };
+		E80D4B7B20CB2DE600224A77 /* getBlock2.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7A20CB2DE600224A77 /* getBlock2.json */; };
+		E80D4B7D20CB2DF300224A77 /* getBlock1.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7C20CB2DF300224A77 /* getBlock1.json */; };
+		E80D4B7F20CB2E3700224A77 /* call_getBalance.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7E20CB2E3700224A77 /* call_getBalance.json */; };
+		E80D4B8120CB47C800224A77 /* Mockingjay+RPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80D4B8020CB47C800224A77 /* Mockingjay+RPC.swift */; };
 		E86A547120C9F6120026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 607FACEA1AFB9204008FA782 /* Info.plist */; };
 		E86A547220C9F6990026CD06 /* JSONContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */; };
 		E86A547320C9F69D0026CD06 /* ContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544120C9DADE0026CD06 /* ContractTests.swift */; };
@@ -80,6 +87,13 @@
 		B97FCCD4E1517A9DD92D3060 /* Pods_ABITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E80D4B7420CB2DB200224A77 /* sendTransaction.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = sendTransaction.json; sourceTree = "<group>"; };
+		E80D4B7620CB2DC600224A77 /* getTransactionReceipt.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getTransactionReceipt.json; sourceTree = "<group>"; };
+		E80D4B7820CB2DD900224A77 /* getBlock3.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getBlock3.json; sourceTree = "<group>"; };
+		E80D4B7A20CB2DE600224A77 /* getBlock2.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getBlock2.json; sourceTree = "<group>"; };
+		E80D4B7C20CB2DF300224A77 /* getBlock1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getBlock1.json; sourceTree = "<group>"; };
+		E80D4B7E20CB2E3700224A77 /* call_getBalance.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = call_getBalance.json; sourceTree = "<group>"; };
+		E80D4B8020CB47C800224A77 /* Mockingjay+RPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mockingjay+RPC.swift"; sourceTree = "<group>"; };
 		E86A544120C9DADE0026CD06 /* ContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractTests.swift; sourceTree = "<group>"; };
 		E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedValueTests.swift; sourceTree = "<group>"; };
 		E86A544A20C9F4830026CD06 /* ABITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ABITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -231,6 +245,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		E80D4B7320CB2D4A00224A77 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				E8FE358D20C5AE7500DD799A /* ERC721.json */,
+				E80D4B7420CB2DB200224A77 /* sendTransaction.json */,
+				E80D4B7620CB2DC600224A77 /* getTransactionReceipt.json */,
+				E80D4B7E20CB2E3700224A77 /* call_getBalance.json */,
+				E80D4B7820CB2DD900224A77 /* getBlock3.json */,
+				E80D4B7C20CB2DF300224A77 /* getBlock1.json */,
+				E80D4B7A20CB2DE600224A77 /* getBlock2.json */,
+			);
+			path = Stubs;
+			sourceTree = "<group>";
+		};
 		E86A544B20C9F4830026CD06 /* ABITests */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,8 +277,9 @@
 			isa = PBXGroup;
 			children = (
 				E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */,
+				E80D4B8020CB47C800224A77 /* Mockingjay+RPC.swift */,
 				E86A544120C9DADE0026CD06 /* ContractTests.swift */,
-				E8FE358D20C5AE7500DD799A /* ERC721.json */,
+				E80D4B7320CB2D4A00224A77 /* Stubs */,
 				E86A545C20C9F4940026CD06 /* Info.plist */,
 			);
 			name = ContractTests;
@@ -424,8 +453,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E80D4B7720CB2DC600224A77 /* getTransactionReceipt.json in Resources */,
+				E80D4B7520CB2DB200224A77 /* sendTransaction.json in Resources */,
 				E86A547E20C9F8930026CD06 /* Info.plist in Resources */,
+				E80D4B7D20CB2DF300224A77 /* getBlock1.json in Resources */,
 				E86A547920C9F72D0026CD06 /* ERC721.json in Resources */,
+				E80D4B7F20CB2E3700224A77 /* call_getBalance.json in Resources */,
+				E80D4B7920CB2DD900224A77 /* getBlock3.json in Resources */,
+				E80D4B7B20CB2DE600224A77 /* getBlock2.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +529,8 @@
 				"${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework",
 				"${BUILT_PRODUCTS_DIR}/Web3/Web3.framework",
 				"${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework",
+				"${BUILT_PRODUCTS_DIR}/Mockingjay/Mockingjay.framework",
+				"${BUILT_PRODUCTS_DIR}/URITemplate/URITemplate.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -504,6 +541,8 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PromiseKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Web3.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mockingjay.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/URITemplate.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -660,6 +699,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E80D4B8120CB47C800224A77 /* Mockingjay+RPC.swift in Sources */,
 				E86A547220C9F6990026CD06 /* JSONContractTests.swift in Sources */,
 				E86A547320C9F69D0026CD06 /* ContractTests.swift in Sources */,
 			);

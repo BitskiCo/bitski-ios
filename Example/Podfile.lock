@@ -9,8 +9,16 @@ PODS:
     - Web3 (~> 0.1)
     - Web3/PromiseKit (~> 0.1)
   - CryptoSwift (0.9.0)
+  - Mockingjay (2.0.1):
+    - Mockingjay/Core (= 2.0.1)
+    - Mockingjay/XCTest (= 2.0.1)
+  - Mockingjay/Core (2.0.1):
+    - URITemplate (~> 2.0)
+  - Mockingjay/XCTest (2.0.1):
+    - Mockingjay/Core
   - PromiseKit/CorePromise (6.2.6)
   - secp256k1.swift (0.1.4)
+  - URITemplate (2.0.3)
   - Web3 (0.1.1):
     - Web3/Core (= 0.1.1)
     - Web3/HTTPExtension (= 0.1.1)
@@ -28,6 +36,7 @@ DEPENDENCIES:
   - AppAuth
   - BigInt.swift
   - Bitski (from `../`)
+  - Mockingjay
   - PromiseKit/CorePromise
   - Web3
   - Web3/PromiseKit
@@ -37,8 +46,10 @@ SPEC REPOS:
     - AppAuth
     - BigInt.swift
     - CryptoSwift
+    - Mockingjay
     - PromiseKit
     - secp256k1.swift
+    - URITemplate
     - Web3
 
 EXTERNAL SOURCES:
@@ -50,10 +61,12 @@ SPEC CHECKSUMS:
   BigInt.swift: 1e0ddf08d82166e72dfb0fa8d40301d273081afc
   Bitski: 61526bb169fe3123099e85a5b8ae2d39e75f9de4
   CryptoSwift: bca8c5b653dcc2d9734409242a070ff53bafac86
+  Mockingjay: 11a621880d2887f1775bdcf824341eb68f218450
   PromiseKit: 8245cb2e3a8fe00453e580bd4aafb57e1671f501
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
+  URITemplate: ace0c4c46dcf8afe6e89b4060621852886b15c3b
   Web3: 1f0c38c8508b8487948af1cb597653b018f4b5d3
 
-PODFILE CHECKSUM: 93b725529b032fa37e44548a1573f094885db861
+PODFILE CHECKSUM: 6f76e5d1a4ad3bb9b3098a23713e78ab70f42631
 
 COCOAPODS: 1.5.2

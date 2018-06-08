@@ -150,6 +150,8 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Web3/Web3.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Mockingjay/Mockingjay.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/URITemplate/URITemplate.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework"
@@ -159,6 +161,8 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/PromiseKit/PromiseKit.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/Web3/Web3.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/Mockingjay/Mockingjay.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/URITemplate/URITemplate.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

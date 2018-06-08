@@ -10,34 +10,10 @@ import XCTest
 import Web3
 import BigInt
 @testable import Bitski
+import Mockingjay
 
 extension EthereumAddress {
     static let testAddress = try! EthereumAddress(hex: "0x0000000000000000000000000000000000000000", eip55: false)
-}
-
-class MockHTTPProvider: Web3Provider {
-    
-    var result: String = ""
-    
-    var responseData: Data? {
-        let string = "{ \"jsonrpc\": \"2.0\", \"id\": 0, \"result\": \"\(result)\" }"
-        return string.data(using: .utf8)
-    }
-    
-    func send<Params, Result>(request: RPCRequest<Params>, response: @escaping Web3ResponseCompletion<Result>) {
-        guard let data = responseData else {
-            response(Web3Response<Result>(status: .connectionFailed))
-            return
-        }
-        do {
-            let rpcResponse = try JSONDecoder().decode(RPCResponse<Result>.self, from: data)
-            let res = Web3Response<Result>.init(status: .ok, rpcResponse: rpcResponse)
-            response(res)
-        } catch {
-            let res = Web3Response<Result>.init(status: .serverError)
-            response(res)
-        }
-    }
 }
 
 class TestContract: GenericERC721Contract {
@@ -49,12 +25,25 @@ class TestContract: GenericERC721Contract {
 }
 
 class JSONContractTests: XCTestCase {
+
+    override func setUp() {
+        super.setUp()
+        stubResponses()
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        removeAllStubs()
+    }
+    
+    func stubResponses() {
+        if let callData = loadStub(named: "call_getBalance") {
+            stub(rpc("eth_call"), jsonData(callData))
+        }
+    }
     
     func testDecodingABI() {
-        let bundle = Bundle(for: type(of: self))
-        let jsonPath = bundle.path(forResource: "ERC721", ofType: "json")!
-        let jsonURL = URL(fileURLWithPath: jsonPath)
-        let data = try! Data(contentsOf: jsonURL)
+        let data = loadStub(named: "ERC721")!
         
         do {
             let decodedABI = try JSONDecoder().decode(JSONContractObject.self, from: data)
@@ -67,28 +56,20 @@ class JSONContractTests: XCTestCase {
     }
     
     func testDecodingContract() {
-        let bundle = Bundle(for: type(of: self))
-        let jsonPath = bundle.path(forResource: "ERC721", ofType: "json")!
-        let jsonURL = URL(fileURLWithPath: jsonPath)
-        let data = try! Data(contentsOf: jsonURL)
-        
-        let provider = MockHTTPProvider()
-        
+        let data = loadStub(named: "ERC721")!
+        let provider = Web3HttpProvider.mockProvider()
         let web3 = Web3(provider: provider)
         
         do {
-            
             let contract = try web3.eth.Contract(abi: data, address: EthereumAddress.testAddress)
             
             XCTAssertEqual(contract.name, "ERC721")
-            
-            provider.result = "0x00000000000000000000000000000000000000000000000000000000000000ff"
             
             let balanceExpectation = expectation(description: "Balance should be returned")
             
             contract["balanceOf"]?(EthereumAddress.testAddress).call() { response, error in
                 if let response = response, let balance = response["_balance"] as? BigUInt {
-                    XCTAssertEqual(balance, 255)
+                    XCTAssertEqual(balance, 1)
                     balanceExpectation.fulfill()
                 } else {
                     XCTFail(error?.localizedDescription ?? "Empty response")
