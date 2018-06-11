@@ -28,14 +28,16 @@ public protocol ERC721Contract: EthereumContract {
 /// Generic implementation class. Use directly, or subclass to conveniently add your contract's events or methods.
 open class GenericERC721Contract: StaticContract, ERC721Contract {
     public let name: String
-    public let address: EthereumAddress
+    public var address: EthereumAddress?
     public let eth: Web3.Eth
+    
+    open var constructor: ABIConstructor?
     
     open var events: [ABIEvent] {
         return [GenericERC721Contract.Transfer, GenericERC721Contract.Approval]
     }
     
-    public required init(name: String, address: EthereumAddress, eth: Web3.Eth) {
+    public required init(name: String, address: EthereumAddress?, eth: Web3.Eth) {
         self.name = name
         self.address = address
         self.eth = eth

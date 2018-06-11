@@ -10,8 +10,9 @@ import Web3
 
 /// A class that can accept invocations and forward to Web3
 public protocol ABIFunctionHandler: class {
-    func call(invocation: ABIInvocation, completion: @escaping ([String: Any]?, Error?) -> Void)
-    func send(invocation: ABIInvocation, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
+    var address: EthereumAddress? { get }
+    func call(_ call: EthereumCall, outputs: [ABIParameter], block: EthereumQuantityTag, completion: @escaping ([String: Any]?, Error?) -> Void)
+    func send(_ transaction: BitskiTransaction, completion: @escaping (EthereumData?, Error?) -> Void)
 }
 
 /// Represents a value that can be passed into a function or is returned from a function
@@ -46,7 +47,7 @@ public protocol ABIFunction: class {
     var outputs: [ABIParameter]? { get }
     
     /// Class responsible for forwarding invocations
-    var handler: ABIFunctionHandler? { get set }
+    var handler: ABIFunctionHandler { get }
     
     /// Signature of the function. Used to identify which function you are calling.
     var signature: String { get }
@@ -54,8 +55,8 @@ public protocol ABIFunction: class {
     /// First 4 bytes of Keccak hash of the signature
     var hashedSignature: String { get }
     
-    init?(abiObject: JSONContractObject.ABIObject)
-    init(name: String, inputs: [ABIParameter], outputs: [ABIParameter]?, handler: ABIFunctionHandler?)
+    init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler)
+    init(name: String, inputs: [ABIParameter], outputs: [ABIParameter]?, handler: ABIFunctionHandler)
     
     
     /// Invokes this function with the provided values
@@ -85,16 +86,18 @@ public class ABIConstantFunction: ABIFunction {
     public let inputs: [ABIParameter]
     public let outputs: [ABIParameter]?
     
-    public var handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public required init?(abiObject: JSONContractObject.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler) {
         guard abiObject.type == .function, abiObject.stateMutability?.isConstant == true else { return nil }
-        self.name = abiObject.name
+        guard let name = abiObject.name else { return nil }
+        self.name = name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
         self.outputs = abiObject.outputs?.map { ABIParameter($0) }
+        self.handler = handler
     }
     
-    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]?, handler: ABIFunctionHandler?) {
+    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]?, handler: ABIFunctionHandler) {
         self.name = name
         self.inputs = inputs
         self.outputs = outputs
@@ -112,15 +115,17 @@ public class ABIPayableFunction: ABIFunction {
     public let inputs: [ABIParameter]
     public let outputs: [ABIParameter]? = nil
     
-    public var handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public required init?(abiObject: JSONContractObject.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler) {
         guard abiObject.type == .function, abiObject.stateMutability == .payable else { return nil }
-        self.name = abiObject.name
+        guard let name = abiObject.name else { return nil }
+        self.name = name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.handler = handler
     }
     
-    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]? = nil, handler: ABIFunctionHandler?) {
+    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]? = nil, handler: ABIFunctionHandler) {
         self.name = name
         self.inputs = inputs
         self.handler = handler
@@ -137,15 +142,17 @@ public class ABINonPayableFunction: ABIFunction {
     public let inputs: [ABIParameter]
     public let outputs: [ABIParameter]? = nil
     
-    public var handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public required init?(abiObject: JSONContractObject.ABIObject) {
+    public required init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler) {
         guard abiObject.type == .function, abiObject.stateMutability == .nonpayable else { return nil }
-        self.name = abiObject.name
+        guard let name = abiObject.name else { return nil }
+        self.name = name
         self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.handler = handler
     }
     
-    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]? = nil, handler: ABIFunctionHandler?) {
+    public required init(name: String, inputs: [ABIParameter] = [], outputs: [ABIParameter]? = nil, handler: ABIFunctionHandler) {
         self.name = name
         self.inputs = inputs
         self.handler = handler
@@ -157,14 +164,26 @@ public class ABINonPayableFunction: ABIFunction {
 }
 
 /// Represents a function that creates a contract
-public struct ABIConstructorFunction {
-    // todo: figure out how and where this would be used
-    let inputs: [ABIParameter]
-}
-
-/// Represents the fallback function of a contract
-public struct ABIFallbackFunction {
-    // what do we do with this?
-    //http://solidity.readthedocs.io/en/v0.4.21/contracts.html#fallback-function
-    let payable: Bool
+public class ABIConstructor {
+    public let inputs: [ABIParameter]
+    public let handler: ABIFunctionHandler
+    public let payable: Bool
+    
+    public init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler) {
+        guard abiObject.type == .constructor else { return nil }
+        self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.handler = handler
+        self.payable = abiObject.payable ?? false
+    }
+    
+    public init(inputs: [ABIParameter], payable: Bool = false, handler: ABIFunctionHandler) {
+        self.inputs = inputs
+        self.handler = handler
+        self.payable = payable
+    }
+    
+    public func invoke(byteCode: EthereumData, parameters: [ABIValue]) -> ABIConstructorInvocation {
+        let wrappedParams = zip(parameters, inputs).map { SolidityWrappedValue(value: $0.0, type: $0.1.type) }
+        return ABIConstructorInvocation(byteCode: byteCode, parameters: wrappedParams, payable: payable, handler: handler)
+    }
 }

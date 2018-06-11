@@ -24,6 +24,7 @@
 		E80D4B7D20CB2DF300224A77 /* getBlock1.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7C20CB2DF300224A77 /* getBlock1.json */; };
 		E80D4B7F20CB2E3700224A77 /* call_getBalance.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B7E20CB2E3700224A77 /* call_getBalance.json */; };
 		E80D4B8120CB47C800224A77 /* Mockingjay+RPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E80D4B8020CB47C800224A77 /* Mockingjay+RPC.swift */; };
+		E80D4B8320CF229800224A77 /* LimitedMintableNonFungibleToken.json in Resources */ = {isa = PBXBuildFile; fileRef = E80D4B8220CF229800224A77 /* LimitedMintableNonFungibleToken.json */; };
 		E86A547120C9F6120026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 607FACEA1AFB9204008FA782 /* Info.plist */; };
 		E86A547220C9F6990026CD06 /* JSONContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FE358B20C5AE2B00DD799A /* JSONContractTests.swift */; };
 		E86A547320C9F69D0026CD06 /* ContractTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E86A544120C9DADE0026CD06 /* ContractTests.swift */; };
@@ -94,6 +95,7 @@
 		E80D4B7C20CB2DF300224A77 /* getBlock1.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = getBlock1.json; sourceTree = "<group>"; };
 		E80D4B7E20CB2E3700224A77 /* call_getBalance.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = call_getBalance.json; sourceTree = "<group>"; };
 		E80D4B8020CB47C800224A77 /* Mockingjay+RPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mockingjay+RPC.swift"; sourceTree = "<group>"; };
+		E80D4B8220CF229800224A77 /* LimitedMintableNonFungibleToken.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = LimitedMintableNonFungibleToken.json; sourceTree = "<group>"; };
 		E86A544120C9DADE0026CD06 /* ContractTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContractTests.swift; sourceTree = "<group>"; };
 		E86A544320C9DAEF0026CD06 /* WrappedValueTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedValueTests.swift; sourceTree = "<group>"; };
 		E86A544A20C9F4830026CD06 /* ABITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ABITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -248,6 +250,7 @@
 		E80D4B7320CB2D4A00224A77 /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
+				E80D4B8220CF229800224A77 /* LimitedMintableNonFungibleToken.json */,
 				E8FE358D20C5AE7500DD799A /* ERC721.json */,
 				E80D4B7420CB2DB200224A77 /* sendTransaction.json */,
 				E80D4B7620CB2DC600224A77 /* getTransactionReceipt.json */,
@@ -453,6 +456,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E80D4B8320CF229800224A77 /* LimitedMintableNonFungibleToken.json in Resources */,
 				E80D4B7720CB2DC600224A77 /* getTransactionReceipt.json in Resources */,
 				E80D4B7520CB2DB200224A77 /* sendTransaction.json in Resources */,
 				E86A547E20C9F8930026CD06 /* Info.plist in Resources */,

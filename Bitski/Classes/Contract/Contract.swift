@@ -13,7 +13,7 @@ import Web3
 /// Brokers relationship between Web3 and contract methods and events
 public protocol EthereumContract: ABIFunctionHandler {
     var name: String { get }
-    var address: EthereumAddress { get }
+    var address: EthereumAddress? { get }
     var eth: Web3.Eth { get }
     var events: [ABIEvent] { get }
 }
@@ -25,7 +25,7 @@ public protocol EthereumContract: ABIFunctionHandler {
 ///
 /// Best for when you want to code the methods yourself
 public protocol StaticContract: EthereumContract {
-    init(name: String, address: EthereumAddress, eth: Web3.Eth)
+    init(name: String, address: EthereumAddress?, eth: Web3.Eth)
 }
 
 /// Contract that is dynamically generated from a JSON representation
@@ -37,13 +37,14 @@ public protocol StaticContract: EthereumContract {
 public class DynamicContract: EthereumContract {
     
     public let name: String
-    public let address: EthereumAddress
+    public var address: EthereumAddress?
     public let eth: Web3.Eth
     
+    private(set) public var constructor: ABIConstructor?
     private(set) public var events: [ABIEvent] = []
     private(set) var methods: [String: ABIFunction] = [:]
     
-    public init(jsonABI: JSONContractObject, address: EthereumAddress, eth: Web3.Eth) {
+    public init(jsonABI: JSONContractObject, address: EthereumAddress?, eth: Web3.Eth) {
         self.name = jsonABI.contractName
         self.address = address
         self.eth = eth
@@ -58,17 +59,19 @@ public class DynamicContract: EthereumContract {
                     add(event: event)
                 }
             case (.function, let stateMutability?) where stateMutability.isConstant:
-                if let function = ABIConstantFunction(abiObject: abiObject) {
+                if let function = ABIConstantFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
             case (.function, .nonpayable?):
-                if let function = ABINonPayableFunction(abiObject: abiObject) {
+                if let function = ABINonPayableFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
             case (.function, .payable?):
-                if let function = ABIPayableFunction(abiObject: abiObject) {
+                if let function = ABIPayableFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
+            case (.constructor, _):
+                self.constructor = ABIConstructor(abiObject: abiObject, handler: self)
             default:
                 print("Could not parse abi object: \(abiObject)")
             }
@@ -86,7 +89,6 @@ public class DynamicContract: EthereumContract {
     ///
     /// - Parameter method: `ABIFunction` that can be called on this contract
     public func add(method: ABIFunction) {
-        method.handler = self
         methods[method.name] = method
     }
     
@@ -97,6 +99,21 @@ public class DynamicContract: EthereumContract {
     public subscript(_ name: String) -> ((ABIValue...) -> ABIInvocation)? {
         return methods[name]?.invoke
     }
+    
+    /// Deploys a new instance of this contract to the network
+    /// Example: contract.deploy(byteCode: byteCode, parameters: p1, p2)?.send(...) { ... }
+    ///
+    /// - Parameters:
+    ///   - byteCode: Compiled bytecode of the contract
+    ///   - parameters: Any input values for the constructor
+    /// - Returns: Invocation object that can be called with .send(...)
+    public func deploy(byteCode: EthereumData, parameters: ABIValue...) -> ABIConstructorInvocation? {
+        return constructor?.invoke(byteCode: byteCode, parameters: parameters)
+    }
+    
+    public func deploy(byteCode: EthereumData) -> ABIConstructorInvocation? {
+        return constructor?.invoke(byteCode: byteCode, parameters: [])
+    }
 }
 
 // MARK: - Call & Send
@@ -106,18 +123,13 @@ extension EthereumContract {
     /// Returns data by calling a constant function on the contract
     ///
     /// - Parameters:
-    ///   - invocation: ABIInvocation object
+    ///   - data: EthereumData object representing the method called
+    ///   - outputs: Expected return values
     ///   - completion: Completion handler
-    public func call(invocation: ABIInvocation, completion: @escaping ([String: Any]?, Error?) -> Void) {
-        let data = serializeData(invocation: invocation)
-        let call = EthereumCall(from: nil, to: address, gas: nil, gasPrice: nil, value: nil, data: data)
-        eth.call(call: call, block: .latest).done { result in
-            if let outputs = invocation.method.outputs {
-                let dictionary = ABIDecoder.decode(outputs: outputs, from: result.hex())
-                completion(dictionary, nil)
-            } else {
-                completion([:], nil)
-            }
+    public func call(_ call: EthereumCall, outputs: [ABIParameter], block: EthereumQuantityTag = .latest, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        eth.call(call: call, block: block).done { result in
+            let dictionary = ABIDecoder.decode(outputs: outputs, from: result.hex())
+            completion(dictionary, nil)
         }.catch { error in
             completion(nil, error)
         }
@@ -126,27 +138,17 @@ extension EthereumContract {
     /// Modifies the contract's data by sending a transaction
     ///
     /// - Parameters:
-    ///   - invocation: ABIInvocation object
+    ///   - data: Encoded EthereumData for the methods called
     ///   - from: EthereumAddress to send from
     ///   - value: Amount of ETH to send, if applicable
     ///   - gas: Maximum gas allowed for the transaction
     ///   - gasPrice: Amount of wei to spend per unit of gas
     ///   - completion: completion handler. Either the transaction's hash or an error.
-    public func send(invocation: ABIInvocation, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
-        let data = serializeData(invocation: invocation)
-        let transaction = BitskiTransaction(to: address, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
+    public func send(_ transaction: BitskiTransaction, completion: @escaping (EthereumData?, Error?) -> Void) {
         eth.sendTransaction(transaction: transaction).done { hash in
             completion(hash, nil)
         }.catch { error in
             completion(nil, error)
         }
     }
-    
-    private func serializeData(invocation: ABIInvocation) -> EthereumData? {
-        guard let inputsString = ABIEncoder.encode(invocation.parameters) else { return nil }
-        let signatureString = invocation.method.hashedSignature
-        let hexString = "0x" + signatureString + inputsString
-        return try? EthereumData(ethereumValue: hexString)
-    }
-    
 }

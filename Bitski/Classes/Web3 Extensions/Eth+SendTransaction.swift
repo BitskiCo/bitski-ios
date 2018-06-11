@@ -22,7 +22,7 @@ public struct BitskiTransaction: Codable {
     public let gasPrice: EthereumQuantity?
     public let data: EthereumData?
     
-    public init(nonce: EthereumQuantity? = nil, to: EthereumAddress, from: EthereumAddress, value: EthereumQuantity = 0, gasLimit: EthereumQuantity, gasPrice: EthereumQuantity? = nil, data: EthereumData? = nil) {
+    public init(nonce: EthereumQuantity? = nil, to: EthereumAddress?, from: EthereumAddress, value: EthereumQuantity = 0, gasLimit: EthereumQuantity, gasPrice: EthereumQuantity? = nil, data: EthereumData? = nil) {
         self.nonce = nonce
         self.to = to
         self.from = from

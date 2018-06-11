@@ -10,8 +10,10 @@ import Web3
 import PromiseKit
 
 enum InvocationError: Error {
+    case contractNotDeployed
     case invalidConfiguration
     case invalidInvocation
+    case encodingError
 }
 
 /// Represents invoking a given contract method with parameters
@@ -23,15 +25,24 @@ public protocol ABIInvocation {
     var parameters: [SolidityWrappedValue] { get }
     
     /// Handler for submitting calls and sends
-    var handler: ABIFunctionHandler? { get }
+    var handler: ABIFunctionHandler { get }
+    
+    /// The generated data for this invocation
+    var data: EthereumData? { get }
+    
+    /// Generates an EthereumCall object
+    func createCall() -> EthereumCall?
+    
+    /// Generates a BitskiTransaction object
+    func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction?
     
     /// Read data from the blockchain. Only available for constant functions.
-    func call(completion: @escaping ([String: Any]?, Error?) -> Void)
+    func call(block: EthereumQuantityTag, completion: @escaping ([String: Any]?, Error?) -> Void)
     
     /// Write data to the blockchain. Only available for non-constant functions
     func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
     
-    init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?)
+    init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler)
 }
 
 // MARK: - Read Invocation
@@ -42,25 +53,31 @@ public struct ABIReadInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
     }
     
-    public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
-        guard let handler = handler else {
-            completion(nil, InvocationError.invalidConfiguration)
+    public func call(block: EthereumQuantityTag = .latest, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        guard handler.address != nil else {
+            completion(nil, InvocationError.contractNotDeployed)
             return
         }
-        handler.call(invocation: self, completion: completion)
+        guard let call = createCall() else {
+            completion(nil, InvocationError.encodingError)
+            return
+        }
+        let outputs = method.outputs ?? []
+        handler.call(call, outputs: outputs, block: block, completion: completion)
     }
     
-    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
-        //Error! Constant function
-        completion(nil, InvocationError.invalidInvocation)
+    public func createCall() -> EthereumCall? {
+        guard let data = data else { return nil }
+        guard let to = handler.address else { return nil }
+        return EthereumCall(from: nil, to: to, gas: nil, gasPrice: nil, value: nil, data: data)
     }
 }
 
@@ -71,26 +88,31 @@ public struct ABIPayableInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
     }
     
-    public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
-        //Cannot invoke call() with this type of function. use send() instead.
-        completion(nil, InvocationError.invalidInvocation)
+    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+        guard let data = data else { return nil }
+        guard let to = handler.address else { return nil }
+        return BitskiTransaction(nonce: nil, to: to, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
     }
     
     //todo: Convert to EthereumTransaction
     public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
-        guard let handler = handler else {
-            completion(nil, InvocationError.invalidConfiguration)
+        guard handler.address != nil else {
+            completion(nil, InvocationError.contractNotDeployed)
             return
         }
-        handler.send(invocation: self, from: from, value: value, gas: gas, gasPrice: gasPrice, completion: completion)
+        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+            completion(nil, InvocationError.encodingError)
+            return
+        }
+        handler.send(transaction, completion: completion)
     }
 }
 
@@ -101,26 +123,31 @@ public struct ABINonPayableInvocation: ABIInvocation {
     public let method: ABIFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler?
+    public let handler: ABIFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler?) {
+    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
     }
     
-    public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
-        //Cannot invoke call() with this type of function. use send() instead.
-        completion(nil, InvocationError.invalidInvocation)
+    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+        guard let data = data else { return nil }
+        guard let to = handler.address else { return nil }
+        return BitskiTransaction(nonce: nil, to: to, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
     }
     
     //todo: Convert to EthereumTransaction
     public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
-        guard let handler = handler else {
-            completion(nil, InvocationError.invalidConfiguration)
+        guard handler.address != nil else {
+            completion(nil, InvocationError.contractNotDeployed)
             return
         }
-        handler.send(invocation: self, from: from, value: nil, gas: gas, gasPrice: gasPrice, completion: completion)
+        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+            completion(nil, InvocationError.encodingError)
+            return
+        }
+        handler.send(transaction, completion: completion)
     }
 }
 
@@ -128,9 +155,37 @@ public struct ABINonPayableInvocation: ABIInvocation {
 
 public extension ABIInvocation {
     
-    public func call() -> Promise<[String: Any]> {
+    // Default Implementations
+    
+    public var data: EthereumData? {
+        return serializeData()
+    }
+    
+    public func createCall() -> EthereumCall? {
+        return nil
+    }
+    
+    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+        return nil
+    }
+    
+    public func call(block: EthereumQuantityTag = .latest, completion: @escaping ([String: Any]?, Error?) -> Void) {
+        completion(nil, InvocationError.invalidInvocation)
+    }
+    
+    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+        completion(nil, InvocationError.invalidInvocation)
+    }
+    
+    public func call(completion: @escaping ([String: Any]?, Error?) -> Void) {
+        self.call(block: .latest, completion: completion)
+    }
+    
+    // Promises
+    
+    public func call(block: EthereumQuantityTag = .latest) -> Promise<[String: Any]> {
         return Promise { seal in
-            self.call(completion: seal.resolve)
+            self.call(block: block, completion: seal.resolve)
         }
     }
     
@@ -140,4 +195,60 @@ public extension ABIInvocation {
         }
     }
     
+    private func serializeData() -> EthereumData? {
+        guard let inputsString = ABIEncoder.encode(parameters) else { return nil }
+        let signatureString = method.hashedSignature
+        let hexString = "0x" + signatureString + inputsString
+        return try? EthereumData(ethereumValue: hexString)
+    }
+}
+
+// MARK: - Contract Creation
+
+/// Represents a contract creation invocation
+public struct ABIConstructorInvocation {
+    public let byteCode: EthereumData
+    public let parameters: [SolidityWrappedValue]
+    public let payable: Bool
+    public let handler: ABIFunctionHandler
+    
+    public init(byteCode: EthereumData, parameters: [SolidityWrappedValue], payable: Bool, handler: ABIFunctionHandler) {
+        self.byteCode = byteCode
+        self.parameters = parameters
+        self.handler = handler
+        self.payable = payable
+    }
+    
+    public func createTransaction(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+        guard let data = serializeData() else { return nil }
+        return BitskiTransaction(to: nil, from: from, value: value, gasLimit: gas, gasPrice: gasPrice, data: data)
+    }
+    
+    public func send(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+        guard payable == true || value == 0 else {
+            completion(nil, InvocationError.invalidInvocation)
+            return
+        }
+        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+            completion(nil, InvocationError.encodingError)
+            return
+        }
+        handler.send(transaction, completion: completion)
+    }
+    
+    public func send(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
+        return Promise { seal in
+            self.send(from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
+        }
+    }
+    
+    private func serializeData() -> EthereumData? {
+        // The data for creating a new contract is the bytecode of the contract + any input params serialized in the standard format.
+        var dataString = "0x"
+        dataString += byteCode.hex().replacingOccurrences(of: "0x", with: "")
+        if parameters.count > 0, let encodedParams = ABIEncoder.encode(parameters) {
+            dataString += encodedParams
+        }
+        return try? EthereumData(ethereumValue: dataString)
+    }
 }

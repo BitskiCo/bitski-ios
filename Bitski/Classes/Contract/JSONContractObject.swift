@@ -74,8 +74,8 @@ public struct JSONContractObject: Codable {
         // output parameters
         let outputs: [Parameter]?
         
-        // name of the function
-        let name: String
+        // name of the function or event (not available for fallback or constructor functions)
+        let name: String?
         
         // type of function (constructor, function, or fallback) or event
         // can be omitted, defaulting to function

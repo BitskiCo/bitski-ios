@@ -12,6 +12,24 @@ import Web3
 import BigInt
 import Mockingjay
 
+// Example of subclassing a common token implementation
+class TestContract: GenericERC721Contract {
+    
+    private let byteCode = try! EthereumData(ethereumValue: "0x0123456789ABCDEF")
+    
+    // Example of a static constructor
+    func deploy(name: String) -> ABIConstructorInvocation {
+        let constructor = ABIConstructor(inputs: [ABIParameter(name: "_name", type: .string)], handler: self)
+        return constructor.invoke(byteCode: byteCode, parameters: [name])
+    }
+    
+    // Example of a static function
+    func buyToken() -> ABIInvocation {
+        let method = ABIPayableFunction(name: "buyToken", inputs: [], outputs: nil, handler: self)
+        return method.invoke()
+    }
+}
+
 class ContractTests: XCTestCase, TransactionWatcherDelegate {
     
     override func setUp() {
@@ -43,6 +61,22 @@ class ContractTests: XCTestCase, TransactionWatcherDelegate {
         if let block1 = loadStub(named: "getBlock1"), let block2 = loadStub(named: "getBlock2"), let block3 = loadStub(named: "getBlock3") {
             stub(rpc("eth_blockNumber"), blockNumberResponse(block1, block2, block3))
         }
+    }
+    
+    func testConstructor() {
+        let provider = Web3HttpProvider.mockProvider()
+        let web3 = Web3(provider: provider)
+        let erc721 = web3.eth.Contract(type: TestContract.self, name: "ERC721")
+        
+        let constructorExpectation = expectation(description: "Contract should be created")
+        
+        erc721.deploy(name: "Test Instance").send(from: .testAddress, value: 0, gas: 15000, gasPrice: nil).done { hash in
+            constructorExpectation.fulfill()
+        }.catch { error in
+            XCTFail(error.localizedDescription)
+        }
+        
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
     
     func testCall() {

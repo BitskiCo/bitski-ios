@@ -79,10 +79,10 @@ public struct ABIEvent {
     }
     
     public init?(abiObject: JSONContractObject.ABIObject) {
-        guard abiObject.type == .event else { return nil }
+        guard abiObject.type == .event, let name = abiObject.name else { return nil }
         self.anonymous = abiObject.anonymous ?? false
         self.inputs = abiObject.inputs.map { Parameter($0) }
-        self.name = abiObject.name
+        self.name = name
     }
     
     public init(name: String, anonymous: Bool, inputs: [Parameter]) {
