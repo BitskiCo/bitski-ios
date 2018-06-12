@@ -70,6 +70,7 @@ class JSONContractTests: XCTestCase {
                     XCTFail(error?.localizedDescription ?? "Empty response")
                 }
             }
+            
             waitForExpectations(timeout: 1.0, handler: nil)
         } catch {
             XCTFail(error.localizedDescription)
@@ -98,7 +99,7 @@ class JSONContractTests: XCTestCase {
             XCTAssertEqual(invocation.byteCode, byteCode)
             
             let transaction = invocation.createTransaction(from: .testAddress, gas: 0, gasPrice: 0)
-            guard let generatedHexString = transaction?.data?.hex() else {
+            guard let generatedHexString = transaction?.data.hex() else {
                 return XCTFail("Transaction should include data")
             }
             
@@ -122,6 +123,67 @@ class JSONContractTests: XCTestCase {
             waitForExpectations(timeout: 5, handler: nil)
         } catch {
             XCTFail(String(describing: error))
+        }
+    }
+    
+    func testManualCalls() {
+        let data = loadStub(named: "ERC721")!
+        let provider = Web3HttpProvider.mockProvider()
+        let web3 = Web3(provider: provider)
+        
+        do {
+            let contract = try web3.eth.Contract(abi: data, address: EthereumAddress.testAddress)
+            
+            XCTAssertEqual(contract.name, "ERC721")
+            
+            let balanceExpectation = expectation(description: "Balance should be returned")
+            
+            guard let call = contract["balanceOf"]?(EthereumAddress.testAddress).createCall() else {
+                XCTFail("Could not generate call")
+                return
+            }
+            
+            web3.eth.call(call: call, block: .latest) { response in
+                switch response.status {
+                case .success:
+                    balanceExpectation.fulfill()
+                case .failure(let error):
+                    XCTFail(error.localizedDescription)
+                }
+            }
+            
+            waitForExpectations(timeout: 1.0, handler: nil)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testManualSends() {
+        let data = loadStub(named: "ERC721")!
+        let provider = Web3HttpProvider.mockProvider()
+        let web3 = Web3(provider: provider)
+        
+        do {
+            let contract = try web3.eth.Contract(abi: data, address: EthereumAddress.testAddress)
+            
+            XCTAssertEqual(contract.name, "ERC721")
+            
+            let transferExpectation = expectation(description: "Transfer transaction should complete")
+            
+            guard let transaction = contract["transfer"]?(EthereumAddress.testAddress, BigUInt(1)).createTransaction(nonce: 0, from: .testAddress, value: nil, gas: 12000, gasPrice: nil) else {
+                XCTFail("Could not generate transaction")
+                return
+            }
+            
+            web3.eth.sendTransaction(transaction: transaction).done { _ in
+                transferExpectation.fulfill()
+            }.catch { error in
+                XCTFail(error.localizedDescription)
+            }
+            
+            waitForExpectations(timeout: 1.0, handler: nil)
+        } catch {
+            XCTFail(error.localizedDescription)
         }
     }
 }

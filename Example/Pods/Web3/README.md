@@ -21,8 +21,8 @@
   <a href="https://codecov.io/gh/Boilertalk/Web3.swift">
     <img src="https://codecov.io/gh/Boilertalk/Web3.swift/branch/master/graph/badge.svg" alt="Code Coverage">
   </a>
-  <a href="https://gitter.im/Boilertalk/Web3.swift?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge">  
-    <img src="https://badges.gitter.im/Boilertalk/Web3.swift.svg" alt="Gitter">
+  <a href="https://t.me/joinchat/BPk3DE6CTFaiOolSIZNLyg">  
+    <img src="https://img.shields.io/badge/chat-on%20telegram-blue.svg?longCache=true&style=flat" alt="Telegram">
   </a>
 </p>
 
@@ -58,7 +58,7 @@ this exact functionality. More about that later.
 If you want to use [PromiseKit](https://github.com/mxcl/PromiseKit) extensions for the web3 calls, you can either use the
 provided PromiseKit subspec/SPM product or create your own.    
 If you want to conveniently parse JSON ABIs for Ethereum Smart Contracts, you can use the provided ABI Parsing subspec/SPM product
-which will be released in version 0.2.0.
+which will be released in version 0.3.0.
 
 Finally, if you want to add functionality to `Web3.swift` which is not provided yet, you don't have to wait until it gets merged
 and released in a version bump. You can simple extend/update functionality within you own app as our APIs are made to be very open
@@ -120,7 +120,7 @@ Web3 is compatible with Swift Package Manager v4 (Swift 4 and above). Simply add
 
 ```Swift
 dependencies: [
-    .package(url: "https://github.com/Boilertalk/Web3.swift.git", from: "0.1.0")
+    .package(url: "https://github.com/Boilertalk/Web3.swift.git", from: "0.2.0")
 ]
 ```
 
@@ -253,16 +253,15 @@ firstly {
     web3.eth.getTransactionCount(address: privateKey.address, block: .latest)
 }.then { nonce in
     Promise { seal in
-        var tx = try EthereumTransaction(
+        let tx = EthereumTransaction(
             nonce: nonce,
             gasPrice: EthereumQuantity(quantity: 21.gwei),
             gasLimit: 21000,
             to: EthereumAddress(hex: "0xC0866A1a0ed41e1aa75c932cA3c55fad847fd90D", eip55: true),
-            value: EthereumQuantity(quantity: 1.eth),
-            chainId: 1
+            value: EthereumQuantity(quantity: 1.eth)
         )
-        tx.sign(with: privateKey)
-        seal.resolve(tx, nil)
+        let signedTx = try tx.sign(with: privateKey, chainId: 1)
+        seal.resolve(signedTx, nil)
     }
 }.then { tx in
     web3.eth.sendRawTransaction(transaction: tx)
@@ -278,10 +277,9 @@ You can even add some promise extensions to `EthereumTransaction` like below:
 ```Swift
 extension EthereumTransaction {
 
-    func promiseSign(with: EthereumPrivateKey) -> Promise<EthereumTransaction> {
+    func promiseSign(with: EthereumPrivateKey, chainId: EthereumQuantity = 0) -> Promise<EthereumSignedTransaction> {
         return Promise { seal in
-            var tx = self
-            try tx.sign(with: with)
+            let tx = try self.sign(with: with, chainId: chainId)
             seal.resolve(tx, nil)
         }
     }
@@ -296,14 +294,13 @@ let privateKey = try! EthereumPrivateKey(hexPrivateKey: "0xa26da69ed1df3ba4bb2a2
 firstly {
     web3.eth.getTransactionCount(address: privateKey.address, block: .latest)
 }.then { nonce in
-    try EthereumTransaction(
+    EthereumTransaction(
         nonce: nonce,
         gasPrice: EthereumQuantity(quantity: 21.gwei),
         gasLimit: 21000,
         to: EthereumAddress(hex: "0xC0866A1a0ed41e1aa75c932cA3c55fad847fd90D", eip55: true),
-        value: EthereumQuantity(quantity: 1.eth),
-        chainId: 1
-    ).promiseSign(with: privateKey)
+        value: EthereumQuantity(quantity: 1.eth)
+    ).promiseSign(with: privateKey, chainId: 1)
 }.then { tx in
     web3.eth.sendRawTransaction(transaction: tx)
 }.done { hash in
@@ -341,7 +338,10 @@ That being said, we will try to minimize breaking changes. Most certainly there 
 
 ## Author
 
-The awesome guys at Boilertalk :alembic:
+The awesome guys at Boilertalk :alembic:    
+...and even more awesome members from the community :purple_heart:
+
+Check out the [contributors list](https://github.com/Boilertalk/Web3.swift/graphs/contributors) for a complete list.
 
 ## License
 

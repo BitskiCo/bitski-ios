@@ -33,14 +33,14 @@ public protocol ABIInvocation {
     /// Generates an EthereumCall object
     func createCall() -> EthereumCall?
     
-    /// Generates a BitskiTransaction object
-    func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction?
+    /// Generates an EthereumTransaction object
+    func createTransaction(nonce: EthereumQuantity?, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction?
     
     /// Read data from the blockchain. Only available for constant functions.
     func call(block: EthereumQuantityTag, completion: @escaping ([String: Any]?, Error?) -> Void)
     
     /// Write data to the blockchain. Only available for non-constant functions
-    func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
+    func send(nonce: EthereumQuantity?, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
     
     init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler)
 }
@@ -96,19 +96,18 @@ public struct ABIPayableInvocation: ABIInvocation {
         self.handler = handler
     }
     
-    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+    public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
         guard let data = data else { return nil }
         guard let to = handler.address else { return nil }
-        return BitskiTransaction(nonce: nil, to: to, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
+        return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: to, value: value ?? 0, data: data)
     }
     
-    //todo: Convert to EthereumTransaction
-    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
         guard handler.address != nil else {
             completion(nil, InvocationError.contractNotDeployed)
             return
         }
-        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+        guard let transaction = createTransaction(nonce: nonce, from: from, value: value, gas: gas, gasPrice: gasPrice) else {
             completion(nil, InvocationError.encodingError)
             return
         }
@@ -131,19 +130,18 @@ public struct ABINonPayableInvocation: ABIInvocation {
         self.handler = handler
     }
     
-    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+    public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
         guard let data = data else { return nil }
         guard let to = handler.address else { return nil }
-        return BitskiTransaction(nonce: nil, to: to, from: from, value: value ?? 0, gasLimit: gas, gasPrice: gasPrice, data: data)
+        return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: to, value: value ?? 0, data: data)
     }
     
-    //todo: Convert to EthereumTransaction
-    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
         guard handler.address != nil else {
             completion(nil, InvocationError.contractNotDeployed)
             return
         }
-        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+        guard let transaction = createTransaction(nonce: nonce, from: from, value: value, gas: gas, gasPrice: gasPrice) else {
             completion(nil, InvocationError.encodingError)
             return
         }
@@ -165,7 +163,7 @@ public extension ABIInvocation {
         return nil
     }
     
-    public func createTransaction(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+    public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
         return nil
     }
     
@@ -173,7 +171,7 @@ public extension ABIInvocation {
         completion(nil, InvocationError.invalidInvocation)
     }
     
-    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
         completion(nil, InvocationError.invalidInvocation)
     }
     
@@ -189,9 +187,9 @@ public extension ABIInvocation {
         }
     }
     
-    public func send(from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
         return Promise { seal in
-            self.send(from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
+            self.send(nonce: nonce, from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
         }
     }
     
@@ -219,26 +217,26 @@ public struct ABIConstructorInvocation {
         self.payable = payable
     }
     
-    public func createTransaction(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> BitskiTransaction? {
+    public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
         guard let data = serializeData() else { return nil }
-        return BitskiTransaction(to: nil, from: from, value: value, gasLimit: gas, gasPrice: gasPrice, data: data)
+        return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: nil, value: value, data: data)
     }
     
-    public func send(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void) {
         guard payable == true || value == 0 else {
             completion(nil, InvocationError.invalidInvocation)
             return
         }
-        guard let transaction = createTransaction(from: from, value: value, gas: gas, gasPrice: gasPrice) else {
+        guard let transaction = createTransaction(nonce: nonce, from: from, value: value, gas: gas, gasPrice: gasPrice) else {
             completion(nil, InvocationError.encodingError)
             return
         }
         handler.send(transaction, completion: completion)
     }
     
-    public func send(from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
+    public func send(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> Promise<EthereumData> {
         return Promise { seal in
-            self.send(from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
+            self.send(nonce: nonce, from: from, value: value, gas: gas, gasPrice: gasPrice, completion: seal.resolve)
         }
     }
     

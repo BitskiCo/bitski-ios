@@ -79,7 +79,7 @@ firstly {
 }.firstValue { accounts in
     accounts
 }.then { account in
-    let transaction = BitskiTransaction(to: EthereumAddress(hex: "SOME ADDRESS", eip55: false), from: account, value: 0, gasLimit: 20000)
+    let transaction = EthereumTransaction(gasLimit: 20000, from: account, to: EthereumAddress(hex: "SOME ADDRESS", eip55: false), value: 0)
     return web3.eth.sendTransaction(transaction: transaction)
 }.done { transactionHash in
     print("Received transaction hash!", transactionHash.hex())
