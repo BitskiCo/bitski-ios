@@ -85,7 +85,7 @@ public struct SolidityWrappedValue {
     }
     
     public static func fixedBytes(_ value: Data) -> SolidityWrappedValue {
-        return SolidityWrappedValue(value: value, type: .bytes(length: value.count))
+        return SolidityWrappedValue(value: value, type: .bytes(length: UInt(value.count)))
     }
     
     // Arrays
@@ -103,17 +103,17 @@ public struct SolidityWrappedValue {
     
     // .fixedArray([1, 2, 3], elementType: .uint256, length: 3) -> uint256[3]
     // .fixedArray([[1,2], [3,4]], elementType: .array(.uint256, length: nil), length: 2) -> uint256[][2]
-    public static func fixedArray<T: ABIValue>(_ value: [T], elementType: SolidityType, length: Int) -> SolidityWrappedValue {
+    public static func fixedArray<T: ABIValue>(_ value: [T], elementType: SolidityType, length: UInt) -> SolidityWrappedValue {
         let type = SolidityType.array(type: elementType, length: length)
         return SolidityWrappedValue(value: value, type: type)
     }
     
-    public static func fixedArray<T: ABIValue & SolidityTypeRepresentable>(_ value: [T], length: Int) -> SolidityWrappedValue {
+    public static func fixedArray<T: ABIValue & SolidityTypeRepresentable>(_ value: [T], length: UInt) -> SolidityWrappedValue {
         return fixedArray(value, elementType: T.solidityType, length: length)
     }
     
     public static func fixedArray<T: ABIValue & SolidityTypeRepresentable>(_ value: [T]) -> SolidityWrappedValue {
-        return fixedArray(value, length: value.count)
+        return fixedArray(value, length: UInt(value.count))
     }
     
     // Array Convenience

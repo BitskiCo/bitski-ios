@@ -13,6 +13,7 @@ public protocol ABIFunctionHandler: class {
     var address: EthereumAddress? { get }
     func call(_ call: EthereumCall, outputs: [ABIParameter], block: EthereumQuantityTag, completion: @escaping ([String: Any]?, Error?) -> Void)
     func send(_ transaction: EthereumTransaction, completion: @escaping (EthereumData?, Error?) -> Void)
+    func estimateGas(_ call: EthereumCall, completion: @escaping (EthereumQuantity?, Error?) -> Void)
 }
 
 /// Represents a value that can be passed into a function or is returned from a function

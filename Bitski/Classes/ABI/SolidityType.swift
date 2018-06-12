@@ -16,7 +16,7 @@ import Web3
 /// - tuple: A collection of types
 public indirect enum SolidityType {
     case type(SolidityValueType)
-    case array(type: SolidityType, length: Int?)
+    case array(type: SolidityType, length: UInt?)
     case tuple([SolidityType])
     
     // Convenience members
@@ -39,7 +39,15 @@ public indirect enum SolidityType {
     public static let int64: SolidityType = .type(.int64)
     public static let int256: SolidityType = .type(.int256)
     
-    public static func bytes(length: Int?) -> SolidityType {
+    public static func fixed(bits: UInt16, exponent: UInt8) -> SolidityType {
+        return .type(.fixed(bits: bits, length: exponent))
+    }
+    
+    public static func ufixed(bits: UInt16, exponent: UInt8) -> SolidityType {
+        return .type(.ufixed(bits: bits, length: exponent))
+    }
+    
+    public static func bytes(length: UInt?) -> SolidityType {
         return .type(.bytes(length: length))
     }
     
@@ -89,7 +97,7 @@ public indirect enum SolidityType {
     
     /// Length in bytes of static portion
     /// Typically 32 bytes, but in the case of a fixed size array, it will be the length of the array * 32 bytes
-    public var staticPartLength: Int {
+    public var staticPartLength: UInt {
         switch self {
         case .array(let type, let length):
             if !type.isDynamic, let length = length {
@@ -106,10 +114,10 @@ public indirect enum SolidityType {
 public enum SolidityValueType {
     
     /// unsigned integer type of M bits, 0 < M <= 256, M % 8 == 0. e.g. uint32, uint8, uint256.
-    case uint(bits: Int)
+    case uint(bits: UInt16)
     
     /// two’s complement signed integer type of M bits, 0 < M <= 256, M % 8 == 0.
-    case int(bits: Int)
+    case int(bits: UInt16)
     
     /// equivalent to uint160, except for the assumed interpretation and language typing.
     /// For computing the function selector, address is used.
@@ -119,16 +127,16 @@ public enum SolidityValueType {
     case bool
     
     /// binary type of M bytes, 0 < M <= 32.
-    case bytes(length: Int?)
+    case bytes(length: UInt?)
     
     /// dynamic sized unicode string assumed to be UTF-8 encoded.
     case string
     
     /// signed fixed-point decimal number of M bits, 8 <= M <= 256, M % 8 ==0, and 0 < N <= 80, which denotes the value v as v / (10 ** N).
-    case fixed(bits: Int, length: Int)
+    case fixed(bits: UInt16, length: UInt8)
     
     /// unsigned variant of fixed<M>x<N>.
-    case ufixed(bits: Int, length: Int)
+    case ufixed(bits: UInt16, length: UInt8)
     
     // MARK: - Convenient shorthands
     
@@ -147,7 +155,7 @@ public enum SolidityValueType {
 
 public extension SolidityValueType {
     
-    public var nativeType: ABIValue.Type {
+    public var nativeType: ABIValue.Type? {
         switch self {
         case .uint(let bits):
             switch bits {
@@ -175,8 +183,10 @@ public extension SolidityValueType {
             return Data.self
         case .address:
             return EthereumAddress.self
-        case .fixed, .ufixed:
-            fatalError("Not supported")
+        case .fixed:
+            return nil
+        case .ufixed:
+            return nil
         }
     }
     
@@ -223,7 +233,6 @@ public extension SolidityValueType {
             
         case .ufixed(let bits, let length):
             return "ufixed\(bits)x\(length)"
-            
         }
     }
 }

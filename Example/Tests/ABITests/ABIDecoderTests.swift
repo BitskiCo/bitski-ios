@@ -71,14 +71,23 @@ class ABIDecoderTests: XCTestCase {
         XCTAssertEqual(decoded?[0] as? Data, bytes)
         
         let encodedFixed = ABIEncoder.encode(.fixedBytes(bytes))!
-        let decodedFixed = ABIDecoder.decode(.bytes(length: bytes.count), from: encodedFixed)
+        let decodedFixed = ABIDecoder.decode(.bytes(length: UInt(bytes.count)), from: encodedFixed)
         XCTAssertEqual(decodedFixed?[0] as? Data, bytes)
     }
     
     func testDecodingTuple() {
-        let encoded = "0000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-        let decoded = ABIDecoder.decode(SolidityType(tuple: .string, .int), from: encoded)
-        XCTAssert(decoded?.first == nil, "Tuple types cannot yet be decoded")
+        let encoded = """
+            0000000000000000000000000000000000000000000000000000000000000020\
+            0000000000000000000000000000000000000000000000000000000000000040\
+            0000000000000000000000000000000000000000000000000000000000000008\
+            000000000000000000000000000000000000000000000000000000000000000b\
+            68656c6c6f20776f726c64000000000000000000000000000000000000000000
+            """
+        let decoded = ABIDecoder.decode(.tuple([.string, .int]), from: encoded)
+        let tupleValue = decoded?.first as? [Any]
+        XCTAssertEqual(tupleValue?.count, 2, "Decoded tuple should have 2 elements")
+        XCTAssertEqual(tupleValue?.first as? String, "hello world", "String value should be decoded correctly")
+        XCTAssertEqual(tupleValue?[1] as? BigInt, 8, "Int value should be decoded correctly")
     }
     
     func testGenericVariant() {

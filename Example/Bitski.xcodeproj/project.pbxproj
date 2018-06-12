@@ -36,6 +36,7 @@
 		E86A547920C9F72D0026CD06 /* ERC721.json in Resources */ = {isa = PBXBuildFile; fileRef = E8FE358D20C5AE7500DD799A /* ERC721.json */; };
 		E86A547D20C9F88E0026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E86A544E20C9F4830026CD06 /* Info.plist */; };
 		E86A547E20C9F8930026CD06 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = E86A545C20C9F4940026CD06 /* Info.plist */; };
+		E88859F820D0478C0071E730 /* estimateGas.json in Resources */ = {isa = PBXBuildFile; fileRef = E88859F720D0478C0071E730 /* estimateGas.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		E86A544E20C9F4830026CD06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E86A545820C9F4940026CD06 /* ContractTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ContractTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E86A545C20C9F4940026CD06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E88859F720D0478C0071E730 /* estimateGas.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = estimateGas.json; sourceTree = "<group>"; };
 		E88B615020BE0FCE00C12395 /* ABITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABITests.swift; sourceTree = "<group>"; };
 		E8FE357F20C0B13B00DD799A /* ABIDecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIDecoderTests.swift; sourceTree = "<group>"; };
 		E8FE358120C0B14900DD799A /* ABIEncoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABIEncoderTests.swift; sourceTree = "<group>"; };
@@ -255,6 +257,7 @@
 				E80D4B7420CB2DB200224A77 /* sendTransaction.json */,
 				E80D4B7620CB2DC600224A77 /* getTransactionReceipt.json */,
 				E80D4B7E20CB2E3700224A77 /* call_getBalance.json */,
+				E88859F720D0478C0071E730 /* estimateGas.json */,
 				E80D4B7820CB2DD900224A77 /* getBlock3.json */,
 				E80D4B7C20CB2DF300224A77 /* getBlock1.json */,
 				E80D4B7A20CB2DE600224A77 /* getBlock2.json */,
@@ -463,6 +466,7 @@
 				E80D4B7D20CB2DF300224A77 /* getBlock1.json in Resources */,
 				E86A547920C9F72D0026CD06 /* ERC721.json in Resources */,
 				E80D4B7F20CB2E3700224A77 /* call_getBalance.json in Resources */,
+				E88859F820D0478C0071E730 /* estimateGas.json in Resources */,
 				E80D4B7920CB2DD900224A77 /* getBlock3.json in Resources */,
 				E80D4B7B20CB2DE600224A77 /* getBlock2.json in Resources */,
 			);

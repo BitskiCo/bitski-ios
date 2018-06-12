@@ -42,7 +42,7 @@ extension FixedWidthInteger where Self: UnsignedInteger {
     }
     
     public static var solidityType: SolidityType {
-        return SolidityType.type(.uint(bits: bitWidth))
+        return SolidityType.type(.uint(bits: UInt16(bitWidth)))
     }
 }
 
@@ -105,7 +105,7 @@ extension FixedWidthInteger where Self: SignedInteger {
     }
     
     public static var solidityType: SolidityType {
-        return SolidityType.type(.int(bits: bitWidth))
+        return SolidityType.type(.int(bits: UInt16(bitWidth)))
     }
 }
 
@@ -280,11 +280,11 @@ extension Data: ABIValue {
         self.init(bytes: trimmedBytes)
     }
     
-    public init?(hexString: String, length: Int) {
+    public init?(hexString: String, length: UInt) {
         //convert to bytes
         let bytes = hexString.hexToBytes()
         //trim bytes to length
-        let trimmedBytes = bytes.prefix(length)
+        let trimmedBytes = bytes.prefix(Int(length))
         self.init(bytes: trimmedBytes)
     }
     

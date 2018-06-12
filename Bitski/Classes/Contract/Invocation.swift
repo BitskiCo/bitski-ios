@@ -27,9 +27,6 @@ public protocol ABIInvocation {
     /// Handler for submitting calls and sends
     var handler: ABIFunctionHandler { get }
     
-    /// The generated data for this invocation
-    var data: EthereumData? { get }
-    
     /// Generates an EthereumCall object
     func createCall() -> EthereumCall?
     
@@ -39,8 +36,14 @@ public protocol ABIInvocation {
     /// Read data from the blockchain. Only available for constant functions.
     func call(block: EthereumQuantityTag, completion: @escaping ([String: Any]?, Error?) -> Void)
     
-    /// Write data to the blockchain. Only available for non-constant functions
+    /// Write data to the blockchain. Only available for non-constant functions.
     func send(nonce: EthereumQuantity?, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?, completion: @escaping (EthereumData?, Error?) -> Void)
+    
+    /// Estimate how much gas is needed to execute this transaction.
+    func estimateGas(from: EthereumAddress?, gas: EthereumQuantity?, value: EthereumQuantity?, completion: @escaping (EthereumQuantity?, Error?) -> Void)
+    
+    /// Encodes the ABI for this invocation
+    func encodeABI() -> EthereumData?
     
     init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler)
 }
@@ -75,7 +78,7 @@ public struct ABIReadInvocation: ABIInvocation {
     }
     
     public func createCall() -> EthereumCall? {
-        guard let data = data else { return nil }
+        guard let data = encodeABI() else { return nil }
         guard let to = handler.address else { return nil }
         return EthereumCall(from: nil, to: to, gas: nil, gasPrice: nil, value: nil, data: data)
     }
@@ -85,6 +88,7 @@ public struct ABIReadInvocation: ABIInvocation {
 
 /// An invocation that writes to the blockchain and can receive ETH. Should only use .send()
 public struct ABIPayableInvocation: ABIInvocation {
+    
     public let method: ABIFunction
     public let parameters: [SolidityWrappedValue]
     
@@ -97,7 +101,7 @@ public struct ABIPayableInvocation: ABIInvocation {
     }
     
     public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
-        guard let data = data else { return nil }
+        guard let data = encodeABI() else { return nil }
         guard let to = handler.address else { return nil }
         return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: to, value: value ?? 0, data: data)
     }
@@ -131,7 +135,7 @@ public struct ABINonPayableInvocation: ABIInvocation {
     }
     
     public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity?, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
-        guard let data = data else { return nil }
+        guard let data = encodeABI() else { return nil }
         guard let to = handler.address else { return nil }
         return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: to, value: value ?? 0, data: data)
     }
@@ -155,10 +159,6 @@ public extension ABIInvocation {
     
     // Default Implementations
     
-    public var data: EthereumData? {
-        return serializeData()
-    }
-    
     public func createCall() -> EthereumCall? {
         return nil
     }
@@ -179,6 +179,26 @@ public extension ABIInvocation {
         self.call(block: .latest, completion: completion)
     }
     
+    public func estimateGas(from: EthereumAddress? = nil, gas: EthereumQuantity? = nil, value: EthereumQuantity? = nil, completion: @escaping (EthereumQuantity?, Error?) -> Void) {
+        guard let data = encodeABI() else {
+            completion(nil, InvocationError.encodingError)
+            return
+        }
+        guard let to = handler.address else {
+            completion(nil, InvocationError.contractNotDeployed)
+            return
+        }
+        let call = EthereumCall(from: from, to: to, gas: gas, gasPrice: nil, value: value, data: data)
+        handler.estimateGas(call, completion: completion)
+    }
+    
+    public func encodeABI() -> EthereumData? {
+        guard let inputsString = ABIEncoder.encode(parameters) else { return nil }
+        let signatureString = method.hashedSignature
+        let hexString = "0x" + signatureString + inputsString
+        return try? EthereumData(ethereumValue: hexString)
+    }
+    
     // Promises
     
     public func call(block: EthereumQuantityTag = .latest) -> Promise<[String: Any]> {
@@ -193,11 +213,10 @@ public extension ABIInvocation {
         }
     }
     
-    private func serializeData() -> EthereumData? {
-        guard let inputsString = ABIEncoder.encode(parameters) else { return nil }
-        let signatureString = method.hashedSignature
-        let hexString = "0x" + signatureString + inputsString
-        return try? EthereumData(ethereumValue: hexString)
+    public func estimateGas(from: EthereumAddress? = nil, gas: EthereumQuantity? = nil, value: EthereumQuantity? = nil) -> Promise<EthereumQuantity> {
+        return Promise { seal in
+            self.estimateGas(from: from, gas: gas, value: value, completion: seal.resolve)
+        }
     }
 }
 
@@ -218,7 +237,7 @@ public struct ABIConstructorInvocation {
     }
     
     public func createTransaction(nonce: EthereumQuantity? = nil, from: EthereumAddress, value: EthereumQuantity = 0, gas: EthereumQuantity, gasPrice: EthereumQuantity?) -> EthereumTransaction? {
-        guard let data = serializeData() else { return nil }
+        guard let data = encodeABI() else { return nil }
         return EthereumTransaction(nonce: nonce, gasPrice: gasPrice, gasLimit: gas, from: from, to: nil, value: value, data: data)
     }
     
@@ -240,7 +259,7 @@ public struct ABIConstructorInvocation {
         }
     }
     
-    private func serializeData() -> EthereumData? {
+    public func encodeABI() -> EthereumData? {
         // The data for creating a new contract is the bytecode of the contract + any input params serialized in the standard format.
         var dataString = "0x"
         dataString += byteCode.hex().replacingOccurrences(of: "0x", with: "")

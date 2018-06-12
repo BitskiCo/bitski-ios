@@ -151,4 +151,17 @@ extension EthereumContract {
             completion(nil, error)
         }
     }
+    
+    /// Estimates the amount of gas used for this method
+    ///
+    /// - Parameters:
+    ///   - call: An ethereum call with the data for the transaction.
+    ///   - completion: completion handler with either an error or the estimated amount of gas needed.
+    public func estimateGas(_ call: EthereumCall, completion: @escaping (EthereumQuantity?, Error?) -> Void) {
+        eth.estimateGas(call: call).done { quantity in
+            completion(quantity, nil)
+        }.catch { error in
+            completion(nil, error)
+        }
+    }
 }

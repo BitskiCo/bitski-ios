@@ -11,6 +11,7 @@ import XCTest
 import Web3
 import BigInt
 import Mockingjay
+import PromiseKit
 
 // Example of subclassing a common token implementation
 class TestContract: GenericERC721Contract {
@@ -60,6 +61,10 @@ class ContractTests: XCTestCase, TransactionWatcherDelegate {
         
         if let block1 = loadStub(named: "getBlock1"), let block2 = loadStub(named: "getBlock2"), let block3 = loadStub(named: "getBlock3") {
             stub(rpc("eth_blockNumber"), blockNumberResponse(block1, block2, block3))
+        }
+        
+        if let gasData = loadStub(named: "estimateGas") {
+            stub(rpc("eth_estimateGas"), jsonData(gasData))
         }
     }
     
@@ -112,7 +117,15 @@ class ContractTests: XCTestCase, TransactionWatcherDelegate {
         let buyCallExpectation = expectation(description: "Call should always error")
         
         // Tests a payable function
-        erc721.buyToken().send(from: .testAddress, value: EthereumQuantity(quantity: 1.eth), gas: 12000, gasPrice: nil).done { hash in
+        
+        let invocation = erc721.buyToken()
+        
+        firstly {
+            invocation.estimateGas(from: .testAddress, value: EthereumQuantity(quantity: 1.eth))
+        }.then { gas -> Promise<EthereumData> in
+            XCTAssertEqual(gas, 21000, "Estimated gas should be 21000")
+            return invocation.send(from: .testAddress, value: EthereumQuantity(quantity: 1.eth), gas: gas, gasPrice: nil)
+        }.done { hash in
             XCTAssertEqual(hash, try! EthereumData(ethereumValue: "0x0e670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331"))
             buyExpectation.fulfill()
         }.catch { error in

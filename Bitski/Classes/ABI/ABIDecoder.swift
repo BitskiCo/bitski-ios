@@ -76,9 +76,9 @@ public class ABIDecoder {
     
     // MARK: - Arrays
     
-    public class func decodeArray(elementType: SolidityType, length: Int?, from hexString: String) -> [Any]? {
+    public class func decodeArray(elementType: SolidityType, length: UInt?, from hexString: String) -> [Any]? {
         if !elementType.isDynamic, let length = length {
-            return decodeFixedArray(elementType: elementType, length: length, from: hexString)
+            return decodeFixedArray(elementType: elementType, length: Int(length), from: hexString)
         } else {
             return decodeDynamicArray(elementType: elementType, from: hexString)
         }
@@ -115,9 +115,10 @@ public class ABIDecoder {
         // Create segments
         let segments = (0..<types.count).compactMap { i -> Segment? in
             let type = types[i]
-            if let staticPart = hexString.substr(i * 64, type.staticPartLength * 2) {
+            if let staticPart = hexString.substr(i * 64, Int(type.staticPartLength) * 2) {
                 var dynamicOffset: String.Index?
                 if type.isDynamic, let offset = Int(staticPart, radix: 16) {
+                    guard (offset * 2) < hexString.count else { return nil }
                     dynamicOffset = hexString.index(hexString.startIndex, offsetBy: offset * 2)
                 }
                 return Segment(type: type, dynamicOffset: dynamicOffset, staticString: staticPart)
@@ -135,7 +136,7 @@ public class ABIDecoder {
         let segments = (0..<outputs.count).compactMap { i -> Segment? in
             let type = outputs[i].type
             let name = outputs[i].name
-            if let staticPart = hexString.substr(i * 64, type.staticPartLength * 2) {
+            if let staticPart = hexString.substr(i * 64, Int(type.staticPartLength) * 2) {
                 var dynamicOffset: String.Index?
                 if type.isDynamic, let offset = Int(staticPart, radix: 16) {
                     dynamicOffset = hexString.index(hexString.startIndex, offsetBy: offset * 2)
@@ -180,16 +181,21 @@ public class ABIDecoder {
                 if let length = length {
                     return Data(hexString: hexString, length: length)
                 } else {
-                    return type.nativeType.init(hexString: hexString)
+                    return Data(hexString: hexString)
                 }
+            case .fixed:
+                // Decimal doesn't support numbers large enough
+                return nil
+            case .ufixed:
+                // Decimal doesn't support numbers large enough
+                return nil
             default:
-                return type.nativeType.init(hexString: hexString)
+                return type.nativeType?.init(hexString: hexString)
             }
         case .array(let elementType, let length):
             return decodeArray(elementType: elementType, length: length, from: hexString)
-        case .tuple:
-            // tuple not yet supported
-            return nil
+        case .tuple(let types):
+            return decode(types, from: String(hexString))
         }
     }
 }

@@ -77,11 +77,11 @@ extension SolidityType: Codable {
         return NSRegularExpression.arrayMatch.matches(string)
     }
     
-    static func arraySizeAndType(_ string: String) -> (String?, Int?) {
+    static func arraySizeAndType(_ string: String) -> (String?, UInt?) {
         let capturedStrings = NSRegularExpression.arrayTypeMatch.matches(in: string)
         var strings = capturedStrings.dropFirst().makeIterator()
         let typeValue = strings.next()
-        if let sizeValue = strings.next(), let intValue = Int(sizeValue) {
+        if let sizeValue = strings.next(), let intValue = UInt(sizeValue) {
             return (typeValue, intValue)
         }
         return (typeValue, nil)
@@ -106,7 +106,7 @@ extension SolidityType: Codable {
         switch (strings.next(), strings.next()) {
         case ("uint", let bits):
             if let bits = bits {
-                if let intValue = Int(bits) {
+                if let intValue = UInt16(bits) {
                     return .type(.uint(bits: intValue))
                 }
                 return nil
@@ -114,7 +114,7 @@ extension SolidityType: Codable {
             return .uint256
         case ("int", let bits):
             if let bits = bits {
-                if let intValue = Int(bits) {
+                if let intValue = UInt16(bits) {
                     return .type(.int(bits: intValue))
                 }
                 return nil
@@ -131,7 +131,7 @@ extension SolidityType: Codable {
     
     static func bytesType(_ string: String) -> SolidityType? {
         let sizeMatches = NSRegularExpression.bytesMatch.matches(in: string).dropFirst()
-        if let sizeString = sizeMatches.first, let size = Int(sizeString) {
+        if let sizeString = sizeMatches.first, let size = UInt(sizeString) {
             return .bytes(length: size)
         }
         // no size

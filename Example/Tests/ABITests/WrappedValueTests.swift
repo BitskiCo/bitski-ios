@@ -53,7 +53,7 @@ class SolidityWrappedValueTests: XCTestCase {
     func testBytes() {
         let bytes = Data("hi!".utf8)
         XCTAssertEqual(SolidityWrappedValue.bytes(bytes).type, .bytes(length: nil))
-        XCTAssertEqual(SolidityWrappedValue.fixedBytes(bytes).type, .bytes(length: bytes.count))
+        XCTAssertEqual(SolidityWrappedValue.fixedBytes(bytes).type, .bytes(length: UInt(bytes.count)))
     }
     
     func testArray() {
