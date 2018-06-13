@@ -18,7 +18,7 @@ public extension Web3.Eth {
     /// - Throws: Error when the ABI data cannot be decoded
     func Contract(abi data: Data) throws -> DynamicContract {
         let decoder = JSONDecoder()
-        let jsonABI = try decoder.decode(JSONContractObject.self, from: data)
+        let jsonABI = try decoder.decode(ContractJSONRepresentation.self, from: data)
         return DynamicContract(jsonABI: jsonABI, address: nil, eth: self)
     }
     
@@ -31,7 +31,7 @@ public extension Web3.Eth {
     /// - Throws: Error when the ABI data cannot be decoded
     func Contract(abi data: Data, address: EthereumAddress) throws -> DynamicContract {
         let decoder = JSONDecoder()
-        let jsonABI = try decoder.decode(JSONContractObject.self, from: data)
+        let jsonABI = try decoder.decode(ContractJSONRepresentation.self, from: data)
         return DynamicContract(jsonABI: jsonABI, address: address, eth: self)
     }
     

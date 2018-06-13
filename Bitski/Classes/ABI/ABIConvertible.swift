@@ -15,7 +15,7 @@ public protocol SolidityTypeRepresentable {
 }
 
 /// A type that can be converted to and from Solidity ABI bytes
-public protocol ABIValue {
+public protocol ABIConvertible {
     
     /// Initialize with a hex string from Solidity
     ///
@@ -109,7 +109,7 @@ extension FixedWidthInteger where Self: SignedInteger {
     }
 }
 
-extension BigInt: ABIValue {
+extension BigInt: ABIConvertible {
     
     public init?(hexString: String) {
         let binaryString = hexString.hexToBinary()
@@ -150,7 +150,7 @@ extension BigInt: SolidityTypeRepresentable {
     }
 }
 
-extension BigUInt: ABIValue {
+extension BigUInt: ABIConvertible {
     
     public init?(hexString: String) {
         self.init(hexString, radix: 16)
@@ -169,7 +169,7 @@ extension BigUInt: SolidityTypeRepresentable {
 
 // Boolean
 
-extension Bool: ABIValue {
+extension Bool: ABIConvertible {
     
     public init?(hexString: String) {
         if let numberValue = UInt(hexString, radix: 16) {
@@ -195,7 +195,7 @@ extension Bool: SolidityTypeRepresentable {
 
 // String
 
-extension String: ABIValue {
+extension String: ABIConvertible {
     
     public init?(hexString: String) {
         if let data = Data(hexString: hexString) {
@@ -219,7 +219,7 @@ extension String: SolidityTypeRepresentable {
 
 // Array
 
-extension Array: ABIValue where Element: ABIValue {
+extension Array: ABIConvertible where Element: ABIConvertible {
     
     public init?(hexString: String) {
         let lengthString = hexString.substr(0, 64)
@@ -265,7 +265,7 @@ extension Array: ABIValue where Element: ABIValue {
 
 // Bytes
 
-extension Data: ABIValue {
+extension Data: ABIConvertible {
     
     public init?(hexString: String) {
         //split segments
@@ -307,7 +307,7 @@ extension Data: ABIValue {
 
 // Address
 
-extension EthereumAddress: ABIValue {
+extension EthereumAddress: ABIConvertible {
     
     public init?(hexString: String) {
         // trim whitespace to 160 bytes
@@ -335,14 +335,14 @@ extension EthereumAddress: SolidityTypeRepresentable {
 
 // MARK: - Explicit protocol conformance
 
-extension Int: ABIValue, SolidityTypeRepresentable {}
-extension Int8: ABIValue, SolidityTypeRepresentable {}
-extension Int16: ABIValue, SolidityTypeRepresentable {}
-extension Int32: ABIValue, SolidityTypeRepresentable {}
-extension Int64: ABIValue, SolidityTypeRepresentable {}
+extension Int: ABIConvertible, SolidityTypeRepresentable {}
+extension Int8: ABIConvertible, SolidityTypeRepresentable {}
+extension Int16: ABIConvertible, SolidityTypeRepresentable {}
+extension Int32: ABIConvertible, SolidityTypeRepresentable {}
+extension Int64: ABIConvertible, SolidityTypeRepresentable {}
 
-extension UInt: ABIValue, SolidityTypeRepresentable {}
-extension UInt8: ABIValue, SolidityTypeRepresentable {}
-extension UInt16: ABIValue, SolidityTypeRepresentable {}
-extension UInt32: ABIValue, SolidityTypeRepresentable {}
-extension UInt64: ABIValue, SolidityTypeRepresentable {}
+extension UInt: ABIConvertible, SolidityTypeRepresentable {}
+extension UInt8: ABIConvertible, SolidityTypeRepresentable {}
+extension UInt16: ABIConvertible, SolidityTypeRepresentable {}
+extension UInt32: ABIConvertible, SolidityTypeRepresentable {}
+extension UInt64: ABIConvertible, SolidityTypeRepresentable {}

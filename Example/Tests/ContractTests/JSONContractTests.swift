@@ -17,7 +17,7 @@ extension EthereumAddress {
     static let testAddress = try! EthereumAddress(hex: "0x0000000000000000000000000000000000000000", eip55: false)
 }
 
-class JSONContractTests: XCTestCase {
+class DynamicContractTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
@@ -42,7 +42,7 @@ class JSONContractTests: XCTestCase {
         let data = loadStub(named: "ERC721")!
         
         do {
-            let decodedABI = try JSONDecoder().decode(JSONContractObject.self, from: data)
+            let decodedABI = try JSONDecoder().decode(ContractJSONRepresentation.self, from: data)
             
             XCTAssertEqual(decodedABI.contractName, "ERC721", "ABI name should be decoded")
             XCTAssertEqual(decodedABI.abi.count, 10, "ABI should be completely decoded")

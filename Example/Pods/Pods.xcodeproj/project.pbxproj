@@ -54,7 +54,7 @@
 		281B47D27474FEEAF7CC8F18C3CF5041 /* main_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BB169CF9EB4C7004B1B4E7C907275FD /* main_impl.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		293A8D0D300D363433C44A8FB92183FE /* HMAC.swift in Sources */ = {isa = PBXBuildFile; fileRef = E62F4959408CF05CAB8A0A8D600BA964 /* HMAC.swift */; };
 		2B1A2719F975A844F7EF5670A9C551EF /* OIDRegistrationResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = D6105642EB4228FD383E36C388316944 /* OIDRegistrationResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		2C64E6C88AB73088E3947FBCAD9E4CC8 /* Invocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC68AEA342028027148BCECA6770B97 /* Invocation.swift */; };
+		2C64E6C88AB73088E3947FBCAD9E4CC8 /* SolidityInvocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DC68AEA342028027148BCECA6770B97 /* SolidityInvocation.swift */; };
 		2CA2EEB0E18700EE7FDF573BCD06C9B2 /* secp256k1.swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D4FBE383AD71E0CB0EE43B67D88F0B4A /* secp256k1.swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F9125C6900FAFFC4557CC389B1C873B /* OIDTokenResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 9F153B88977768060FDEAE3AAAE4DC72 /* OIDTokenResponse.m */; };
 		308F6D5DD72434B44796A0BF20A4FC51 /* Web3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79453C6EF293366D2BFF56B3EBCCA2F9 /* Web3.swift */; };
@@ -93,7 +93,7 @@
 		425645E869D530A47B54FB29C61B0AE9 /* AppAuth-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1987AE9BFF58B94362D6EDE214BCB266 /* AppAuth-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		42F4E4FF643B606585DB95A26AE19AC5 /* RLPItemConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDF15DD7D74A2C25F943FFB81D9385D /* RLPItemConvertible.swift */; };
 		4352BE0B53B7A3A7BF02590C9548D03B /* OIDAuthorizationService.h in Headers */ = {isa = PBXBuildFile; fileRef = FA0416C8AD8FC00086F6471B8E907C40 /* OIDAuthorizationService.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		43759692C9843853C95CF988263CDDEB /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA39CF6B2FB71BD8ED515A84446C73C /* Event.swift */; };
+		43759692C9843853C95CF988263CDDEB /* SolidityEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CA39CF6B2FB71BD8ED515A84446C73C /* SolidityEvent.swift */; };
 		43BBF44A4ABE111ACC2D9AD905C21D3C /* EthereumLogObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C88B1A4B829B1415312EDF7CE9D170D5 /* EthereumLogObject.swift */; };
 		44B1ADDFB02547C088ABE9E85E7ACCC2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DC97B787CBD26FF412EAD89BB6334DC /* Utils.swift */; };
 		44DEE4B1AC2E3768106422AB99DAB607 /* num_gmp.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D4117DCA7639A6F453A614F8BA7A5D0 /* num_gmp.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -111,7 +111,7 @@
 		4BEC1ECF760B183C2285B4EC5323BD2E /* BigUInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE22955C8EA4DF8A060F946136C814B /* BigUInt.swift */; };
 		4CC50D5587FFCF5DFA48B9D87D6037DA /* OIDDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 0BE8580D35E1570CD649349F3C095809 /* OIDDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4CD29ABAF7D0860D6084CEFD8297B2F2 /* RandomHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3AE807EA13958659C7BB9A6B9EC1C7B /* RandomHex.swift */; };
-		4E16DA9918804212A61A66E517125DED /* Contract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CF1A2F27C06AC904EA48B4CF4DF975 /* Contract.swift */; };
+		4E16DA9918804212A61A66E517125DED /* EthereumContract.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CF1A2F27C06AC904EA48B4CF4DF975 /* EthereumContract.swift */; };
 		4E4B08B80EFC158660D58AA78C21E27D /* Pods-Bitski_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 93813683A94B880D723F8FA6DA36E027 /* Pods-Bitski_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EDBC879019BB01E84AA9246BC86322C /* OIDScopes.m in Sources */ = {isa = PBXBuildFile; fileRef = 99246D691724F179537269672D1ABE55 /* OIDScopes.m */; };
 		502CA78557A760EECE1CF20AD031CC5F /* CryptoSwift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF523F939BB96DBCDF6600EE509F52 /* CryptoSwift-dummy.m */; };
@@ -249,10 +249,10 @@
 		B7EC2E586666A3CAF9F17A72FC68B763 /* Box.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1834534297DBE60CA0E2A82F88861547 /* Box.swift */; };
 		B973480C1301A4C4A56629BF62D21948 /* Comparable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56DFEAA6460A516A272AB8636940D889 /* Comparable.swift */; };
 		B9854BFF437463C8763E6013A21AD88B /* CTR.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB312E0B3F2E8ED66CB68A100C42A6EC /* CTR.swift */; };
-		B9DE04D6D8BFC899E1D3C863FEF1F3A5 /* JSONContractObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11155CEA00EDC134E023B299500D07A5 /* JSONContractObject.swift */; };
+		B9DE04D6D8BFC899E1D3C863FEF1F3A5 /* ContractJSONRepresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11155CEA00EDC134E023B299500D07A5 /* ContractJSONRepresentation.swift */; };
 		BA418E30F861871700509E0636ECE134 /* Data+BytesConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0C2FC39404CBC081BF7587A5F547D9 /* Data+BytesConvertible.swift */; };
 		BB05EC98BCC0DEBC192728ECDC37194F /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA604730E47F2E42584ADCD8EAFCA6F2 /* Promise.swift */; };
-		BC11A576769945BE0DE88301979B3A59 /* Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A46FE2F45C39ECA2C6E26C3063B3B /* Function.swift */; };
+		BC11A576769945BE0DE88301979B3A59 /* SolidityFunction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A46FE2F45C39ECA2C6E26C3063B3B /* SolidityFunction.swift */; };
 		BD2D0F512BDDBFB07F55EE75D31FE938 /* OIDTokenUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = AAC876B3EAE9B61CEF5F3EF1D0024B61 /* OIDTokenUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BD3012282E255C84BB642952055F9A08 /* Int+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FAF72A5ED4D21BA3730ABED390DAA85 /* Int+Extension.swift */; };
 		BD5A21AD74411B53A4E09A365F4531DC /* Error.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CBBDCED390F2930CBEA966E044CC9DB /* Error.swift */; };
@@ -297,7 +297,7 @@
 		D3AF4AB1A90B5F10986D15B1D35A3136 /* after.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16BF5F3AF7884C53098CEFFE4ABB504F /* after.swift */; };
 		D3C2837B02D2DBB3AF2A47D31435828C /* RLPEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B661591FF541782D420B22F0DE1E10A /* RLPEncoder.swift */; };
 		D3DA7E6DAE71DF467B4AC03EAB033D3C /* UInt128.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9083066DDB08E8FF6932EFE4B52A89C6 /* UInt128.swift */; };
-		D3F52DCA2D33E1F16B9A587B9F308B82 /* ABIValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIValue.swift */; };
+		D3F52DCA2D33E1F16B9A587B9F308B82 /* ABIConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIConvertible.swift */; };
 		D570D8C16E39A004A8218845C482529C /* NoPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5243713C37D7D474F86768A4092A4229 /* NoPadding.swift */; };
 		D5DEBB6002AE0C3679EDE539F184F005 /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4F20BDCF040BC6EBAC1B7916768B722 /* Array+Extension.swift */; };
 		D6534CAE42372D795AFEC2C733609D62 /* ecmult.h in Headers */ = {isa = PBXBuildFile; fileRef = 164E5C96AD25385CFC94DA9D43B6CA7E /* ecmult.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -323,6 +323,7 @@
 		E77A97E38D3A77E00356E071535C104F /* race.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E5428C44CD92E56983D19D8FB5530D9 /* race.m */; };
 		E8581385CA6133CB1FAA93A62A3B6E75 /* AnyPromise.h in Headers */ = {isa = PBXBuildFile; fileRef = 7E0020BBFC192FF41BA5B4DD5B454BF8 /* AnyPromise.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E85B77ED20D1AB190069E3B4 /* SolidityTuple.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B77EC20D1AB190069E3B4 /* SolidityTuple.swift */; };
+		E85B77EF20D1B35C0069E3B4 /* ABI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B77EE20D1B35C0069E3B4 /* ABI.swift */; };
 		E9A949DD68B983C9DBAA92870500F3C3 /* Cipher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF7DA2BDE6BA284D165F395CD778B5EC /* Cipher.swift */; };
 		EA18840A0FC3E209BB5980C631F88849 /* UnsignedInteger+Shifting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D56FA265C15CD977082CD5F16DDB141 /* UnsignedInteger+Shifting.swift */; };
 		EB0B833840245FDA8CFBC2FD21BFD0F1 /* EthereumSyncStatusObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = B04378BEA23432F22DD924819E5EDD95 /* EthereumSyncStatusObject.swift */; };
@@ -650,7 +651,7 @@
 
 /* Begin PBXFileReference section */
 		01B9AEA72341B25C9D4082DD8B922F71 /* Rabbit+Foundation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Rabbit+Foundation.swift"; path = "Sources/CryptoSwift/Foundation/Rabbit+Foundation.swift"; sourceTree = "<group>"; };
-		01CF1A2F27C06AC904EA48B4CF4DF975 /* Contract.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Contract.swift; sourceTree = "<group>"; };
+		01CF1A2F27C06AC904EA48B4CF4DF975 /* EthereumContract.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EthereumContract.swift; sourceTree = "<group>"; };
 		01F646399E050BE345E84193B992A70C /* PromiseKit.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = PromiseKit.xcconfig; sourceTree = "<group>"; };
 		0336899F4631508FF826AA14A24E4053 /* Mockingjay-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Mockingjay-umbrella.h"; sourceTree = "<group>"; };
 		050A84D0CC6ABA0365B25FC27F9CDF47 /* PKCS7Padding.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PKCS7Padding.swift; path = Sources/CryptoSwift/PKCS/PKCS7Padding.swift; sourceTree = "<group>"; };
@@ -676,7 +677,7 @@
 		0FE22955C8EA4DF8A060F946136C814B /* BigUInt.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BigUInt.swift; path = BigInt/Classes/BigUInt.swift; sourceTree = "<group>"; };
 		105A7B89C255C7029FE568B0FF9BABBD /* Pods-Bitski_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Bitski_Example-resources.sh"; sourceTree = "<group>"; };
 		10D40FB8587B05CD043096DC492F717D /* PromiseKit-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "PromiseKit-prefix.pch"; sourceTree = "<group>"; };
-		11155CEA00EDC134E023B299500D07A5 /* JSONContractObject.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JSONContractObject.swift; sourceTree = "<group>"; };
+		11155CEA00EDC134E023B299500D07A5 /* ContractJSONRepresentation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ContractJSONRepresentation.swift; sourceTree = "<group>"; };
 		117D5ADFC88A87E46D4204458B8DA90B /* Hashable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Hashable.swift; path = BigInt/Classes/Hashable.swift; sourceTree = "<group>"; };
 		12DE52C1234B372D0CEA8986A0EEBCC3 /* AppAuth-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "AppAuth-prefix.pch"; sourceTree = "<group>"; };
 		1443B97F275CDE28068504B6808BBCF1 /* AES.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AES.swift; path = Sources/CryptoSwift/AES.swift; sourceTree = "<group>"; };
@@ -693,7 +694,7 @@
 		1B661591FF541782D420B22F0DE1E10A /* RLPEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RLPEncoder.swift; path = Web3/Classes/Core/RLP/RLPEncoder.swift; sourceTree = "<group>"; };
 		1BA8DEB8327324501043637CD7843A13 /* RandomAccessCryptor.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RandomAccessCryptor.swift; path = Sources/CryptoSwift/RandomAccessCryptor.swift; sourceTree = "<group>"; };
 		1C11E6D5CD47430C1405A64A64E5085A /* Mockingjay.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Mockingjay.swift; path = Sources/Mockingjay/Mockingjay.swift; sourceTree = "<group>"; };
-		1C4A46FE2F45C39ECA2C6E26C3063B3B /* Function.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Function.swift; sourceTree = "<group>"; };
+		1C4A46FE2F45C39ECA2C6E26C3063B3B /* SolidityFunction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SolidityFunction.swift; sourceTree = "<group>"; };
 		1CB545DBE205D4B3B27ED3DE0BEC3F72 /* EthereumTransaction.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = EthereumTransaction.swift; path = Web3/Classes/Core/Transaction/EthereumTransaction.swift; sourceTree = "<group>"; };
 		1CFA7E99ECF8C57316B3D46E72ACC52D /* OIDAuthState+Bitski.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "OIDAuthState+Bitski.swift"; sourceTree = "<group>"; };
 		1D2BD61C268281CF91A581C59E34420D /* Generics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Generics.swift; path = Sources/CryptoSwift/Generics.swift; sourceTree = "<group>"; };
@@ -775,7 +776,7 @@
 		4C19C0E8944F0294C983321EA1A3E93D /* race.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = race.swift; path = Sources/race.swift; sourceTree = "<group>"; };
 		4C2900983C728FE1558407AA0859164E /* lax_der_privatekey_parsing.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = lax_der_privatekey_parsing.h; path = secp256k1/Classes/secp256k1/contrib/lax_der_privatekey_parsing.h; sourceTree = "<group>"; };
 		4C64E3AA096CF12A43A98B1D5A63FA33 /* OIDRegistrationRequest.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = OIDRegistrationRequest.h; path = Source/OIDRegistrationRequest.h; sourceTree = "<group>"; };
-		4CA39CF6B2FB71BD8ED515A84446C73C /* Event.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		4CA39CF6B2FB71BD8ED515A84446C73C /* SolidityEvent.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SolidityEvent.swift; sourceTree = "<group>"; };
 		4E842CBA729EB2EC813FB9F0CB8C70D6 /* ABIEncoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ABIEncoder.swift; sourceTree = "<group>"; };
 		4EC5CB9DB3C0C6DE1788C8D821668670 /* field.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = field.h; path = secp256k1/Classes/secp256k1/src/field.h; sourceTree = "<group>"; };
 		51685C27C1842E452A64328419F52EDF /* Pods_ABITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ABITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -874,7 +875,7 @@
 		8C019251FE5A1A18FB1FF67E7C1364E5 /* SHA3.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SHA3.swift; path = Sources/CryptoSwift/SHA3.swift; sourceTree = "<group>"; };
 		8C70F90F0CB8BC5EAAD3D8C4D12C7648 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D29F9C40219F6143A5D46A2B8D87450 /* Rabbit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Rabbit.swift; path = Sources/CryptoSwift/Rabbit.swift; sourceTree = "<group>"; };
-		8DC68AEA342028027148BCECA6770B97 /* Invocation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Invocation.swift; sourceTree = "<group>"; };
+		8DC68AEA342028027148BCECA6770B97 /* SolidityInvocation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SolidityInvocation.swift; sourceTree = "<group>"; };
 		8DC79B0112691E0375B6C28121DAC910 /* AppAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AppAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E4A05D07DBC4539F16E8ED5CDF2BF2F /* AppAuth-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "AppAuth-dummy.m"; sourceTree = "<group>"; };
 		8E78C97EFD16D496F985A5BD464DF3B3 /* Types+RLPItemConvertible.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Types+RLPItemConvertible.swift"; path = "Web3/Classes/Core/RLP/Types+RLPItemConvertible.swift"; sourceTree = "<group>"; };
@@ -979,7 +980,7 @@
 		C2CA1230EFC070431588385687410261 /* CryptoSwift-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CryptoSwift-prefix.pch"; sourceTree = "<group>"; };
 		C2D45D2B93BD195C468729F404B007C7 /* ERC721.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ERC721.swift; sourceTree = "<group>"; };
 		C3ED9395E3E3D6C9B1D0366CD7C064FD /* Pods-Bitski_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Bitski_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIValue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ABIValue.swift; sourceTree = "<group>"; };
+		C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIConvertible.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ABIConvertible.swift; sourceTree = "<group>"; };
 		C5929855FFE42F29B04186EFE9297A5A /* Pods-Bitski_Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Bitski_Tests-frameworks.sh"; sourceTree = "<group>"; };
 		C5D9F387933274F48166060B0C885165 /* Web3HttpProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Web3HttpProvider.swift; path = Web3/Classes/FoundationHTTP/Web3HttpProvider.swift; sourceTree = "<group>"; };
 		C5EAD4A2EDF874FBE07399ADAE26C813 /* HMAC+Foundation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "HMAC+Foundation.swift"; path = "Sources/CryptoSwift/Foundation/HMAC+Foundation.swift"; sourceTree = "<group>"; };
@@ -1033,6 +1034,7 @@
 		E74EEE88E80A364BA5A0302E918D20A8 /* Pods-Bitski_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Bitski_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E80C24C874C1F21A0AFC3FF9A11EC908 /* Pods-ContractTests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-ContractTests-acknowledgements.markdown"; sourceTree = "<group>"; };
 		E85B77EC20D1AB190069E3B4 /* SolidityTuple.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolidityTuple.swift; sourceTree = "<group>"; };
+		E85B77EE20D1B35C0069E3B4 /* ABI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABI.swift; sourceTree = "<group>"; };
 		E9F42D4DB190DF051EB5235074A45993 /* OIDAuthStateErrorDelegate.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = OIDAuthStateErrorDelegate.h; path = Source/OIDAuthStateErrorDelegate.h; sourceTree = "<group>"; };
 		EA30B5D9BA0B9CB175BADC8E1E934E05 /* PromiseKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = PromiseKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAF8AA13E3FE03CDEE27B9079FE3F91C /* Array+Foundation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Array+Foundation.swift"; path = "Sources/CryptoSwift/Foundation/Array+Foundation.swift"; sourceTree = "<group>"; };
@@ -1279,9 +1281,10 @@
 		1A85CFFA788BAC7DE44C8602514A90A1 /* ABI */ = {
 			isa = PBXGroup;
 			children = (
+				E85B77EE20D1B35C0069E3B4 /* ABI.swift */,
 				83EF8CA7CC26EA8496A962C9CD0D692B /* ABIDecoder.swift */,
 				4E842CBA729EB2EC813FB9F0CB8C70D6 /* ABIEncoder.swift */,
-				C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIValue.swift */,
+				C523D78AEC1EAF40E475C7DDA8E03BCB /* ABIConvertible.swift */,
 				9DE7D9C493449402B3D10D35F3C191AF /* SolidityType.swift */,
 				2352F4122FA4866EF0D400CF81A220AD /* SolidityType+Codable.swift */,
 				82AB91D7425CE767BF6A249B06195021 /* SolidityWrappedValue.swift */,
@@ -1877,12 +1880,12 @@
 		D5741741A9149656FC01B06B5CBFF8F6 /* Contract */ = {
 			isa = PBXGroup;
 			children = (
-				01CF1A2F27C06AC904EA48B4CF4DF975 /* Contract.swift */,
+				01CF1A2F27C06AC904EA48B4CF4DF975 /* EthereumContract.swift */,
 				C2D45D2B93BD195C468729F404B007C7 /* ERC721.swift */,
-				4CA39CF6B2FB71BD8ED515A84446C73C /* Event.swift */,
-				1C4A46FE2F45C39ECA2C6E26C3063B3B /* Function.swift */,
-				8DC68AEA342028027148BCECA6770B97 /* Invocation.swift */,
-				11155CEA00EDC134E023B299500D07A5 /* JSONContractObject.swift */,
+				4CA39CF6B2FB71BD8ED515A84446C73C /* SolidityEvent.swift */,
+				1C4A46FE2F45C39ECA2C6E26C3063B3B /* SolidityFunction.swift */,
+				8DC68AEA342028027148BCECA6770B97 /* SolidityInvocation.swift */,
+				11155CEA00EDC134E023B299500D07A5 /* ContractJSONRepresentation.swift */,
 				B555F0A6259CFE327F3A1E3388FBBA89 /* TransactionWatcher.swift */,
 			);
 			name = Contract;
@@ -2461,19 +2464,20 @@
 				E37D970E074A7B30C790A50FB8356E75 /* ABIDecoder.swift in Sources */,
 				E85B77ED20D1AB190069E3B4 /* SolidityTuple.swift in Sources */,
 				48368499D743DD03D28787CE9F82E106 /* ABIEncoder.swift in Sources */,
-				D3F52DCA2D33E1F16B9A587B9F308B82 /* ABIValue.swift in Sources */,
+				D3F52DCA2D33E1F16B9A587B9F308B82 /* ABIConvertible.swift in Sources */,
 				6F5B45B5DBF0F61CB63B52A8D39E3DDE /* BigUInt+Ethereum.swift in Sources */,
 				E513513454BCB811E52537E6B1822448 /* Bitski-dummy.m in Sources */,
 				7CBD12101CA48F906F635DFDA986FADC /* Bitski.swift in Sources */,
 				E5F6CEE26602639D23F3D3B8DF34D0A4 /* BitskiProvider.swift in Sources */,
-				4E16DA9918804212A61A66E517125DED /* Contract.swift in Sources */,
+				4E16DA9918804212A61A66E517125DED /* EthereumContract.swift in Sources */,
 				15561D81E901DAA5666DBAB6B5CD3C8F /* ERC721.swift in Sources */,
 				E5BA0DB9988BC76B565B3927F3C446E4 /* Eth+Contract.swift in Sources */,
 				C3BCC8581DD63F85A1D313E39E33D29C /* Eth+SendTransaction.swift in Sources */,
-				43759692C9843853C95CF988263CDDEB /* Event.swift in Sources */,
-				BC11A576769945BE0DE88301979B3A59 /* Function.swift in Sources */,
-				2C64E6C88AB73088E3947FBCAD9E4CC8 /* Invocation.swift in Sources */,
-				B9DE04D6D8BFC899E1D3C863FEF1F3A5 /* JSONContractObject.swift in Sources */,
+				43759692C9843853C95CF988263CDDEB /* SolidityEvent.swift in Sources */,
+				BC11A576769945BE0DE88301979B3A59 /* SolidityFunction.swift in Sources */,
+				E85B77EF20D1B35C0069E3B4 /* ABI.swift in Sources */,
+				2C64E6C88AB73088E3947FBCAD9E4CC8 /* SolidityInvocation.swift in Sources */,
+				B9DE04D6D8BFC899E1D3C863FEF1F3A5 /* ContractJSONRepresentation.swift in Sources */,
 				C158547CDB87C7CBF4541689D5F93A25 /* OIDAuthorizationUICoordinator+Bitski.swift in Sources */,
 				33DB170AB22020E8DE61D03211B40E3B /* OIDAuthState+Bitski.swift in Sources */,
 				4CD29ABAF7D0860D6084CEFD8297B2F2 /* RandomHex.swift in Sources */,

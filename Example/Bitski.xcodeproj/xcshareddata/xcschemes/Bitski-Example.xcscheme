@@ -46,7 +46,7 @@
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "B6CD83F69C70B5A6FD005F57BE80548A"
+            BlueprintIdentifier = "495BB39549237B48253E0F3AD85C1EE7"
             BuildableName = "Bitski.framework"
             BlueprintName = "Bitski"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
@@ -72,6 +72,14 @@
                BlueprintName = "ABITests"
                ReferencedContainer = "container:Bitski.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "ABIDecoderTests">
+               </Test>
+               <Test
+                  Identifier = "ABIEncoderTests">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">

@@ -19,14 +19,14 @@ class TestContract: GenericERC721Contract {
     private let byteCode = try! EthereumData(ethereumValue: "0x0123456789ABCDEF")
     
     // Example of a static constructor
-    func deploy(name: String) -> ABIConstructorInvocation {
-        let constructor = ABIConstructor(inputs: [ABIParameter(name: "_name", type: .string)], handler: self)
+    func deploy(name: String) -> SolidityConstructorInvocation {
+        let constructor = SolidityConstructor(inputs: [SolidityFunctionParameter(name: "_name", type: .string)], handler: self)
         return constructor.invoke(byteCode: byteCode, parameters: [name])
     }
     
     // Example of a static function
-    func buyToken() -> ABIInvocation {
-        let method = ABIPayableFunction(name: "buyToken", inputs: [], outputs: nil, handler: self)
+    func buyToken() -> SolidityInvocation {
+        let method = SolidityPayableFunction(name: "buyToken", inputs: [], outputs: nil, handler: self)
         return method.invoke()
     }
 }

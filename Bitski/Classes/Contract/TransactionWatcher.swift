@@ -71,7 +71,7 @@ public class TransactionWatcher {
     public weak var delegate: TransactionWatcherDelegate?
     
     /// Events that we are expecting may be returned
-    private(set) public var watchedEvents = Set<ABIEvent>()
+    private(set) public var watchedEvents = Set<SolidityEvent>()
     
     private let web3: Web3
     private var timer: Timer?
@@ -85,7 +85,7 @@ public class TransactionWatcher {
     /// Watches for a provided event from the receipt's logs
     ///
     /// - Parameter event: ABIEvent to watch for
-    public func startWatching(for event: ABIEvent) {
+    public func startWatching(for event: SolidityEvent) {
         watchedEvents.insert(event)
         if let receipt = transactionReceipt {
             checkForMatchingEvents(logs: receipt.logs)
@@ -95,7 +95,7 @@ public class TransactionWatcher {
     /// Stops watching for a provided event
     ///
     /// - Parameter event: ABIEvent to stop watching
-    public func stopWatching(event: ABIEvent) {
+    public func stopWatching(event: SolidityEvent) {
         watchedEvents.remove(event)
     }
     
@@ -138,7 +138,8 @@ public class TransactionWatcher {
                 }
             } else {
                 for log in logs {
-                    if event.hashedSignature == log.topics.first?.hex().replacingOccurrences(of: "0x", with: "") {
+                    let hashedSignature = ABI.encodeEventSignature(event)
+                    if hashedSignature == log.topics.first?.hex() {
                         parseEvent(event, from: log)
                     }
                 }
@@ -146,8 +147,8 @@ public class TransactionWatcher {
         }
     }
     
-    private func parseEvent(_ event: ABIEvent, from log: EthereumLogObject) {
-        if let values = event.values(from: log) {
+    private func parseEvent(_ event: SolidityEvent, from log: EthereumLogObject) {
+        if let values = try? ABI.decodeLog(event: event, from: log) {
             let eventInstance = ABIEmittedEvent(name: event.name, values: values)
             let userInfo = [TransactionWatcher.MatchedEventKey: eventInstance]
             NotificationCenter.default.post(name: TransactionWatcher.DidReceiveEvent, object: self, userInfo: userInfo)

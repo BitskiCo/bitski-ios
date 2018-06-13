@@ -8,7 +8,7 @@
 import Foundation
 import Web3
 
-public struct JSONContractObject: Codable {
+public struct ContractJSONRepresentation: Codable {
     
     /// Name of the contract
     let contractName: String

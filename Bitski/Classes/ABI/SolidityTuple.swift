@@ -9,7 +9,7 @@ import Foundation
 
 /// Wrapper for a tuple in Solidity
 /// Use this instead of native Swift tuples when encoding
-public struct SolidityTuple: ABIValue {
+public struct SolidityTuple: ABIConvertible {
     
     var values: [SolidityWrappedValue]
     
@@ -27,6 +27,6 @@ public struct SolidityTuple: ABIValue {
     }
     
     public func abiEncode(dynamic: Bool) -> String? {
-        return ABIEncoder.encode(values)
+        return try? ABIEncoder.encode(values)
     }
 }

@@ -11,11 +11,11 @@ import Web3
 
 /// Base protocol all contracts should adopt.
 /// Brokers relationship between Web3 and contract methods and events
-public protocol EthereumContract: ABIFunctionHandler {
+public protocol EthereumContract: SolidityFunctionHandler {
     var name: String { get }
     var address: EthereumAddress? { get }
     var eth: Web3.Eth { get }
-    var events: [ABIEvent] { get }
+    var events: [SolidityEvent] { get }
 }
 
 /// Contract where all methods and events are defined statically
@@ -40,38 +40,38 @@ public class DynamicContract: EthereumContract {
     public var address: EthereumAddress?
     public let eth: Web3.Eth
     
-    private(set) public var constructor: ABIConstructor?
-    private(set) public var events: [ABIEvent] = []
-    private(set) var methods: [String: ABIFunction] = [:]
+    private(set) public var constructor: SolidityConstructor?
+    private(set) public var events: [SolidityEvent] = []
+    private(set) var methods: [String: SolidityFunction] = [:]
     
-    public init(jsonABI: JSONContractObject, address: EthereumAddress?, eth: Web3.Eth) {
+    public init(jsonABI: ContractJSONRepresentation, address: EthereumAddress?, eth: Web3.Eth) {
         self.name = jsonABI.contractName
         self.address = address
         self.eth = eth
         self.parseABIObjects(abi: jsonABI.abi)
     }
     
-    private func parseABIObjects(abi: [JSONContractObject.ABIObject]) {
+    private func parseABIObjects(abi: [ContractJSONRepresentation.ABIObject]) {
         for abiObject in abi {
             switch (abiObject.type, abiObject.stateMutability) {
             case (.event, _):
-                if let event = ABIEvent(abiObject: abiObject) {
+                if let event = SolidityEvent(abiObject: abiObject) {
                     add(event: event)
                 }
             case (.function, let stateMutability?) where stateMutability.isConstant:
-                if let function = ABIConstantFunction(abiObject: abiObject, handler: self) {
+                if let function = SolidityConstantFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
             case (.function, .nonpayable?):
-                if let function = ABINonPayableFunction(abiObject: abiObject, handler: self) {
+                if let function = SolidityNonPayableFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
             case (.function, .payable?):
-                if let function = ABIPayableFunction(abiObject: abiObject, handler: self) {
+                if let function = SolidityPayableFunction(abiObject: abiObject, handler: self) {
                     add(method: function)
                 }
             case (.constructor, _):
-                self.constructor = ABIConstructor(abiObject: abiObject, handler: self)
+                self.constructor = SolidityConstructor(abiObject: abiObject, handler: self)
             default:
                 print("Could not parse abi object: \(abiObject)")
             }
@@ -81,14 +81,14 @@ public class DynamicContract: EthereumContract {
     /// Adds an event object to list of stored events. Generally this should be done automatically by Web3.
     ///
     /// - Parameter event: `ABIEvent` that can be emitted from this contract
-    public func add(event: ABIEvent) {
+    public func add(event: SolidityEvent) {
         events.append(event)
     }
     
     /// Adds a method object to list of stored methods. Generally this should be done automatically by Web3.
     ///
     /// - Parameter method: `ABIFunction` that can be called on this contract
-    public func add(method: ABIFunction) {
+    public func add(method: SolidityFunction) {
         methods[method.name] = method
     }
     
@@ -96,7 +96,7 @@ public class DynamicContract: EthereumContract {
     /// For example: `MyContract['balanceOf']?(address).call() { ... }`
     ///
     /// - Parameter name: Name of function to call
-    public subscript(_ name: String) -> ((ABIValue...) -> ABIInvocation)? {
+    public subscript(_ name: String) -> ((ABIConvertible...) -> SolidityInvocation)? {
         return methods[name]?.invoke
     }
     
@@ -107,11 +107,11 @@ public class DynamicContract: EthereumContract {
     ///   - byteCode: Compiled bytecode of the contract
     ///   - parameters: Any input values for the constructor
     /// - Returns: Invocation object that can be called with .send(...)
-    public func deploy(byteCode: EthereumData, parameters: ABIValue...) -> ABIConstructorInvocation? {
+    public func deploy(byteCode: EthereumData, parameters: ABIConvertible...) -> SolidityConstructorInvocation? {
         return constructor?.invoke(byteCode: byteCode, parameters: parameters)
     }
     
-    public func deploy(byteCode: EthereumData) -> ABIConstructorInvocation? {
+    public func deploy(byteCode: EthereumData) -> SolidityConstructorInvocation? {
         return constructor?.invoke(byteCode: byteCode, parameters: [])
     }
 }
@@ -126,9 +126,9 @@ extension EthereumContract {
     ///   - data: EthereumData object representing the method called
     ///   - outputs: Expected return values
     ///   - completion: Completion handler
-    public func call(_ call: EthereumCall, outputs: [ABIParameter], block: EthereumQuantityTag = .latest, completion: @escaping ([String: Any]?, Error?) -> Void) {
+    public func call(_ call: EthereumCall, outputs: [SolidityFunctionParameter], block: EthereumQuantityTag = .latest, completion: @escaping ([String: Any]?, Error?) -> Void) {
         eth.call(call: call, block: block).done { result in
-            let dictionary = ABIDecoder.decode(outputs: outputs, from: result.hex())
+            let dictionary = try ABI.decodeParameters(outputs, from: result.hex())
             completion(dictionary, nil)
         }.catch { error in
             completion(nil, error)

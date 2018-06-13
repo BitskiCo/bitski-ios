@@ -9,13 +9,13 @@ import Foundation
 import BigInt
 import Web3
 
-/// Struct representing the combination of a SolidityType a native value
+/// Struct representing the combination of a SolidityType and a native value
 public struct SolidityWrappedValue {
     
-    let value: ABIValue
+    let value: ABIConvertible
     let type: SolidityType
     
-    public init(value: ABIValue, type: SolidityType) {
+    public init(value: ABIConvertible, type: SolidityType) {
         self.value = value
         self.type = type
     }
@@ -92,39 +92,41 @@ public struct SolidityWrappedValue {
     
     // .array([1, 2, 3], elementType: .uint256) -> uint256[]
     // .array([[1,2], [3,4]], elementType: .array(.uint256, length: nil)) -> uint256[][]
-    public static func array<T: ABIValue>(_ value: [T], elementType: SolidityType) -> SolidityWrappedValue {
+    public static func array<T: ABIConvertible>(_ value: [T], elementType: SolidityType) -> SolidityWrappedValue {
         let type = SolidityType.array(type: elementType, length: nil)
         return SolidityWrappedValue(value: value, type: type)
     }
     
-    public static func array<T: ABIValue & SolidityTypeRepresentable>(_ value: [T]) -> SolidityWrappedValue {
+    public static func array<T: ABIConvertible & SolidityTypeRepresentable>(_ value: [T]) -> SolidityWrappedValue {
         return array(value, elementType: T.solidityType)
     }
     
     // .fixedArray([1, 2, 3], elementType: .uint256, length: 3) -> uint256[3]
     // .fixedArray([[1,2], [3,4]], elementType: .array(.uint256, length: nil), length: 2) -> uint256[][2]
-    public static func fixedArray<T: ABIValue>(_ value: [T], elementType: SolidityType, length: UInt) -> SolidityWrappedValue {
+    public static func fixedArray<T: ABIConvertible>(_ value: [T], elementType: SolidityType, length: UInt) -> SolidityWrappedValue {
         let type = SolidityType.array(type: elementType, length: length)
         return SolidityWrappedValue(value: value, type: type)
     }
     
-    public static func fixedArray<T: ABIValue & SolidityTypeRepresentable>(_ value: [T], length: UInt) -> SolidityWrappedValue {
+    public static func fixedArray<T: ABIConvertible & SolidityTypeRepresentable>(_ value: [T], length: UInt) -> SolidityWrappedValue {
         return fixedArray(value, elementType: T.solidityType, length: length)
     }
     
-    public static func fixedArray<T: ABIValue & SolidityTypeRepresentable>(_ value: [T]) -> SolidityWrappedValue {
+    public static func fixedArray<T: ABIConvertible & SolidityTypeRepresentable>(_ value: [T]) -> SolidityWrappedValue {
         return fixedArray(value, length: UInt(value.count))
     }
     
     // Array Convenience
     
-    public static func array<T: ABIValue & SolidityTypeRepresentable>(_ value: [[T]]) -> SolidityWrappedValue {
+    public static func array<T: ABIConvertible & SolidityTypeRepresentable>(_ value: [[T]]) -> SolidityWrappedValue {
         return array(value, elementType: .array(type: T.solidityType, length: nil))
     }
     
-    public static func array<T: ABIValue & SolidityTypeRepresentable>(_ value: [[[T]]]) -> SolidityWrappedValue {
+    public static func array<T: ABIConvertible & SolidityTypeRepresentable>(_ value: [[[T]]]) -> SolidityWrappedValue {
         return array(value, elementType: .array(type: .array(type: T.solidityType, length: nil), length: nil))
     }
+    
+    // Tuple
     
     public static func tuple(_ wrappedValues: SolidityWrappedValue...) -> SolidityWrappedValue {
         let types = wrappedValues.map { $0.type }

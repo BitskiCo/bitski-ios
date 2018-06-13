@@ -17,15 +17,15 @@ enum InvocationError: Error {
 }
 
 /// Represents invoking a given contract method with parameters
-public protocol ABIInvocation {
+public protocol SolidityInvocation {
     /// The function that was invoked
-    var method: ABIFunction { get }
+    var method: SolidityFunction { get }
     
     /// Parameters method was invoked with
     var parameters: [SolidityWrappedValue] { get }
     
     /// Handler for submitting calls and sends
-    var handler: ABIFunctionHandler { get }
+    var handler: SolidityFunctionHandler { get }
     
     /// Generates an EthereumCall object
     func createCall() -> EthereumCall?
@@ -45,20 +45,20 @@ public protocol ABIInvocation {
     /// Encodes the ABI for this invocation
     func encodeABI() -> EthereumData?
     
-    init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler)
+    init(method: SolidityFunction, parameters: [ABIConvertible], handler: SolidityFunctionHandler)
 }
 
 // MARK: - Read Invocation
 
 /// An invocation that is read-only. Should only use .call()
-public struct ABIReadInvocation: ABIInvocation {
+public struct SolidityReadInvocation: SolidityInvocation {
     
-    public let method: ABIFunction
+    public let method: SolidityFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler
+    public let handler: SolidityFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
+    public init(method: SolidityFunction, parameters: [ABIConvertible], handler: SolidityFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
@@ -87,14 +87,14 @@ public struct ABIReadInvocation: ABIInvocation {
 // MARK: - Payable Invocation
 
 /// An invocation that writes to the blockchain and can receive ETH. Should only use .send()
-public struct ABIPayableInvocation: ABIInvocation {
+public struct SolidityPayableInvocation: SolidityInvocation {
     
-    public let method: ABIFunction
+    public let method: SolidityFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler
+    public let handler: SolidityFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
+    public init(method: SolidityFunction, parameters: [ABIConvertible], handler: SolidityFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
@@ -122,13 +122,13 @@ public struct ABIPayableInvocation: ABIInvocation {
 // MARK: - Non Payable Invocation
 
 /// An invocation that writes to the blockchain and cannot receive ETH. Should only use .send().
-public struct ABINonPayableInvocation: ABIInvocation {
-    public let method: ABIFunction
+public struct SolidityNonPayableInvocation: SolidityInvocation {
+    public let method: SolidityFunction
     public let parameters: [SolidityWrappedValue]
     
-    public let handler: ABIFunctionHandler
+    public let handler: SolidityFunctionHandler
     
-    public init(method: ABIFunction, parameters: [ABIValue], handler: ABIFunctionHandler) {
+    public init(method: SolidityFunction, parameters: [ABIConvertible], handler: SolidityFunctionHandler) {
         self.method = method
         self.parameters = zip(parameters, method.inputs).map { SolidityWrappedValue(value: $0, type: $1.type) }
         self.handler = handler
@@ -155,7 +155,7 @@ public struct ABINonPayableInvocation: ABIInvocation {
 
 // MARK: - PromiseKit convenience
 
-public extension ABIInvocation {
+public extension SolidityInvocation {
     
     // Default Implementations
     
@@ -193,10 +193,10 @@ public extension ABIInvocation {
     }
     
     public func encodeABI() -> EthereumData? {
-        guard let inputsString = ABIEncoder.encode(parameters) else { return nil }
-        let signatureString = method.hashedSignature
-        let hexString = "0x" + signatureString + inputsString
-        return try? EthereumData(ethereumValue: hexString)
+        if let hexString = try? ABI.encodeFunctionCall(self) {
+            return try? EthereumData(ethereumValue: hexString)
+        }
+        return nil
     }
     
     // Promises
@@ -223,13 +223,13 @@ public extension ABIInvocation {
 // MARK: - Contract Creation
 
 /// Represents a contract creation invocation
-public struct ABIConstructorInvocation {
+public struct SolidityConstructorInvocation {
     public let byteCode: EthereumData
     public let parameters: [SolidityWrappedValue]
     public let payable: Bool
-    public let handler: ABIFunctionHandler
+    public let handler: SolidityFunctionHandler
     
-    public init(byteCode: EthereumData, parameters: [SolidityWrappedValue], payable: Bool, handler: ABIFunctionHandler) {
+    public init(byteCode: EthereumData, parameters: [SolidityWrappedValue], payable: Bool, handler: SolidityFunctionHandler) {
         self.byteCode = byteCode
         self.parameters = parameters
         self.handler = handler
@@ -263,8 +263,8 @@ public struct ABIConstructorInvocation {
         // The data for creating a new contract is the bytecode of the contract + any input params serialized in the standard format.
         var dataString = "0x"
         dataString += byteCode.hex().replacingOccurrences(of: "0x", with: "")
-        if parameters.count > 0, let encodedParams = ABIEncoder.encode(parameters) {
-            dataString += encodedParams
+        if parameters.count > 0, let encodedParams = try? ABI.encodeParameters(parameters) {
+            dataString += encodedParams.replacingOccurrences(of: "0x", with: "")
         }
         return try? EthereumData(ethereumValue: dataString)
     }

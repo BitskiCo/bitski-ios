@@ -11,6 +11,10 @@ import BigInt
 
 public class ABIEncoder {
     
+    enum Error: Swift.Error {
+        case couldNotEncode(type: SolidityType, value: Any)
+    }
+    
     struct Segment {
         let type: SolidityType
         let encodedValue: String
@@ -32,14 +36,12 @@ public class ABIEncoder {
     }
     
     /// Encode pairs of values and expected types to Solidity ABI compatible string
-    public class func encode(_ values: [SolidityWrappedValue]) -> String? {
+    public class func encode(_ values: [SolidityWrappedValue]) throws -> String {
         // map segments
-        let segments = values.compactMap { wrapped -> Segment? in
+        let segments = try values.map { wrapped -> Segment in
             // encode value portion
-            if let encodedValue = encode(wrapped.value, to: wrapped.type) {
-                return Segment(type: wrapped.type, value: encodedValue)
-            }
-            return nil
+            let encodedValue = try encode(wrapped.value, to: wrapped.type)
+            return Segment(type: wrapped.type, value: encodedValue)
         }
         // calculate start of dynamic portion in bytes (combined length of all static parts)
         let dynamicOffsetStart = segments.map { $0.staticLength }.reduce(0, +)
@@ -62,22 +64,20 @@ public class ABIEncoder {
     }
     
     /// Encode with values inline
-    public class func encode(_ values: SolidityWrappedValue...) -> String? {
-        return encode(values)
+    public class func encode(_ values: SolidityWrappedValue...) throws -> String {
+        return try encode(values)
     }
     
     /// Encode a single wrapped value
-    class func encode(_ wrapped: SolidityWrappedValue) -> String? {
-        return encode([wrapped])
+    public class func encode(_ wrapped: SolidityWrappedValue) throws -> String {
+        return try encode([wrapped])
     }
     
     /// Encode a single value to a type
-    class func encode(_ value: ABIValue, to type: SolidityType) -> String? {
-        return value.abiEncode(dynamic: type.isDynamic)
-    }
-    
-    /// Encode a single value to a type
-    class func encodeArray<T: ABIValue>(_ value: [T], to type: SolidityType) -> String? {
-        return value.abiEncode(dynamic: type.isDynamic)
+    public class func encode(_ value: ABIConvertible, to type: SolidityType) throws -> String {
+        if let encoded = value.abiEncode(dynamic: type.isDynamic) {
+            return encoded
+        }
+        throw Error.couldNotEncode(type: type, value: value)
     }
 }
