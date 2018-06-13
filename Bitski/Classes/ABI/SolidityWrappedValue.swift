@@ -125,4 +125,11 @@ public struct SolidityWrappedValue {
     public static func array<T: ABIValue & SolidityTypeRepresentable>(_ value: [[[T]]]) -> SolidityWrappedValue {
         return array(value, elementType: .array(type: .array(type: T.solidityType, length: nil), length: nil))
     }
+    
+    public static func tuple(_ wrappedValues: SolidityWrappedValue...) -> SolidityWrappedValue {
+        let types = wrappedValues.map { $0.type }
+        let type = SolidityType.tuple(types)
+        let tuple = SolidityTuple(wrappedValues)
+        return SolidityWrappedValue(value: tuple, type: type)
+    }
 }

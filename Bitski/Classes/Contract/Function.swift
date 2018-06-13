@@ -22,10 +22,13 @@ public struct ABIParameter {
     public let type: SolidityType
     public let components: [ABIParameter]?
     
-    public init(_ parameter: JSONContractObject.Parameter) {
+    public init?(_ parameter: JSONContractObject.Parameter) {
         self.name = parameter.name
-        self.type = parameter.type
-        self.components = parameter.components?.map { ABIParameter($0) }
+        let components = parameter.components?.compactMap { ABIParameter($0) }
+        let subTypes = components?.map { $0.type }
+        guard let type = SolidityType(parameter.type, subTypes: subTypes) else { return nil }
+        self.type = type
+        self.components = components
     }
     
     public init(name: String, type: SolidityType, components: [ABIParameter]? = nil) {
@@ -93,8 +96,8 @@ public class ABIConstantFunction: ABIFunction {
         guard abiObject.type == .function, abiObject.stateMutability?.isConstant == true else { return nil }
         guard let name = abiObject.name else { return nil }
         self.name = name
-        self.inputs = abiObject.inputs.map { ABIParameter($0) }
-        self.outputs = abiObject.outputs?.map { ABIParameter($0) }
+        self.inputs = abiObject.inputs.compactMap { ABIParameter($0) }
+        self.outputs = abiObject.outputs?.compactMap { ABIParameter($0) }
         self.handler = handler
     }
     
@@ -122,7 +125,7 @@ public class ABIPayableFunction: ABIFunction {
         guard abiObject.type == .function, abiObject.stateMutability == .payable else { return nil }
         guard let name = abiObject.name else { return nil }
         self.name = name
-        self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.inputs = abiObject.inputs.compactMap { ABIParameter($0) }
         self.handler = handler
     }
     
@@ -149,7 +152,7 @@ public class ABINonPayableFunction: ABIFunction {
         guard abiObject.type == .function, abiObject.stateMutability == .nonpayable else { return nil }
         guard let name = abiObject.name else { return nil }
         self.name = name
-        self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.inputs = abiObject.inputs.compactMap { ABIParameter($0) }
         self.handler = handler
     }
     
@@ -172,7 +175,7 @@ public class ABIConstructor {
     
     public init?(abiObject: JSONContractObject.ABIObject, handler: ABIFunctionHandler) {
         guard abiObject.type == .constructor else { return nil }
-        self.inputs = abiObject.inputs.map { ABIParameter($0) }
+        self.inputs = abiObject.inputs.compactMap { ABIParameter($0) }
         self.handler = handler
         self.payable = abiObject.payable ?? false
     }

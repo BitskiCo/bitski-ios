@@ -14,13 +14,15 @@ public class ABIDecoder {
     struct Segment {
         let type: SolidityType
         let name: String?
+        let components: [ABIParameter]?
         var dynamicOffset: String.Index?
         let staticString: String
         var decodedValue: Any? = nil
         
-        init(type: SolidityType, name: String? = nil, dynamicOffset: String.Index? = nil, staticString: String) {
+        init(type: SolidityType, name: String? = nil, components: [ABIParameter]? = nil, dynamicOffset: String.Index? = nil, staticString: String) {
             self.type = type
             self.name = name
+            self.components = components
             self.dynamicOffset = dynamicOffset
             self.staticString = staticString
         }
@@ -31,7 +33,7 @@ public class ABIDecoder {
                 let range = ranges.removeFirst()
                 substring = String(hexString[range])
             }
-            decodedValue = decodeType(type: type, hexString: substring)
+            decodedValue = decodeType(type: type, hexString: substring, components: components)
         }
     }
     
@@ -136,12 +138,13 @@ public class ABIDecoder {
         let segments = (0..<outputs.count).compactMap { i -> Segment? in
             let type = outputs[i].type
             let name = outputs[i].name
+            let components = outputs[i].components
             if let staticPart = hexString.substr(i * 64, Int(type.staticPartLength) * 2) {
                 var dynamicOffset: String.Index?
                 if type.isDynamic, let offset = Int(staticPart, radix: 16) {
                     dynamicOffset = hexString.index(hexString.startIndex, offsetBy: offset * 2)
                 }
-                return Segment(type: type, name: name, dynamicOffset: dynamicOffset, staticString: staticPart)
+                return Segment(type: type, name: name, components: components, dynamicOffset: dynamicOffset, staticString: staticPart)
             }
             return nil
         }
@@ -173,7 +176,7 @@ public class ABIDecoder {
         }
     }
     
-    private class func decodeType(type: SolidityType, hexString: String) -> Any? {
+    private class func decodeType(type: SolidityType, hexString: String, components: [ABIParameter]? = nil) -> Any? {
         switch type {
         case .type(let type):
             switch type {
@@ -195,7 +198,13 @@ public class ABIDecoder {
         case .array(let elementType, let length):
             return decodeArray(elementType: elementType, length: length, from: hexString)
         case .tuple(let types):
-            return decode(types, from: String(hexString))
+            if let components = components {
+                // will return with names
+                return decode(outputs: components, from: hexString)
+            } else {
+                // just return the values
+                return decode(types, from: hexString)
+            }
         }
     }
 }

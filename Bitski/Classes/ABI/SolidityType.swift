@@ -77,7 +77,7 @@ public indirect enum SolidityType {
         }
     }
     
-    /// String representation for JSON encoding
+    /// String representation for ABI signature
     public var stringValue: String {
         switch self {
         case .type(let type):

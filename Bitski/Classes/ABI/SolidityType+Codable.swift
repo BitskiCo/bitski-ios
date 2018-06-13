@@ -37,10 +37,28 @@ extension SolidityType: Codable {
         case typeMalformed
     }
     
-    init(_ string: String) throws {
+    /// Initializes a SolidityType from a string
+    public init(_ string: String) throws {
         self = try SolidityType.typeFromString(string)
     }
     
+    /// Initializes a SolidityType from a given string and optional sub types
+    public init?(_ string: String, subTypes: [SolidityType]?) {
+        switch (string, subTypes) {
+        case ("tuple", let subTypes?):
+            self = .tuple(subTypes)
+        case ("tuple[]", let subTypes?):
+            self = .array(type: .tuple(subTypes), length: nil)
+        default:
+            if let type = try? SolidityType(string) {
+                self = type
+            } else  {
+                return nil
+            }
+        }
+    }
+    
+    /// Determines the SolidityType from a given string, from the JSON representation
     static func typeFromString(_ string: String) throws -> SolidityType {
         switch string {
         case "string":

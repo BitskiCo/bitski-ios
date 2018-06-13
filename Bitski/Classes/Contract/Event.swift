@@ -35,10 +35,13 @@ public struct ABIEvent {
         /// of their value instead of the actual value.
         public let indexed: Bool
         
-        public init(_ abi: JSONContractObject.Parameter) {
+        public init?(_ abi: JSONContractObject.Parameter) {
             self.name = abi.name
-            self.type = abi.type
-            self.components = abi.components?.map { Parameter($0) }
+            let components = abi.components?.compactMap { Parameter($0) }
+            let subTypes = components?.map { $0.type }
+            guard let type = SolidityType(abi.type, subTypes: subTypes) else { return nil }
+            self.type = type
+            self.components = components
             self.indexed = abi.indexed ?? false
         }
         
@@ -81,7 +84,7 @@ public struct ABIEvent {
     public init?(abiObject: JSONContractObject.ABIObject) {
         guard abiObject.type == .event, let name = abiObject.name else { return nil }
         self.anonymous = abiObject.anonymous ?? false
-        self.inputs = abiObject.inputs.map { Parameter($0) }
+        self.inputs = abiObject.inputs.compactMap { Parameter($0) }
         self.name = name
     }
     

@@ -50,14 +50,14 @@ public struct JSONContractObject: Codable {
         // constructor function. can't have name or outputs
         case constructor
         
-        //http://solidity.readthedocs.io/en/v0.4.21/contracts.html#fallback-function
+        // http://solidity.readthedocs.io/en/v0.4.21/contracts.html#fallback-function
         case fallback
     }
     
     /// Represents a value passed into our returned from a method or event
     public struct Parameter: Codable {
         let name: String
-        let type: SolidityType
+        let type: String
         let components: [Parameter]?
         let indexed: Bool?
     }
@@ -92,6 +92,17 @@ public struct JSONContractObject: Codable {
         // true if the event was declared as anonymous
         let anonymous: Bool?
         
+        public init(decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            self.constant = try container.decodeIfPresent(Bool.self, forKey: .constant)
+            self.inputs = try container.decode([Parameter].self, forKey: .inputs)
+            self.outputs = try container.decodeIfPresent([Parameter].self, forKey: .outputs)
+            self.name = try container.decodeIfPresent(String.self, forKey: .name)
+            self.type = try container.decodeIfPresent(ObjectType.self, forKey: .type) ?? .function
+            self.payable = try container.decodeIfPresent(Bool.self, forKey: .payable) ?? false
+            self.stateMutability = try container.decodeIfPresent(StateMutability.self, forKey: .stateMutability)
+            self.anonymous = try container.decodeIfPresent(Bool.self, forKey: .anonymous)
+        }
     }
     
 }

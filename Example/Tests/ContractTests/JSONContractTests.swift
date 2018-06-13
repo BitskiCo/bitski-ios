@@ -11,6 +11,7 @@ import Web3
 import BigInt
 @testable import Bitski
 import Mockingjay
+import PromiseKit
 
 extension EthereumAddress {
     static let testAddress = try! EthereumAddress(hex: "0x0000000000000000000000000000000000000000", eip55: false)
@@ -20,7 +21,6 @@ class JSONContractTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        stubResponses()
     }
     
     override func tearDown() {
@@ -38,6 +38,7 @@ class JSONContractTests: XCTestCase {
     }
     
     func testDecodingABI() {
+        stubResponses()
         let data = loadStub(named: "ERC721")!
         
         do {
@@ -51,6 +52,7 @@ class JSONContractTests: XCTestCase {
     }
     
     func testDecodingContract() {
+        stubResponses()
         let data = loadStub(named: "ERC721")!
         let provider = Web3HttpProvider.mockProvider()
         let web3 = Web3(provider: provider)
@@ -78,6 +80,7 @@ class JSONContractTests: XCTestCase {
     }
     
     func testDeployingContract() {
+        stubResponses()
         let data = loadStub(named: "LimitedMintableNonFungibleToken")!
         let provider = Web3HttpProvider.mockProvider()
         let web3 = Web3(provider: provider)
@@ -127,6 +130,7 @@ class JSONContractTests: XCTestCase {
     }
     
     func testManualCalls() {
+        stubResponses()
         let data = loadStub(named: "ERC721")!
         let provider = Web3HttpProvider.mockProvider()
         let web3 = Web3(provider: provider)
@@ -159,6 +163,7 @@ class JSONContractTests: XCTestCase {
     }
     
     func testManualSends() {
+        stubResponses()
         let data = loadStub(named: "ERC721")!
         let provider = Web3HttpProvider.mockProvider()
         let web3 = Web3(provider: provider)
@@ -182,6 +187,39 @@ class JSONContractTests: XCTestCase {
             }
             
             waitForExpectations(timeout: 1.0, handler: nil)
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testTupleOutputs() {
+        if let tupleCallData = loadStub(named: "call_tuple") {
+            stub(rpc("eth_call"), jsonData(tupleCallData))
+        }
+        
+        let data = loadStub(named: "TupleExample")!
+        let provider = Web3HttpProvider.mockProvider()
+        let web3 = Web3(provider: provider)
+        
+        do {
+            let contract = try web3.eth.Contract(abi: data, address: .testAddress)
+            
+            let callExpectation = expectation(description: "Call should be completed")
+            
+            firstly {
+                contract["f"]!(SolidityTuple(.uint(BigUInt(1)), .uint(BigUInt(2))), BigUInt(3)).call()
+            }.done { outputs in
+                guard let t = outputs["t"] as? [String: Any] else {
+                    XCTFail("returned tuple should be decoded")
+                    return
+                }
+                XCTAssertEqual(t["x"] as? BigUInt, 3, "x value in tuple should be decoded properly")
+                XCTAssertEqual(t["y"] as? BigUInt, 4, "y value in tuple should be decoded properly")
+                callExpectation.fulfill()
+            }.catch { error in
+                XCTFail(error.localizedDescription)
+            }
+            waitForExpectations(timeout: 5.0, handler: nil)
         } catch {
             XCTFail(error.localizedDescription)
         }
