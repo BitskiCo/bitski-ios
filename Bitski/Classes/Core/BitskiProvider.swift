@@ -15,6 +15,16 @@ public protocol BitskiAuthDelegate: NSObjectProtocol {
 
 public class BitskiHTTPProvider: Web3Provider {
     
+    public enum Error: Swift.Error {
+        case noDelegate
+        case notLoggedIn(Swift.Error?)
+        case encodingFailed(Swift.Error?)
+        case decodingFailed(Swift.Error?)
+        case requestCancelled
+        case missingData
+        case invalidResponseCode
+    }
+    
     /// Headers to add to all requests
     public var headers = [
         "Accept": "application/json",
@@ -23,7 +33,7 @@ public class BitskiHTTPProvider: Web3Provider {
     
     /// URL for JSON-RPC requests
     let rpcURL: URL
-
+    
     /// Internal queue for handling requests
     let queue: DispatchQueue
     
@@ -52,7 +62,7 @@ public class BitskiHTTPProvider: Web3Provider {
     weak var authDelegate: BitskiAuthDelegate?
     
     // MARK: - Initialization
-
+    
     /// Initializes a `BitskiProvider` for use with Web3
     ///
     /// - Parameters:
@@ -80,48 +90,56 @@ public class BitskiHTTPProvider: Web3Provider {
     public func send<Params, Result>(request: RPCRequest<Params>, response: @escaping Web3ResponseCompletion<Result>) {
         guard let authDelegate = authDelegate else {
             //todo: don't require this for requests that don't require authentication
-            response(Web3Response<Result>(status: .requestFailed))
+            let error: Web3Response<Result>.Error = .requestFailed(Error.noDelegate)
+            response(Web3Response<Result>(error: error))
             return
         }
         authDelegate.getCurrentAccessToken { accessToken, error in
             guard let accessToken = accessToken else {
-                let err = Web3Response<Result>(status: .requestFailed)
-                response(err)
+                let err: Web3Response<Result>.Error = .requestFailed(Error.notLoggedIn(error))
+                response(Web3Response<Result>(error: err))
                 return
             }
-            self.queue.async {
-                guard let body = try? self.encoder.encode(request) else {
-                    let err = Web3Response<Result>(status: .requestFailed)
-                    response(err)
-                    return
-                }
-                
-                if self.requiresAuthorization(request: request) {
-                    self.sendViaWeb(request: request, body: body, accessToken: accessToken, response: response)
-                    return
-                }
-                
-                var req = URLRequest(url: self.rpcURL)
-                req.httpMethod = "POST"
-                req.httpBody = body
-                for (k, v) in self.headers {
-                    req.addValue(v, forHTTPHeaderField: k)
-                }
-                
-                req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-                
-                let task = self.session.dataTask(with: req) { data, urlResponse, error in
-                    guard let urlResponse = urlResponse as? HTTPURLResponse, let data = data, error == nil else {
-                        let err = Web3Response<Result>(status: .serverError)
-                        response(err)
-                        return
-                    }
-                    
-                    let res: Web3Response<Result> = self.parseResponse(urlResponse: urlResponse, data: data)
-                    response(res)
-                }
-                task.resume()
+            self.sendAuthenticated(request: request, accessToken: accessToken, response: response)
+        }
+    }
+    
+    private func sendAuthenticated<Params, Result>(request: RPCRequest<Params>, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
+        self.queue.async {
+            let body: Data
+            do {
+                body = try self.encoder.encode(request)
+            } catch {
+                let err: Web3Response<Result>.Error = .requestFailed(Error.encodingFailed(error))
+                response(Web3Response<Result>(error: err))
+                return
             }
+            
+            if self.requiresAuthorization(request: request) {
+                self.sendViaWeb(request: request, body: body, response: response)
+                return
+            }
+            
+            var req = URLRequest(url: self.rpcURL)
+            req.httpMethod = "POST"
+            req.httpBody = body
+            for (k, v) in self.headers {
+                req.addValue(v, forHTTPHeaderField: k)
+            }
+            
+            req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            let task = self.session.dataTask(with: req) { data, urlResponse, error in
+                guard let urlResponse = urlResponse as? HTTPURLResponse, let data = data, error == nil else {
+                    let err: Web3Response<Result>.Error = .serverError(error)
+                    response(Web3Response(error: err))
+                    return
+                }
+                
+                let res: Web3Response<Result> = self.parseResponse(urlResponse: urlResponse, data: data)
+                response(res)
+            }
+            task.resume()
         }
     }
     
@@ -130,21 +148,21 @@ public class BitskiHTTPProvider: Web3Provider {
     /// - Parameters:
     ///   - request: The original RPCRequest
     ///   - body: The serialized body of the request
-    ///   - accessToken: A valid access token for the current user to add to the request
     ///   - response: callback with the result of the web request
-    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, body: Data, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
+    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, body: Data, response: @escaping Web3ResponseCompletion<Result>) {
         // Get base URL depending on the request
         guard let methodURL = self.urlForMethod(methodName: request.method, baseURL: self.webBaseURL) else {
-            let err = Web3Response<Result>(status: .requestFailed)
+            let err = Web3Response<Result>(error: .requestFailed(nil))
             response(err)
             return
         }
         // Encode the request data into the url query params
-        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body, accessToken: accessToken) else {
-            let error = Web3Response<Result>(status: .requestFailed)
+        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body) else {
+            let error = Web3Response<Result>(error: .requestFailed(nil))
             response(error)
             return
         }
+        
         // UI work must happen on the main queue, rather than our internal queue
         DispatchQueue.main.async {
             //todo: ideally find a way to do this without relying on SFAuthenticationSession.
@@ -154,7 +172,7 @@ public class BitskiHTTPProvider: Web3Provider {
                         let res: Web3Response<Result> = self.parseResponse(url: url)
                         response(res)
                     } else {
-                        let err = Web3Response<Result>(status: .serverError)
+                        let err = Web3Response<Result>(error: .serverError(error))
                         response(err)
                     }
                     self.currentSession = nil
@@ -178,7 +196,7 @@ public class BitskiHTTPProvider: Web3Provider {
             return false
         }
     }
-
+    
     /// Get the web URL for a given JSON-RPC method
     ///
     /// - Parameters:
@@ -199,14 +217,15 @@ public class BitskiHTTPProvider: Web3Provider {
     /// - Parameters:
     ///   - methodURL: The base URL for the request
     ///   - body: JSON-RPC request serialized as Data
-    ///   - accessToken: Valid access token
     /// - Returns: Web URL with necessary query parameters
-    private func queryEncodedRequestURL(methodURL: URL, body: Data, accessToken: String) -> URL? {
+    private func queryEncodedRequestURL(methodURL: URL, body: Data) -> URL? {
         guard var urlComponents = URLComponents(url: methodURL, resolvingAgainstBaseURL: true) else {
             return nil
         }
         
         var queryItems = urlComponents.queryItems ?? []
+        
+        let accessToken = headers["Authorization"]?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
         
         queryItems += [
             URLQueryItem(name: "network", value: network.rawValue),
@@ -234,17 +253,9 @@ public class BitskiHTTPProvider: Web3Provider {
         let status = urlResponse.statusCode
         guard status >= 200 && status < 300 else {
             // This is a non typical rpc error response and should be considered a server error.
-            return Web3Response<T>(status: .serverError)
+            return Web3Response(error: .serverError(Error.invalidResponseCode))
         }
-        
-        do {
-            let rpcResponse = try self.decoder.decode(RPCResponse<T>.self, from: data)
-            // We got the Result object
-            return Web3Response(status: .ok, rpcResponse: rpcResponse)
-        } catch {
-            // We don't have the response we expected...
-            return Web3Response<T>(status: .serverError) //todo: Implement more meaningful status
-        }
+        return parseResponse(data: data)
     }
     
     /// Parse a response from the web using URL query items
@@ -259,14 +270,26 @@ public class BitskiHTTPProvider: Web3Provider {
         }).compactMap({ (queryItem) -> Data? in
             return queryItem.value.flatMap { Data(base64Encoded: $0) }
         }).first else {
-            return Web3Response<T>(status: .serverError) //todo: Implement more meaningful status
+            return Web3Response(error: Error.decodingFailed(nil))
         }
         
+        return parseResponse(data: data)
+    }
+    
+    private func parseResponse<T>(data: Data) -> Web3Response<T> {
         do {
             let rpcResponse = try self.decoder.decode(RPCResponse<T>.self, from: data)
-            return Web3Response(status: .ok, rpcResponse: rpcResponse)
+            // We got the Response object
+            if let result = rpcResponse.result {
+                return Web3Response(status: .success(result))
+            } else if let error = rpcResponse.error {
+                return Web3Response(error: error)
+            } else {
+                return Web3Response(error: Error.missingData)
+            }
         } catch {
-            return Web3Response<T>(status: .serverError) //todo: Implement more meaningful status
+            // We don't have the response we expected...
+            return Web3Response<T>(error: Error.decodingFailed(error))
         }
     }
 }

@@ -1,26 +1,26 @@
 PODS:
   - AppAuth (0.92.0)
   - BigInt.swift (1.0.0)
-  - Bitski (0.1.0):
+  - Bitski (0.1.3):
     - AppAuth (~> 0.92)
     - BigInt.swift (~> 1.0)
     - PromiseKit/CorePromise (~> 6.0)
     - secp256k1.swift (~> 0.1)
-    - Web3 (~> 0.1)
-    - Web3/PromiseKit (~> 0.1)
-  - CryptoSwift (0.9.0)
+    - Web3 (~> 0.2)
+    - Web3/PromiseKit (~> 0.2)
+  - CryptoSwift (0.10.0)
   - PromiseKit/CorePromise (6.2.6)
   - secp256k1.swift (0.1.4)
-  - Web3 (0.1.1):
-    - Web3/Core (= 0.1.1)
-    - Web3/HTTPExtension (= 0.1.1)
-  - Web3/Core (0.1.1):
+  - Web3 (0.2.1):
+    - Web3/Core (= 0.2.1)
+    - Web3/HTTPExtension (= 0.2.1)
+  - Web3/Core (0.2.1):
     - BigInt.swift (~> 1.0)
     - CryptoSwift (~> 0.8)
     - secp256k1.swift (~> 0.1)
-  - Web3/HTTPExtension (0.1.1):
+  - Web3/HTTPExtension (0.2.1):
     - Web3/Core
-  - Web3/PromiseKit (0.1.1):
+  - Web3/PromiseKit (0.2.1):
     - PromiseKit/CorePromise (~> 6.0)
     - Web3/Core
 
@@ -43,12 +43,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AppAuth: 3f4f1d6d85ad631d0bbf15ffcdc10c447face97a
   BigInt.swift: 1e0ddf08d82166e72dfb0fa8d40301d273081afc
-  Bitski: 8ec88e64e40316f1c8e4847fe5493d3d0a52d255
-  CryptoSwift: bca8c5b653dcc2d9734409242a070ff53bafac86
+  Bitski: 793eecbf19739f0e1b44d60f0349dc2758b0382a
+  CryptoSwift: 6c778d69282bed3b4e975ff97a79d074f20bb011
   PromiseKit: 8245cb2e3a8fe00453e580bd4aafb57e1671f501
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
-  Web3: 1f0c38c8508b8487948af1cb597653b018f4b5d3
+  Web3: bf3c71ce4be523136df63f484001f17cbfd639b1
 
 PODFILE CHECKSUM: 5f018b45e8c3b5a286cb34a0120e08e9dd0cdc3f
 
-COCOAPODS: 1.5.2
+COCOAPODS: 1.5.3

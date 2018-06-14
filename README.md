@@ -2,7 +2,7 @@
 
 ## Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the example project, clone the repo, and run `pod install` from the Example directory first. You'll need to add your client id and redirect url to `AppDelegate`.
 
 ## Requirements
 
@@ -22,32 +22,35 @@ pod 'Bitski'
 
 ### Initialization
 
-First, request a client ID by signing up here: https://developer.bitski.com. Make sure you request an offline scope so that your access tokens can be refreshed.
+First, request a client ID by signing up [here](https://developer.bitski.com). Make sure you request an offline scope so that your access tokens can be refreshed.
+You'll also need to associate the redirectURL you use with your client id in the developer portal. This ensures that only urls that you trust can be used with your client id.
 
-Then in your app, you'll initialize an instance of Bitski:
+In your app, you'll initialize an instance of Bitski:
 
 ```swift
 // Replace redirect URL with an url scheme that will hit your native app
 Bitski.shared = Bitski(clientID: "<YOUR CLIENT ID>", redirectURL: URL(string: "exampleapp://application/callback")!)
 ```
+We provide a convenient static place to initialize your instance in `Bitski.shared`, but if you want to avoid using a singleton you can store your instance however
+works best for you.
 
 ### Authentication
 
-Once you have an instance of Bitski, you can check the signed in status. The user will need to be logged in before making any Web3 calls.
+Once you have an instance of `Bitski` configured, you can check the signed in status. The user will need to be logged in before making any Web3 calls.
 
 ```swift
 if Bitski.shared?.isLoggedIn == true {
-    self.web3 = bitski.getWeb3(network: .kovan)
+    self.web3 = Bitski.shared?.getWeb3(network: .kovan)
     // show logged in state
 } else {
     // show logged out state
 }
 ```
 
-To sign in (this will open a browser window):
+To sign in, simply call `signIn()` (this will open a browser window):
 
 ```swift
-Bitski.shared?.signIn() { accessToken, error in
+Bitski.shared?.signIn() { error in
     // Once signed in, get an instance of Web3 for the network you want
     // Currently we only support kovan and rinkeby. mainnet coming soon.
     self.web3 = Bitski.shared?.getWeb3(network: .kovan)
@@ -71,22 +74,32 @@ NotificationCenter.default.addObserver(self, selector: #selector(userDidLogout),
 
 ### Using Web3
 
-Once you have an instance of Web3 intialized, you can use it to make Ethereum calls and transactions.
+Once you have an instance of Web3 intialized, you can use it to make Ethereum calls and transactions. We provide full access to the Ethereum network through
+our API.
 
 ```swift
+// Example: Make a simple transfer transaction
 firstly {
     web3.eth.accounts()
-}.firstValue { accounts in
-    accounts
-}.then { account in
-    let transaction = BitskiTransaction(to: EthereumAddress(hex: "SOME ADDRESS", eip55: false), from: account, value: 0, gasLimit: 20000)
+}.then { accounts in
+    guard let account = accounts.first else { throw SomeError }
+    let to = EthereumAddress(hex: "SOME ADDRESS", eip55: false)
+    let transaction = EthereumTransaction(gasLimit: 21000, from: account, to: to, value: EthereumQuantity(quantity: 1.eth))
     return web3.eth.sendTransaction(transaction: transaction)
-}.done { transactionHash in
-    print("Received transaction hash!", transactionHash.hex())
+}.then { transactionHash in
+    web3.eth.getTransactionReceipt(transactionHash)
+}.done { receipt in
+    // Retrieved the receipt!
 }
 ```
 
 For more about what you can do in Web3, see [Web3.swift](https://github.com/Boilertalk/Web3.swift).
+
+### Authorization
+
+Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI 
+and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss. 
+For the best experience we recommend limiting the amount of transactions you send.
 
 ## License
 

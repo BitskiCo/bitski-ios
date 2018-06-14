@@ -134,17 +134,17 @@ public class Bitski: NSObject {
     ///
     /// - Parameters:
     ///   - viewController: viewController to present web interface from
-    ///   - completion: A closure that includes either an access token, or an error
-    public func signIn(completion: @escaping ((String?, Error?) -> Void)) {
-        if let authState = getAuthState(), authState.isAuthorized, let accessToken = authState.lastTokenResponse?.accessToken {
-            completion(accessToken, nil)
+    ///   - completion: A closure called after sign in that includes an optional error
+    public func signIn(completion: @escaping ((Error?) -> Void)) {
+        if let authState = getAuthState(), authState.isAuthorized {
+            completion(nil)
             return
         }
         getConfiguration { configuration, error in
             if let configuration = configuration {
                 self.signIn(configuration: configuration, completion: completion)
             } else if let error = error {
-                completion(nil, error)
+                completion(error)
             }
         }
     }
@@ -156,7 +156,7 @@ public class Bitski: NSObject {
     }
     
     // MARK: - Web3
-
+    
     /// Get a `BitskiHTTPProvider` for the requested network
     ///
     /// - Parameter network: Ethereum Network to use. Currently "kovan" and "rinkeby" are the only accepted values
@@ -167,13 +167,13 @@ public class Bitski: NSObject {
         }
         let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
         let httpProvider = BitskiHTTPProvider(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, authDelegate: self)
-
+        
         setHeaders(provider: httpProvider)
-
+        
         providers[network] = httpProvider
         return httpProvider
     }
-
+    
     /// Returns a `Web3` instance configured for Bitski
     ///
     /// - Parameter network: Ethereum network to use. Currently only "kovan" and "rinkeby" are accepted values.
@@ -204,15 +204,15 @@ public class Bitski: NSObject {
             completion(configuration, error)
         }
     }
-
+    
     /// Performs the sign in request
     ///
     /// - Parameters:
     ///   - configuration: configuration object for the authorization session
-    ///   - completion: A closure that contains either a string for the access token, or an error
-    private func signIn(configuration: OIDServiceConfiguration, completion: @escaping ((String?, Error?) -> Void)) {
+    ///   - completion: A closure called on completion that contains an optional error
+    private func signIn(configuration: OIDServiceConfiguration, completion: @escaping ((Error?) -> Void)) {
         authorizationFlowSession?.cancel()
-
+        
         let request = OIDAuthorizationRequest(
             configuration: configuration,
             clientId: clientID,
@@ -222,16 +222,16 @@ public class Bitski: NSObject {
             responseType: OIDResponseTypeCode,
             additionalParameters: nil
         )
-
+        
         authorizationFlowSession = OIDAuthState.getAuthState(byPresenting: request) { authState, error in
             self.setAuthState(authState)
-            if let authState = authState, let accessToken = authState.lastTokenResponse?.accessToken {
-                completion(accessToken, nil)
+            if authState != nil {
+                completion(nil)
                 NotificationCenter.default.post(name: Bitski.LoggedInNotification, object: nil)
             } else if let error = error {
-                completion(nil, error)
+                completion(error)
             } else {
-                completion(nil, AuthenticationError.noAccessToken)
+                completion(AuthenticationError.noAccessToken)
             }
         }
     }

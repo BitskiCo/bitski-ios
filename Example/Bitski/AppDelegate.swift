@@ -16,8 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        Bitski.shared = Bitski(clientID: "CLIENTID", redirectURL: URL(string: "bitskiexample://application/callback")!)
+        // UPDATE THIS WITH YOUR CLIENT ID
+        Bitski.shared = Bitski(clientID: "CLIENTID", redirectURL: URL(string: "yourapp://application/callback")!)
         return true
     }
 
