@@ -24,7 +24,7 @@ class LoggedOutViewController: UIViewController {
     }
     
     @IBAction func signIn() {
-        Bitski.shared?.signIn() { _, error in
+        Bitski.shared?.signIn() { error in
             if let error = error {
                 print("Error signing in: \(error)")
                 return
