@@ -13,48 +13,49 @@ import AppAuth
 /// Bitski only supports iOS11 and above, which must use SFAuthenticationSession.
 /// The traditional OIDAuthorizationUICoordinator requires a viewController, which
 /// in iOS 11+ is discarded. This class is a workaround to prevent that requirement.
-class BitskiAuthorizationUICoordinator: NSObject, OIDAuthorizationUICoordinator {
-    
+class BitskiAuthenticationAgent: NSObject, OIDExternalUserAgent {
+
     private var authenticationSession: SFAuthenticationSession?
     private var authorizationFlowInProgress: Bool = false
-    private weak var session: OIDAuthorizationFlowSession?
-    
+    private weak var session: OIDExternalUserAgentSession?
+
     override init() {
         super.init()
     }
-    
-    /// Starts the authorization flow by opening SFAuthenticationSession
-    func present(_ request: OIDAuthorizationRequest, session: OIDAuthorizationFlowSession) -> Bool {
+
+    func present(_ request: OIDExternalUserAgentRequest, session: OIDExternalUserAgentSession) -> Bool {
         if authorizationFlowInProgress {
+            return false
+        }
+        
+        guard let requestURL = request.externalUserAgentRequestURL(), let redirectScheme = request.redirectScheme() else {
             return false
         }
         
         authorizationFlowInProgress = true
         self.session = session
-        let requestURL = request.authorizationRequestURL()
-        let redirectScheme = request.redirectURL?.scheme
-        
+
         let session = SFAuthenticationSession(url: requestURL, callbackURLScheme: redirectScheme) { (callbackURL, error) in
             if let callbackURL = callbackURL {
-                self.session?.resumeAuthorizationFlow(with: callbackURL)
+                self.session?.resumeExternalUserAgentFlow(with: callbackURL)
             } else {
                 let safariError = OIDErrorUtilities.error(with: OIDErrorCode.userCanceledAuthorizationFlow, underlyingError: error, description: nil)
-                self.session?.failAuthorizationFlowWithError(safariError)
+                self.session?.failExternalUserAgentFlowWithError(safariError)
             }
         }
         self.authenticationSession = session
         let result = session.start()
-        
+
         if !result {
             let error = OIDErrorUtilities.error(with: OIDErrorCode.safariOpenError, underlyingError: nil, description: "Unable to open SFAuthenticationSession")
-            self.session?.failAuthorizationFlowWithError(error)
+            self.session?.failExternalUserAgentFlowWithError(error)
             cleanUp()
         }
         return result
     }
-    
+
     /// Dismisses authorization flow by cancelling SFAuthenticationSession
-    func dismissAuthorization(animated: Bool, completion: @escaping () -> Void) {
+    func dismiss(animated: Bool, completion: @escaping () -> Void) {
         if !authorizationFlowInProgress {
             return
         }
@@ -62,7 +63,7 @@ class BitskiAuthorizationUICoordinator: NSObject, OIDAuthorizationUICoordinator 
         cleanUp()
         completion()
     }
-    
+
     /// Remove references
     private func cleanUp() {
         session = nil

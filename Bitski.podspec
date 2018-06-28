@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   s.dependency 'Web3', '~> 0.3.0'
   s.dependency 'Web3/ContractABI', '~> 0.3.0'
   s.dependency 'Web3/PromiseKit', '~> 0.3.0'
-  s.dependency 'AppAuth', '~> 0.92'
+  s.dependency 'AppAuth', '~> 0.93'
   s.dependency 'BigInt.swift', '~> 1.0'
   s.dependency 'secp256k1.swift', '~> 0.1'
   s.dependency 'PromiseKit/CorePromise', '~> 6.0'

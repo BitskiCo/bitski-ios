@@ -80,7 +80,7 @@ public class Bitski: NSObject {
     static private let authStateKey: String = "BitskiAuthState"
     
     /// Active authorization session
-    private var authorizationFlowSession: OIDAuthorizationFlowSession?
+    private var authorizationFlowSession: OIDExternalUserAgentSession?
     
     /// HTTPProviders by network name
     private var providers: [Network: BitskiHTTPProvider] = [:]
@@ -222,8 +222,7 @@ public class Bitski: NSObject {
             responseType: OIDResponseTypeCode,
             additionalParameters: nil
         )
-        
-        authorizationFlowSession = OIDAuthState.getAuthState(byPresenting: request) { authState, error in
+        authorizationFlowSession = OIDAuthState.authState(byPresenting: request, externalUserAgent: BitskiAuthenticationAgent()) { authState, error in
             self.setAuthState(authState)
             if authState != nil {
                 completion(nil)
