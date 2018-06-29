@@ -165,6 +165,12 @@ works best for you.</p>
 <p>A user will remain signed in indefinitely, unless the access token is revoked. To explicitly sign out:</p>
 <pre class="highlight swift"><code><span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">signOut</span><span class="p">()</span>
 </code></pre>
+<h3 id='local-dev' class='heading'>Local Dev</h3>
+
+<p>If you&rsquo;re developing locally (like with truffle develop or ganache), you can use the development network instead.</p>
+<pre class="highlight swift"><code><span class="k">let</span> <span class="nv">network</span><span class="p">:</span> <span class="kt">Bitski</span><span class="o">.</span><span class="kt">Network</span> <span class="o">=</span> <span class="o">.</span><span class="nf">development</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="s">"http://localhost:9545"</span><span class="p">)</span> <span class="c1">//or use your local IP if building for a device.</span>
+<span class="k">let</span> <span class="nv">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">(</span><span class="nv">network</span><span class="p">:</span> <span class="n">network</span><span class="p">)</span>
+</code></pre>
 <h3 id='handling-implicit-logouts' class='heading'>Handling Implicit Logouts</h3>
 
 <p>Notifications will be posted when the user is signed in and signed out (<code><a href="Classes/Bitski.html#/s:6BitskiAAC20LoggedInNotificationSo14NSNotificationC4NameVvpZ">Bitski.LoggedInNotification</a></code> and <code><a href="Classes/Bitski.html#/s:6BitskiAAC21LoggedOutNotificationSo14NSNotificationC4NameVvpZ">Bitski.LoggedOutNotification</a></code>) respectively.
@@ -195,8 +201,8 @@ our API.</p>
 <p>For more about what you can do in Web3, see <a href="https://github.com/Boilertalk/Web3.swift">Web3.swift</a>.</p>
 <h3 id='authorization' class='heading'>Authorization</h3>
 
-<p>Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI 
-and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss. 
+<p>Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI
+and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss.
 For the best experience we recommend limiting the amount of transactions you send.</p>
 <h2 id='license' class='heading'>License</h2>
 

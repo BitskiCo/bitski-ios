@@ -73,6 +73,15 @@ A user will remain signed in indefinitely, unless the access token is revoked. T
 Bitski.shared?.signOut()
 ```
 
+### Local Dev
+
+If you're developing locally (like with truffle develop or ganache), you can use the development network instead.
+
+```swift
+let network: Bitski.Network = .development(url: "http://localhost:9545") //or use your local IP if building for a device.
+let web3 = Bitski.getWeb3(network: network)
+```
+
 ### Handling Implicit Logouts
 
 Notifications will be posted when the user is signed in and signed out (`Bitski.LoggedInNotification` and `Bitski.LoggedOutNotification`) respectively.
@@ -109,8 +118,8 @@ For more about what you can do in Web3, see [Web3.swift](https://github.com/Boil
 
 ### Authorization
 
-Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI 
-and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss. 
+Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI
+and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss.
 For the best experience we recommend limiting the amount of transactions you send.
 
 ## License
