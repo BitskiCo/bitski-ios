@@ -343,6 +343,8 @@
 		E677E0E8B7C6ECB5ABBFB9CA7E36D2DC /* secp256k1.swift-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 1714D64191410FF2DAA39FBF3217E096 /* secp256k1.swift-dummy.m */; };
 		E6FBD6F9743FF3439B5B6DF9B55272A4 /* EthereumTransactionReceiptObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD539B492CD825C1A0DA91F138EA696 /* EthereumTransactionReceiptObject.swift */; };
 		E82E4DD74923D8E864831A0BF1297DB6 /* field_5x52_int128_impl.h in Headers */ = {isa = PBXBuildFile; fileRef = CA93A7F33D0D38E7E8E39432377C4DF2 /* field_5x52_int128_impl.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		E856029E20E5A57700045919 /* Web3+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E856029D20E5A57700045919 /* Web3+Utils.swift */; };
+		E85602A020E5A8A100045919 /* Bitski+OIDAuthStateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E856029F20E5A8A100045919 /* Bitski+OIDAuthStateDelegate.swift */; };
 		E8ECA0343C3751AE9A092B3D3DBC8864 /* SolidityType+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B20952F4B2BD93A5F2863A6185CA367 /* SolidityType+Codable.swift */; };
 		EA475093B4C0A5FBC862077186C818B9 /* AES.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8F64182ED74B1AAF78A73EECBB8C112 /* AES.swift */; };
 		EAD92AE5A25F2B2D269D1CA1B2FB318E /* secp256k1.swift-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4303D507656FE8267C62A7098FFEFB38 /* secp256k1.swift-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -942,6 +944,9 @@
 		E723AD9B719B49394FFB8C075BAEDB69 /* eckey.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = eckey.h; path = secp256k1/Classes/secp256k1/src/eckey.h; sourceTree = "<group>"; };
 		E73D34ABB4E01E7B0E4FE57729C3D37F /* scalar_low.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = scalar_low.h; path = secp256k1/Classes/secp256k1/src/scalar_low.h; sourceTree = "<group>"; };
 		E7A2EF0A4E170C2A24FF41C0FE20D748 /* Rabbit+Foundation.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Rabbit+Foundation.swift"; path = "Sources/CryptoSwift/Foundation/Rabbit+Foundation.swift"; sourceTree = "<group>"; };
+		E856029C20E5943400045919 /* .jazzy.yaml */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = .jazzy.yaml; sourceTree = "<group>"; };
+		E856029D20E5A57700045919 /* Web3+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Web3+Utils.swift"; sourceTree = "<group>"; };
+		E856029F20E5A8A100045919 /* Bitski+OIDAuthStateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bitski+OIDAuthStateDelegate.swift"; sourceTree = "<group>"; };
 		E8FC89B65C0B32F247855ABF342927C4 /* Bytes+SecureRandom.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "Bytes+SecureRandom.swift"; path = "Web3/Classes/Core/Toolbox/Bytes+SecureRandom.swift"; sourceTree = "<group>"; };
 		EA1C514832465747F3C1DF3B0AB4F301 /* BlockCipher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BlockCipher.swift; path = Sources/CryptoSwift/BlockCipher.swift; sourceTree = "<group>"; };
 		EA2105F4BEA0A9E91ABA475A01AF137D /* ABIDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ABIDecoder.swift; path = Web3/Classes/ContractABI/ABI/ABIDecoder.swift; sourceTree = "<group>"; };
@@ -1266,6 +1271,7 @@
 			isa = PBXGroup;
 			children = (
 				4C3E578753B596E1DB399583A2AC8D09 /* Bitski.swift */,
+				E856029F20E5A8A100045919 /* Bitski+OIDAuthStateDelegate.swift */,
 				592CC1263B55C2C897069144019B3E16 /* BitskiProvider.swift */,
 			);
 			name = Core;
@@ -1345,6 +1351,7 @@
 			children = (
 				65617FEE065B96148CF1B24E3F06063C /* Bitski.podspec */,
 				0756B6D818AE18266FE7EAF745B194D8 /* LICENSE */,
+				E856029C20E5943400045919 /* .jazzy.yaml */,
 				439110C45544E661280B062317CAEFFD /* README.md */,
 			);
 			name = Pod;
@@ -1605,6 +1612,7 @@
 			children = (
 				9018C4149E712BCD3E4E27CFFBA3B7A4 /* BigUInt+Ethereum.swift */,
 				FB595CB34C7D98C01E927D82E93B5A55 /* RandomHex.swift */,
+				E856029D20E5A57700045919 /* Web3+Utils.swift */,
 				C9D11DBF5EF88ED7A9384A9EB80F8FB9 /* TransactionWatcher.swift */,
 			);
 			name = "Web3 Extensions";
@@ -2389,9 +2397,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E856029E20E5A57700045919 /* Web3+Utils.swift in Sources */,
 				D18D559B705D63345C5C229766FBF753 /* BigUInt+Ethereum.swift in Sources */,
 				C4978C0B8DFF1A07008FA117D86E5C13 /* Bitski-dummy.m in Sources */,
 				6E5B4FD202A76165FC07356980CB0F2D /* Bitski.swift in Sources */,
+				E85602A020E5A8A100045919 /* Bitski+OIDAuthStateDelegate.swift in Sources */,
 				8C548523EB62ACE68E7B0BD476A63F9C /* BitskiProvider.swift in Sources */,
 				AE3C55842A6CA576103C2C39E7031C6F /* BitskiAuthenticationAgent.swift in Sources */,
 				063268A739D10B9BCA3B154127FB3DD6 /* RandomHex.swift in Sources */,

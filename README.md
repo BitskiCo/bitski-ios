@@ -1,4 +1,14 @@
-# Bitski
+# Bitski iOS SDK
+
+[![CocoaPods](https://img.shields.io/cocoapods/v/Bitski.svg?style=flat)](https://cocoapods.org/pods/Bitski)
+[![CocoaPods](https://img.shields.io/cocoapods/l/Bitski.svg?style=flat)](https://github.com/BitskiCo/bitski-ios/blob/master/LICENSE)
+[![CocoaPods](https://img.shields.io/cocoapods/p/Bitski.svg?style=flat)](https://github.com/BitskiCo/bitski-ios#)
+
+The official [Bitski](https://www.bitski.com) SDK for iOS. Build decentralized iOS apps with Ethereum with OAuth-based cross-platform wallet.
+
+- Read our [Documentation](https://docs.bitski.com) or the [API Reference](https://bitskico.github.io/bitski-ios/) to get started.
+- Want to see an example of the SDK in action? Check out our [iOS Example Dapp](https://github.com/BitskiCo/example-native-dapp).
+- Learn more about what's possible with Ethereum on iOS at [Web3.swift](https://github.com/Boilertalk/Web3.swift).
 
 ## Example
 
@@ -6,7 +16,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 ## Requirements
 
-- Currently supports iOS 11 only
+- Currently only supports iOS 11 and above
 
 ## Installation
 
@@ -80,16 +90,18 @@ our API.
 ```swift
 // Example: Make a simple transfer transaction
 firstly {
-    web3.eth.accounts()
-}.then { accounts in
-    guard let account = accounts.first else { throw SomeError }
+    web3.eth.accounts().firstValue
+}.then { account in
     let to = EthereumAddress(hex: "SOME ADDRESS", eip55: false)
     let transaction = EthereumTransaction(gasLimit: 21000, from: account, to: to, value: EthereumQuantity(quantity: 1.eth))
     return web3.eth.sendTransaction(transaction: transaction)
 }.then { transactionHash in
     web3.eth.getTransactionReceipt(transactionHash)
 }.done { receipt in
-    // Retrieved the receipt!
+    let watcher = TransactionWatcher(hash: transactionHash, web3: web3)
+    watcher.expectedConfirmations = 3
+    watcher.delegate = self
+    self.transactionWatcher = watcher
 }
 ```
 

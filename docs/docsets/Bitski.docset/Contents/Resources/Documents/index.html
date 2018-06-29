@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bitski  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+
+    <a title="Bitski  Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="index.html">
+          Bitski Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/BitskiCo/bitski-ios">
+            <img class="header-icon" src="img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="index.html">Bitski Reference</a>
+      <img class="carat" src="img/carat.png" />
+      Bitski  Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Bitski.html">Bitski</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Bitski/AuthenticationError.html">– AuthenticationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/Bitski/Network.html">– Network</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Web3 Provider.html">Web3 Provider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/BitskiHTTPProvider.html">BitskiHTTPProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/BitskiHTTPProvider/Error.html">– Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Watching Transactions.html">Watching Transactions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/TransactionWatcher.html">TransactionWatcher</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Classes/TransactionWatcher/Status.html">– Status</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Protocols/TransactionWatcherDelegate.html">TransactionWatcherDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="Utilities.html">Utilities</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="Utilities.html#/s:6Bitski9randomHexSSSi10bytesCount_tKF">randomHex(bytesCount:)</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            
+            <h1 id='bitski-ios-sdk' class='heading'>Bitski iOS SDK</h1>
+
+<p><a href="https://cocoapods.org/pods/Bitski"><img src="https://img.shields.io/cocoapods/v/Bitski.svg?style=flat" alt="CocoaPods"></a>
+<a href="https://github.com/BitskiCo/bitski-ios/blob/master/LICENSE"><img src="https://img.shields.io/cocoapods/l/Bitski.svg?style=flat" alt="CocoaPods"></a>
+<a href="https://github.com/BitskiCo/bitski-ios#"><img src="https://img.shields.io/cocoapods/p/Bitski.svg?style=flat" alt="CocoaPods"></a></p>
+
+<p>The official <a href="https://www.bitski.com">Bitski</a> SDK for iOS. Build decentralized iOS apps with Ethereum with OAuth-based cross-platform wallet.</p>
+
+<ul>
+<li>Read our <a href="https://docs.bitski.com">Documentation</a> or the <a href="https://bitskico.github.io/bitski-ios/">API Reference</a> to get started.</li>
+<li>Want to see an example of the SDK in action? Check out our <a href="https://github.com/BitskiCo/example-native-dapp">iOS Example Dapp</a>.</li>
+<li>Learn more about what&rsquo;s possible with Ethereum on iOS at <a href="https://github.com/Boilertalk/Web3.swift">Web3.swift</a>.</li>
+</ul>
+<h2 id='example' class='heading'>Example</h2>
+
+<p>To run the example project, clone the repo, and run <code>pod install</code> from the Example directory first. You&rsquo;ll need to add your client id and redirect url to <code>AppDelegate</code>.</p>
+<h2 id='requirements' class='heading'>Requirements</h2>
+
+<ul>
+<li>Currently only supports iOS 11 and above</li>
+</ul>
+<h2 id='installation' class='heading'>Installation</h2>
+
+<p>Bitski is available through <a href="https://cocoapods.org">CocoaPods</a>. To install
+it, simply add the following line to your Podfile:</p>
+<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'Bitski'</span>
+</code></pre>
+<h2 id='usage' class='heading'>Usage</h2>
+<h3 id='initialization' class='heading'>Initialization</h3>
+
+<p>First, request a client ID by signing up <a href="https://developer.bitski.com">here</a>. Make sure you request an offline scope so that your access tokens can be refreshed.
+You&rsquo;ll also need to associate the redirectURL you use with your client id in the developer portal. This ensures that only urls that you trust can be used with your client id.</p>
+
+<p>In your app, you&rsquo;ll initialize an instance of Bitski:</p>
+<pre class="highlight swift"><code><span class="c1">// Replace redirect URL with an url scheme that will hit your native app</span>
+<span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="p">(</span><span class="nv">clientID</span><span class="p">:</span> <span class="s">"&lt;YOUR CLIENT ID&gt;"</span><span class="p">,</span> <span class="nv">redirectURL</span><span class="p">:</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="s">"exampleapp://application/callback"</span><span class="p">)</span><span class="o">!</span><span class="p">)</span>
+</code></pre>
+
+<p>We provide a convenient static place to initialize your instance in <code><a href="Classes/Bitski.html#/s:6BitskiAAC6sharedABSgvpZ">Bitski.shared</a></code>, but if you want to avoid using a singleton you can store your instance however
+works best for you.</p>
+<h3 id='authentication' class='heading'>Authentication</h3>
+
+<p>Once you have an instance of <code><a href="Classes/Bitski.html">Bitski</a></code> configured, you can check the signed in status. The user will need to be logged in before making any Web3 calls.</p>
+<pre class="highlight swift"><code><span class="k">if</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="n">isLoggedIn</span> <span class="o">==</span> <span class="kc">true</span> <span class="p">{</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">(</span><span class="nv">network</span><span class="p">:</span> <span class="o">.</span><span class="n">kovan</span><span class="p">)</span>
+    <span class="c1">// show logged in state</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="c1">// show logged out state</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>To sign in, simply call <code>signIn()</code> (this will open a browser window):</p>
+<pre class="highlight swift"><code><span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">signIn</span><span class="p">()</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
+    <span class="c1">// Once signed in, get an instance of Web3 for the network you want</span>
+    <span class="c1">// Currently we only support kovan and rinkeby. mainnet coming soon.</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">(</span><span class="nv">network</span><span class="p">:</span> <span class="o">.</span><span class="n">kovan</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>A user will remain signed in indefinitely, unless the access token is revoked. To explicitly sign out:</p>
+<pre class="highlight swift"><code><span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">signOut</span><span class="p">()</span>
+</code></pre>
+<h3 id='handling-implicit-logouts' class='heading'>Handling Implicit Logouts</h3>
+
+<p>Notifications will be posted when the user is signed in and signed out (<code><a href="Classes/Bitski.html#/s:6BitskiAAC20LoggedInNotificationSo14NSNotificationC4NameVvpZ">Bitski.LoggedInNotification</a></code> and <code><a href="Classes/Bitski.html#/s:6BitskiAAC21LoggedOutNotificationSo14NSNotificationC4NameVvpZ">Bitski.LoggedOutNotification</a></code>) respectively.
+A user can be signed out either explicitly, or implicitly if the access token is revoked. Therefore, it&rsquo;s a good practice to respond to these notifications.</p>
+<pre class="highlight swift"><code><span class="kt">NotificationCenter</span><span class="o">.</span><span class="k">default</span><span class="o">.</span><span class="nf">addObserver</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">selector</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">userDidLogout</span><span class="kd">)</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">Bitski</span><span class="o">.</span><span class="kt">LoggedOutNotification</span><span class="p">,</span> <span class="nv">object</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre>
+<h3 id='using-web3' class='heading'>Using Web3</h3>
+
+<p>Once you have an instance of Web3 intialized, you can use it to make Ethereum calls and transactions. We provide full access to the Ethereum network through
+our API.</p>
+<pre class="highlight swift"><code><span class="c1">// Example: Make a simple transfer transaction</span>
+<span class="n">firstly</span> <span class="p">{</span>
+    <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="nf">accounts</span><span class="p">()</span><span class="o">.</span><span class="n">firstValue</span>
+<span class="p">}</span><span class="o">.</span><span class="n">then</span> <span class="p">{</span> <span class="n">account</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">to</span> <span class="o">=</span> <span class="kt">EthereumAddress</span><span class="p">(</span><span class="nv">hex</span><span class="p">:</span> <span class="s">"SOME ADDRESS"</span><span class="p">,</span> <span class="nv">eip55</span><span class="p">:</span> <span class="kc">false</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">transaction</span> <span class="o">=</span> <span class="kt">EthereumTransaction</span><span class="p">(</span><span class="nv">gasLimit</span><span class="p">:</span> <span class="mi">21000</span><span class="p">,</span> <span class="nv">from</span><span class="p">:</span> <span class="n">account</span><span class="p">,</span> <span class="nv">to</span><span class="p">:</span> <span class="n">to</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">EthereumQuantity</span><span class="p">(</span><span class="nv">quantity</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="n">eth</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="nf">sendTransaction</span><span class="p">(</span><span class="nv">transaction</span><span class="p">:</span> <span class="n">transaction</span><span class="p">)</span>
+<span class="p">}</span><span class="o">.</span><span class="n">then</span> <span class="p">{</span> <span class="n">transactionHash</span> <span class="k">in</span>
+    <span class="n">web3</span><span class="o">.</span><span class="n">eth</span><span class="o">.</span><span class="nf">getTransactionReceipt</span><span class="p">(</span><span class="n">transactionHash</span><span class="p">)</span>
+<span class="p">}</span><span class="o">.</span><span class="n">done</span> <span class="p">{</span> <span class="n">receipt</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">watcher</span> <span class="o">=</span> <span class="kt">TransactionWatcher</span><span class="p">(</span><span class="nv">hash</span><span class="p">:</span> <span class="n">transactionHash</span><span class="p">,</span> <span class="nv">web3</span><span class="p">:</span> <span class="n">web3</span><span class="p">)</span>
+    <span class="n">watcher</span><span class="o">.</span><span class="n">expectedConfirmations</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">watcher</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">transactionWatcher</span> <span class="o">=</span> <span class="n">watcher</span>
+<span class="p">}</span>
+</code></pre>
+
+<p>For more about what you can do in Web3, see <a href="https://github.com/Boilertalk/Web3.swift">Web3.swift</a>.</p>
+<h3 id='authorization' class='heading'>Authorization</h3>
+
+<p>Our Web3 provider lets you send transactions to be signed, but the user must explictly approve them. For security, this authorization happens in our web UI 
+and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss. 
+For the best experience we recommend limiting the amount of transactions you send.</p>
+<h2 id='license' class='heading'>License</h2>
+
+<p>Bitski is available under the MIT license. See the LICENSE file for more info.</p>
+
+          </div>
+        </section>
+
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>Copyright © 2018 Out There Labs, Inc</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

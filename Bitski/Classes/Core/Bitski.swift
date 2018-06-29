@@ -9,25 +9,20 @@
 import AppAuth
 import Web3
 
+/// An instance of the Bitski SDK
 public class Bitski: NSObject {
-    
-    /// Shared instance of Bitski
-    public static var shared: Bitski?
-    
-    /// Notification triggered when the user logs in
-    public static let LoggedInNotification = NSNotification.Name(rawValue: "BitskiUserDidLogIn")
-    
-    /// Notification triggered when the user logs out
-    public static let LoggedOutNotification = NSNotification.Name(rawValue: "BitskiUserDidLogOut")
     
     /// Standard Bitski errors
     public enum AuthenticationError: Error {
+        /// Returned when trying to make a web3 request while logged out
         case notLoggedIn
+        /// Returned when an access token is not received while logging in
         case noAccessToken
     }
     
     /// Represents distinct Ethereum Networks
-    public enum Network: String {
+    public enum Network: RawRepresentable, Hashable {
+        
         /// the default
         case mainnet
         /// kovan test net
@@ -37,10 +32,15 @@ public class Bitski: NSObject {
         /// ropsten test net
         case ropsten
         
+        /// local development network
+        case development(url: String)
+        
+        // MARK: Instance Variables
+        
         /// Whether or not Bitski currently supports this network
         var isSupported: Bool {
             switch self {
-            case .kovan, .rinkeby:
+            case .kovan, .rinkeby, .development:
                 return true
             default:
                 return false
@@ -49,9 +49,67 @@ public class Bitski: NSObject {
         
         /// JSON-RPC endpoint for the network, relative to base API URL
         var rpcURL: String {
-            return "web3/\(self.rawValue)"
+            switch self {
+            case .mainnet:
+                return "web3/mainnet"
+            case .kovan:
+                return "web3/kovan"
+            case .rinkeby:
+                return "web3/rinkeby"
+            case .ropsten:
+                return "web3/ropsten"
+            case .development(let url):
+                return url
+            }
+        }
+        
+        // MARK: RawRepresentable
+        
+        public typealias RawValue = String
+        
+        public init?(rawValue: RawValue) {
+            switch rawValue {
+            case "mainnet":
+                self = .mainnet
+            case "kovan":
+                self = .kovan
+            case "rinkeby":
+                self = .rinkeby
+            case "ropsten":
+                self = .ropsten
+            default:
+                self = .development(url: rawValue)
+            }
+        }
+        
+        public var rawValue: String {
+            switch self {
+            case .mainnet:
+                return "mainnet"
+            case .kovan:
+                return "kovan"
+            case .rinkeby:
+                return "rinkeby"
+            case .ropsten:
+                return "ropsten"
+            case .development(let url):
+                return url
+            }
         }
     }
+    
+    // MARK: Notifications
+    
+    /// Notification triggered when the user logs in
+    public static let LoggedInNotification = NSNotification.Name(rawValue: "BitskiUserDidLogIn")
+    
+    /// Notification triggered when the user logs out
+    public static let LoggedOutNotification = NSNotification.Name(rawValue: "BitskiUserDidLogOut")
+    
+    // MARK: Instance Variables
+    
+    /// Shared instance of `Bitski`
+    public static var shared: Bitski?
     
     /// Whether or not the current user is logged in
     public var isLoggedIn: Bool {
@@ -82,8 +140,8 @@ public class Bitski: NSObject {
     /// Active authorization session
     private var authorizationFlowSession: OIDExternalUserAgentSession?
     
-    /// HTTPProviders by network name
-    private var providers: [Network: BitskiHTTPProvider] = [:]
+    /// Cached Web3Providers by network
+    private var providers: [Network: Web3Provider] = [:]
     
     /// Cached OpenID Auth State
     private var authState: OIDAuthState? {
@@ -159,19 +217,20 @@ public class Bitski: NSObject {
     
     /// Get a `BitskiHTTPProvider` for the requested network
     ///
-    /// - Parameter network: Ethereum Network to use. Currently "kovan" and "rinkeby" are the only accepted values
+    /// - Parameter network: Ethereum network to use. Currently .development, .kovan, and .rinkeby are the only accepted values.
     /// - Returns: Web3Provider instance configured for Bitski.
-    public func getProvider(network: Network) -> BitskiHTTPProvider {
+    public func getProvider(network: Network) -> Web3Provider {
         if let provider = providers[network] {
             return provider;
         }
-        let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
-        let httpProvider = BitskiHTTPProvider(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, authDelegate: self)
-        
-        setHeaders(provider: httpProvider)
-        
-        providers[network] = httpProvider
-        return httpProvider
+        switch network {
+        case .development(let url):
+            let httpProvider = Web3HttpProvider(rpcURL: url)
+            providers[network] = httpProvider
+            return httpProvider
+        default:
+            return createBitskiProvider(network: network)
+        }
     }
     
     /// Returns a `Web3` instance configured for Bitski
@@ -183,6 +242,20 @@ public class Bitski: NSObject {
     }
     
     // MARK: - Private Methods
+    
+    /// Creates a new BitskiHTTPProvider
+    ///
+    /// - Parameter network: Network to use
+    /// - Returns: a configured instance of BitskiHTTPProvider
+    private func createBitskiProvider(network: Network) -> BitskiHTTPProvider {
+        let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
+        let httpProvider = BitskiHTTPProvider(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, authDelegate: self)
+        
+        setHeaders(provider: httpProvider)
+        
+        providers[network] = httpProvider
+        return httpProvider
+    }
     
     /// Sets the Client ID headers on the given provider
     ///
@@ -238,7 +311,7 @@ public class Bitski: NSObject {
     /// Set and archive the current OAuth State
     ///
     /// - Parameter authState: OIDAuthState to set or nil to remove
-    private func setAuthState(_ authState: OIDAuthState?) {
+    func setAuthState(_ authState: OIDAuthState?) {
         self.authState = authState
         var data: Data? = nil
         if let authState = authState {
@@ -251,7 +324,7 @@ public class Bitski: NSObject {
     /// Get auth state from memory or disk
     ///
     /// - Returns: OIDAuthState if available
-    private func getAuthState() -> OIDAuthState? {
+    func getAuthState() -> OIDAuthState? {
         if let authState = authState {
             return authState
         }
@@ -265,9 +338,11 @@ public class Bitski: NSObject {
     }
 }
 
+// MARK: - BitskiAuthDelegate
+
 extension Bitski: BitskiAuthDelegate {
     /// Called before every JSON RPC request to get a fresh access token if needed
-    public func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void) {
+    func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void) {
         guard let authState = authState else {
             completion(nil, AuthenticationError.notLoggedIn)
             return
@@ -281,21 +356,4 @@ extension Bitski: BitskiAuthDelegate {
             }
         }
     }
-}
-
-extension Bitski: OIDAuthStateChangeDelegate, OIDAuthStateErrorDelegate {
-    
-    public func didChange(_ state: OIDAuthState) {
-        if state.isAuthorized && state.authorizationError == nil {
-            self.setAuthState(state)
-        } else {
-            self.signOut()
-        }
-    }
-    
-    public func authState(_ state: OIDAuthState, didEncounterAuthorizationError error: Error) {
-        // Remove cached auth state
-        self.signOut()
-    }
-    
 }

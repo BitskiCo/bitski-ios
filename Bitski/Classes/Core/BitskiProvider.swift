@@ -9,23 +9,35 @@
 import Web3
 import SafariServices
 
-public protocol BitskiAuthDelegate: NSObjectProtocol {
+protocol BitskiAuthDelegate: NSObjectProtocol {
     func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void)
 }
 
+/// A custom Web3 HttpProvider that is specifically configured for use with Bitski.
+/// You shouldn't create one yourself, but instead create one using `Bitski.getWeb3(network:)` or `Bitski.getProvider(network:)`
 public class BitskiHTTPProvider: Web3Provider {
     
+    /// Various errors that may occur while processing Web3 requests
     public enum Error: Swift.Error {
+        /// The provider is not configured with an authDelegate
         case noDelegate
+        /// Bitski is not currently logged in
         case notLoggedIn(Swift.Error?)
+        /// Encoding the JSON-RPC request failed
         case encodingFailed(Swift.Error?)
+        /// Decoding the JSON-RPC request failed
         case decodingFailed(Swift.Error?)
+        /// The transaction was canceled by the user
         case requestCancelled
+        /// The JSON-RPC request is missing a result
         case missingData
+        /// The server returned an unexpected response code
         case invalidResponseCode
     }
     
-    /// Headers to add to all requests
+    // MARK: Instance Variables
+    
+    /// HTTP headers to add to all requests
     public var headers = [
         "Accept": "application/json",
         "Content-Type": "application/json"
@@ -68,9 +80,10 @@ public class BitskiHTTPProvider: Web3Provider {
     /// - Parameters:
     ///   - rpcURL: The URL to send JSON-RPC requests to
     ///   - webBaseURL: The base URL for all web UI requests
-    ///   - session: URLSession to use. Defaults to a new default URLSession
     ///   - redirectURL: The URL to redirect back to after authorization requests
-    public init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, authDelegate: BitskiAuthDelegate?, session: URLSession = URLSession(configuration: .default)) {
+    ///   - authDelegate: A class responsible for delivering a current access token
+    ///   - session: URLSession to use. Defaults to a new default URLSession
+    init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, authDelegate: BitskiAuthDelegate?, session: URLSession = URLSession(configuration: .default)) {
         self.rpcURL = rpcURL
         self.webBaseURL = webBaseURL
         self.network = network

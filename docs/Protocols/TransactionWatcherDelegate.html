@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>TransactionWatcherDelegate Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset="utf-8">
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+
+    <a name="//apple_ref/swift/Protocol/TransactionWatcherDelegate" class="dashAnchor"></a>
+
+    <a title="TransactionWatcherDelegate Protocol Reference"></a>
+
+    <header class="header">
+      <p class="header-col header-col--primary">
+        <a class="header-link" href="../index.html">
+          Bitski Docs
+        </a>
+         (100% documented)
+      </p>
+    
+      <p class="header-col--secondary">
+        <form role="search" action="../search.json">
+          <input type="text" placeholder="Search documentation" data-typeahead>
+        </form>
+      </p>
+    
+        <p class="header-col header-col--secondary">
+          <a class="header-link" href="https://github.com/BitskiCo/bitski-ios">
+            <img class="header-icon" src="../img/gh.png"/>
+            View on GitHub
+          </a>
+        </p>
+    
+    </header>
+
+    <p class="breadcrumbs">
+      <a class="breadcrumb" href="../index.html">Bitski Reference</a>
+      <img class="carat" src="../img/carat.png" />
+      TransactionWatcherDelegate Protocol Reference
+    </p>
+
+    <div class="content-wrapper">
+      <nav class="navigation">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Authentication.html">Authentication</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Bitski.html">Bitski</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Bitski/AuthenticationError.html">– AuthenticationError</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/Bitski/Network.html">– Network</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Web3 Provider.html">Web3 Provider</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/BitskiHTTPProvider.html">BitskiHTTPProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/BitskiHTTPProvider/Error.html">– Error</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Watching Transactions.html">Watching Transactions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TransactionWatcher.html">TransactionWatcher</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Classes/TransactionWatcher/Status.html">– Status</a>
+              </li>
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Protocols/TransactionWatcherDelegate.html">TransactionWatcherDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a class="nav-group-name-link" href="../Utilities.html">Utilities</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a class="nav-group-task-link" href="../Utilities.html#/s:6Bitski9randomHexSSSi10bytesCount_tKF">randomHex(bytesCount:)</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+
+        <section class="section">
+          <div class="section-content">
+            <h1>TransactionWatcherDelegate</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">TransactionWatcherDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                </div>
+              </div>
+            <p>A class that will receive updates about a transaction.</p>
+
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-content">
+            <div class="task-group">
+              <ul class="item-container">
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_AF6StatusO09didUpdateF0tF"></a>
+                    <a name="//apple_ref/swift/Method/transactionWatcher(_:didUpdateStatus:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_AF6StatusO09didUpdateF0tF">transactionWatcher(_:didUpdateStatus:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the transaction&rsquo;s status changes</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">transactionWatcher</span><span class="p">(</span><span class="n">_</span> <span class="nv">transactionWatcher</span><span class="p">:</span> <span class="kt"><a href="../Classes/TransactionWatcher.html">TransactionWatcher</a></span><span class="p">,</span> <span class="n">didUpdateStatus</span> <span class="nv">status</span><span class="p">:</span> <span class="kt"><a href="../Classes/TransactionWatcher.html">TransactionWatcher</a></span><span class="o">.</span><span class="kt">Status</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transactionWatcher</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the instance of TransactionWatcher that triggered this event</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>status</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the new status of the transaction</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_4Web308EthereumB13ReceiptObjectV010didReceiveH0tF"></a>
+                    <a name="//apple_ref/swift/Method/transactionWatcher(_:didReceiveReceipt:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_4Web308EthereumB13ReceiptObjectV010didReceiveH0tF">transactionWatcher(_:didReceiveReceipt:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when the transaction receipt is receieved</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">transactionWatcher</span><span class="p">(</span><span class="n">_</span> <span class="nv">transactionWatcher</span><span class="p">:</span> <span class="kt"><a href="../Classes/TransactionWatcher.html">TransactionWatcher</a></span><span class="p">,</span> <span class="n">didReceiveReceipt</span> <span class="nv">receipt</span><span class="p">:</span> <span class="kt">EthereumTransactionReceiptObject</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transactionWatcher</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the instance of TransactionWatcher that triggered this event</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>receipt</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the receipt object of the transaction</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_4Web320SolidityEmittedEventV010didReceiveI0tF"></a>
+                    <a name="//apple_ref/swift/Method/transactionWatcher(_:didReceiveEvent:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6Bitski26TransactionWatcherDelegateP011transactionC0yAA0bC0C_4Web320SolidityEmittedEventV010didReceiveI0tF">transactionWatcher(_:didReceiveEvent:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Called when an instance of an event being watched is received</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">transactionWatcher</span><span class="p">(</span><span class="n">_</span> <span class="nv">transactionWatcher</span><span class="p">:</span> <span class="kt"><a href="../Classes/TransactionWatcher.html">TransactionWatcher</a></span><span class="p">,</span> <span class="n">didReceiveEvent</span> <span class="nv">event</span><span class="p">:</span> <span class="kt">SolidityEmittedEvent</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transactionWatcher</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the instance of TransactionWatcher that triggered this event</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>event</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the event that was received</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+      </article>
+    </div>
+    <section class="footer">
+      <p>Copyright © 2018 Out There Labs, Inc</p>
+      <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.9.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+    </section>
+  </body>
+</div>
+</html>

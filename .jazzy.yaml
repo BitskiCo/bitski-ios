@@ -1,0 +1,29 @@
+author: Bitski
+author_url: https://docs.bitski.com
+copyright: Copyright © 2018 Out There Labs, Inc
+readme: README.md
+podspec: Bitski.podspec
+github_url: https://github.com/BitskiCo/bitski-ios
+theme: fullwidth
+clean: true
+
+exclude:
+    - "Bitski/Classes/Core/Bitski+OIDAuthStateDelegate.swift"
+    - "Bitski/Classes/Web3 Extensions/BigUInt+Ethereum.swift"
+    - "Bitski/Classes/Web3 Extensions/Web3+Utils.swift"
+
+custom_categories:
+    - name: Authentication
+      children:
+        - Bitski
+    - name: Web3 Provider
+      children:
+        - BitskiHTTPProvider
+    - name: Watching Transactions
+      children:
+        - TransactionWatcher
+        - TransactionWatcherDelegate
+    - name: Utilities
+      children:
+        - randomHex(bytesCount:)
+
