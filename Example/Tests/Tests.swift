@@ -1,5 +1,5 @@
 import XCTest
-import Bitski
+@testable import Bitski
 
 class Tests: XCTestCase {
     
@@ -13,16 +13,19 @@ class Tests: XCTestCase {
         super.tearDown()
     }
     
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure() {
-            // Put the code you want to measure the time of here.
-        }
+    func testNetworks() {
+        let kovan = Bitski.Network.kovan
+        let rinkeby = Bitski.Network.rinkeby
+        let ropsten = Bitski.Network.ropsten
+        let mainnet = Bitski.Network.mainnet
+        let development = Bitski.Network.development(url: "http://localhost:9545")
+        
+        XCTAssertTrue(kovan.isSupported, "Kovan should be supported")
+        XCTAssertTrue(rinkeby.isSupported, "Rinkeby should be supported")
+        XCTAssertTrue(development.isSupported, "Development should be supported")
+        
+        XCTAssertFalse(ropsten.isSupported, "Ropsten should not be supported")
+        XCTAssertFalse(mainnet.isSupported, "mainnet should not be supported")
     }
     
 }
