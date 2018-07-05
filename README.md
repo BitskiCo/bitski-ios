@@ -3,6 +3,7 @@
 [![CocoaPods](https://img.shields.io/cocoapods/v/Bitski.svg?style=flat)](https://cocoapods.org/pods/Bitski)
 [![CocoaPods](https://img.shields.io/cocoapods/l/Bitski.svg?style=flat)](https://github.com/BitskiCo/bitski-ios/blob/master/LICENSE)
 [![CocoaPods](https://img.shields.io/cocoapods/p/Bitski.svg?style=flat)](https://github.com/BitskiCo/bitski-ios)
+[![Documentation](https://bitskico.github.io/bitski-ios/badge.svg)](https://bitskico.github.io/bitski-ios/)
 [![Codecov](https://img.shields.io/codecov/c/github/bitskico/bitski-ios.svg?style=flat)](https://codecov.io/gh/bitskico/bitski-ios)
 
 The official [Bitski](https://www.bitski.com) SDK for iOS. Build decentralized iOS apps with Ethereum with OAuth-based cross-platform wallet.

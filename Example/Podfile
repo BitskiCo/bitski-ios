@@ -9,4 +9,5 @@ end
 target 'Bitski_Tests' do
     pod 'Bitski', :path => '../'
     pod 'Web3', '0.3.0'
+    pod 'OHHTTPStubs/Swift'
 end

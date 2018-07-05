@@ -10,7 +10,7 @@ import AppAuth
 import Web3
 
 /// An instance of the Bitski SDK
-public class Bitski: NSObject {
+public class Bitski: NSObject, BitskiAuthDelegate {
     
     /// Standard Bitski errors
     public enum AuthenticationError: Error {
@@ -134,6 +134,11 @@ public class Bitski: NSObject {
     /// URL to use for redirects from the web back into the app
     let redirectURL: URL
     
+    /// Class to use for creating http providers
+    var providerClass: BitskiHTTPProvider.Type {
+        return BitskiHTTPProvider.self
+    }
+    
     static private let configurationKey: String = "BitskiOIDServiceConfiguration"
     static private let authStateKey: String = "BitskiAuthState"
     
@@ -249,7 +254,8 @@ public class Bitski: NSObject {
     /// - Returns: a configured instance of BitskiHTTPProvider
     private func createBitskiProvider(network: Network) -> BitskiHTTPProvider {
         let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
-        let httpProvider = BitskiHTTPProvider(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, authDelegate: self)
+        let httpProvider = providerClass.init(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL)
+        httpProvider.authDelegate = self
         
         setHeaders(provider: httpProvider)
         
@@ -283,7 +289,7 @@ public class Bitski: NSObject {
     /// - Parameters:
     ///   - configuration: configuration object for the authorization session
     ///   - completion: A closure called on completion that contains an optional error
-    private func signIn(configuration: OIDServiceConfiguration, completion: @escaping ((Error?) -> Void)) {
+    func signIn(configuration: OIDServiceConfiguration, agent: OIDExternalUserAgent = BitskiAuthenticationAgent(), completion: @escaping ((Error?) -> Void)) {
         authorizationFlowSession?.cancel()
         
         let request = OIDAuthorizationRequest(
@@ -295,7 +301,7 @@ public class Bitski: NSObject {
             responseType: OIDResponseTypeCode,
             additionalParameters: nil
         )
-        authorizationFlowSession = OIDAuthState.authState(byPresenting: request, externalUserAgent: BitskiAuthenticationAgent()) { authState, error in
+        authorizationFlowSession = OIDAuthState.authState(byPresenting: request, externalUserAgent: agent) { authState, error in
             self.setAuthState(authState)
             if authState != nil {
                 completion(nil)
@@ -336,11 +342,9 @@ public class Bitski: NSObject {
         }
         return nil
     }
-}
-
-// MARK: - BitskiAuthDelegate
-
-extension Bitski: BitskiAuthDelegate {
+    
+    // MARK: - BitskiAuthDelegate
+    
     /// Called before every JSON RPC request to get a fresh access token if needed
     func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void) {
         guard let authState = authState else {

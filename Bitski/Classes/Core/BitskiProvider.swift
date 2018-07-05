@@ -67,8 +67,8 @@ public class BitskiHTTPProvider: Web3Provider {
     /// JSONDecoder for parsing RPCResponses
     private let decoder = JSONDecoder()
     
-    /// The current SFAuthenticationSession for requests requiring authorization (must be retained).
-    private var currentSession: SFAuthenticationSession?
+    /// The current BitskiAuthorizationAgent for requests requiring authorization (must be retained).
+    private var currentAuthAgent: AuthorizationAgent?
     
     /// Delegate to provide up to date access tokens for each request
     weak var authDelegate: BitskiAuthDelegate?
@@ -81,15 +81,13 @@ public class BitskiHTTPProvider: Web3Provider {
     ///   - rpcURL: The URL to send JSON-RPC requests to
     ///   - webBaseURL: The base URL for all web UI requests
     ///   - redirectURL: The URL to redirect back to after authorization requests
-    ///   - authDelegate: A class responsible for delivering a current access token
     ///   - session: URLSession to use. Defaults to a new default URLSession
-    init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, authDelegate: BitskiAuthDelegate?, session: URLSession = URLSession(configuration: .default)) {
+    required public init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession = URLSession(configuration: .default)) {
         self.rpcURL = rpcURL
         self.webBaseURL = webBaseURL
         self.network = network
         self.session = session
         self.redirectURL = redirectURL
-        self.authDelegate = authDelegate
         self.queue = DispatchQueue(label: "BitskiHttpProvider", attributes: .concurrent)
     }
     
@@ -117,6 +115,10 @@ public class BitskiHTTPProvider: Web3Provider {
         }
     }
     
+    func createAuthorizationAgent(accessToken: String) -> AuthorizationAgent {
+        return BitskiAuthorizationAgent(baseURL: webBaseURL, redirectURL: redirectURL, network: network, accessToken: accessToken)
+    }
+    
     private func sendAuthenticated<Params, Result>(request: RPCRequest<Params>, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
         self.queue.async {
             let body: Data
@@ -129,7 +131,7 @@ public class BitskiHTTPProvider: Web3Provider {
             }
             
             if self.requiresAuthorization(request: request) {
-                self.sendViaWeb(request: request, body: body, response: response)
+                self.sendWithAuthorization(request: request, body: body, accessToken: accessToken, response: response)
                 return
             }
             
@@ -156,42 +158,19 @@ public class BitskiHTTPProvider: Web3Provider {
         }
     }
     
-    /// Send the current RPC method via the web when authorization is required
-    ///
-    /// - Parameters:
-    ///   - request: The original RPCRequest
-    ///   - body: The serialized body of the request
-    ///   - response: callback with the result of the web request
-    private func sendViaWeb<Params, Result>(request: RPCRequest<Params>, body: Data, response: @escaping Web3ResponseCompletion<Result>) {
-        // Get base URL depending on the request
-        guard let methodURL = self.urlForMethod(methodName: request.method, baseURL: self.webBaseURL) else {
-            let err = Web3Response<Result>(error: .requestFailed(nil))
-            response(err)
-            return
-        }
-        // Encode the request data into the url query params
-        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body) else {
-            let error = Web3Response<Result>(error: .requestFailed(nil))
-            response(error)
-            return
-        }
-        
-        // UI work must happen on the main queue, rather than our internal queue
-        DispatchQueue.main.async {
-            //todo: ideally find a way to do this without relying on SFAuthenticationSession.
-            self.currentSession = SFAuthenticationSession(url: url, callbackURLScheme: self.redirectURL.scheme) { url, error in
-                self.queue.async {
-                    if error == nil, let url = url {
-                        let res: Web3Response<Result> = self.parseResponse(url: url)
-                        response(res)
-                    } else {
-                        let err = Web3Response<Result>(error: .serverError(error))
-                        response(err)
-                    }
-                    self.currentSession = nil
-                }
+    private func sendWithAuthorization<Params, Result>(request: RPCRequest<Params>, body: Data, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
+        self.currentAuthAgent = createAuthorizationAgent(accessToken: accessToken)
+        self.currentAuthAgent?.requestAuthorization(method: request.method, body: body) { data, error in
+            if let data = data {
+                let res: Web3Response<Result> = self.parseResponse(data: data)
+                response(res)
+            } else if let error = error {
+                let err: Web3Response<Result>.Error = .serverError(error)
+                response(Web3Response(error: err))
+            } else {
+                let err: Web3Response<Result>.Error = .requestFailed(nil)
+                response(Web3Response(error: err))
             }
-            self.currentSession?.start()
         }
     }
     
@@ -210,50 +189,6 @@ public class BitskiHTTPProvider: Web3Provider {
         }
     }
     
-    /// Get the web URL for a given JSON-RPC method
-    ///
-    /// - Parameters:
-    ///   - methodName: name of the method to check
-    ///   - baseURL: the web base url the result should be relative to
-    /// - Returns: A web URL for the JSON-RPC method, or nil if one is not available
-    private func urlForMethod(methodName: String, baseURL: URL) -> URL? {
-        switch methodName {
-        case "eth_sendTransaction":
-            return URL(string: "/eth-send-transaction", relativeTo: baseURL)
-        default:
-            return nil
-        }
-    }
-    
-    /// Creates a URL with query params that represent the RPCRequest
-    ///
-    /// - Parameters:
-    ///   - methodURL: The base URL for the request
-    ///   - body: JSON-RPC request serialized as Data
-    /// - Returns: Web URL with necessary query parameters
-    private func queryEncodedRequestURL(methodURL: URL, body: Data) -> URL? {
-        guard var urlComponents = URLComponents(url: methodURL, resolvingAgainstBaseURL: true) else {
-            return nil
-        }
-        
-        var queryItems = urlComponents.queryItems ?? []
-        
-        let accessToken = headers["Authorization"]?.replacingOccurrences(of: "Bearer ", with: "") ?? ""
-        
-        queryItems += [
-            URLQueryItem(name: "network", value: network.rawValue),
-            URLQueryItem(name: "payload", value: body.base64EncodedString()),
-            URLQueryItem(name: "referrerAccessToken", value: accessToken)
-        ]
-        
-        if let encodedRedirectURI = redirectURL.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            queryItems += [URLQueryItem(name: "redirectURI", value: encodedRedirectURI)]
-        }
-        
-        urlComponents.queryItems = queryItems
-        return urlComponents.url
-    }
-    
     // MARK: - Decoding
     
     /// Parse a response from a Data and an HTTPURLResponse object
@@ -268,24 +203,6 @@ public class BitskiHTTPProvider: Web3Provider {
             // This is a non typical rpc error response and should be considered a server error.
             return Web3Response(error: .serverError(Error.invalidResponseCode))
         }
-        return parseResponse(data: data)
-    }
-    
-    /// Parse a response from the web using URL query items
-    ///
-    /// - Parameter url: Callback URL with result
-    /// - Returns: Web3Response with either the result if it can successfully be decoded from the query params, or an error
-    private func parseResponse<T>(url: URL) -> Web3Response<T> {
-        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        
-        guard let data = urlComponents?.queryItems?.filter( { (item) -> Bool in
-            item.name == "result"
-        }).compactMap({ (queryItem) -> Data? in
-            return queryItem.value.flatMap { Data(base64Encoded: $0) }
-        }).first else {
-            return Web3Response(error: Error.decodingFailed(nil))
-        }
-        
         return parseResponse(data: data)
     }
     

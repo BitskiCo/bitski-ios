@@ -20,6 +20,7 @@
   },
   "swift_version": "4.0",
   "source_files": "Bitski/Classes/**/*",
+  "exclude_files": "docs/**/*",
   "dependencies": {
     "Web3": [
       "~> 0.3.0"

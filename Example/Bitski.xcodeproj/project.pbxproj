@@ -15,6 +15,13 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		AB038E26F332FDEFD229CD17 /* Pods_Bitski_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */; };
+		E820CBFA20EE92AD005CCE05 /* MockAuthAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */; };
+		E820CBFC20EE9395005CCE05 /* MockBitski.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820CBFB20EE9395005CCE05 /* MockBitski.swift */; };
+		E820CC0120EEAAEE005CCE05 /* MockBitskiProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820CC0020EEAAEE005CCE05 /* MockBitskiProvider.swift */; };
+		E820CC0420EEB801005CCE05 /* token.json in Resources */ = {isa = PBXBuildFile; fileRef = E820CC0220EEB801005CCE05 /* token.json */; };
+		E820CC0520EEB801005CCE05 /* send-transaction.json in Resources */ = {isa = PBXBuildFile; fileRef = E820CC0320EEB801005CCE05 /* send-transaction.json */; };
+		E820CC0720EEBB66005CCE05 /* openid-configuration.json in Resources */ = {isa = PBXBuildFile; fileRef = E820CC0620EEBB66005CCE05 /* openid-configuration.json */; };
+		E820CC0920EEBE2E005CCE05 /* eth-accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = E820CC0820EEBE2E005CCE05 /* eth-accounts.json */; };
 		E85B785E20D2EF8D0069E3B4 /* LoggedOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B785D20D2EF8D0069E3B4 /* LoggedOutViewController.swift */; };
 		E85B786020D2EF9B0069E3B4 /* LoggedInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B785F20D2EF9B0069E3B4 /* LoggedInViewController.swift */; };
 /* End PBXBuildFile section */
@@ -49,6 +56,13 @@
 		B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.release.xcconfig"; sourceTree = "<group>"; };
 		C3109604084DD994DE4C7CB4 /* Pods-Bitski_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		DBC92345A3AE96CFBA8AE979 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthAgent.swift; sourceTree = "<group>"; };
+		E820CBFB20EE9395005CCE05 /* MockBitski.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBitski.swift; sourceTree = "<group>"; };
+		E820CC0020EEAAEE005CCE05 /* MockBitskiProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBitskiProvider.swift; sourceTree = "<group>"; };
+		E820CC0220EEB801005CCE05 /* token.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = token.json; sourceTree = "<group>"; };
+		E820CC0320EEB801005CCE05 /* send-transaction.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "send-transaction.json"; sourceTree = "<group>"; };
+		E820CC0620EEBB66005CCE05 /* openid-configuration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "openid-configuration.json"; sourceTree = "<group>"; };
+		E820CC0820EEBE2E005CCE05 /* eth-accounts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "eth-accounts.json"; sourceTree = "<group>"; };
 		E85B785D20D2EF8D0069E3B4 /* LoggedOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedOutViewController.swift; sourceTree = "<group>"; };
 		E85B785F20D2EF9B0069E3B4 /* LoggedInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -133,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				607FACEB1AFB9204008FA782 /* Tests.swift */,
+				E820CBFD20EE9601005CCE05 /* Stubs */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
 			path = Tests;
@@ -142,6 +157,9 @@
 			isa = PBXGroup;
 			children = (
 				607FACEA1AFB9204008FA782 /* Info.plist */,
+				E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */,
+				E820CBFB20EE9395005CCE05 /* MockBitski.swift */,
+				E820CC0020EEAAEE005CCE05 /* MockBitskiProvider.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -163,6 +181,17 @@
 				627E7F951881880492F5040A /* Pods_Bitski_Tests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E820CBFD20EE9601005CCE05 /* Stubs */ = {
+			isa = PBXGroup;
+			children = (
+				E820CC0320EEB801005CCE05 /* send-transaction.json */,
+				E820CC0620EEBB66005CCE05 /* openid-configuration.json */,
+				E820CC0820EEBE2E005CCE05 /* eth-accounts.json */,
+				E820CC0220EEB801005CCE05 /* token.json */,
+			);
+			path = Stubs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -262,6 +291,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E820CC0720EEBB66005CCE05 /* openid-configuration.json in Resources */,
+				E820CC0520EEB801005CCE05 /* send-transaction.json in Resources */,
+				E820CC0420EEB801005CCE05 /* token.json in Resources */,
+				E820CC0920EEBE2E005CCE05 /* eth-accounts.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +368,7 @@
 				"${BUILT_PRODUCTS_DIR}/SipHash/SipHash.framework",
 				"${BUILT_PRODUCTS_DIR}/Web3/Web3.framework",
 				"${BUILT_PRODUCTS_DIR}/secp256k1.swift/secp256k1.framework",
+				"${BUILT_PRODUCTS_DIR}/OHHTTPStubs/OHHTTPStubs.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
@@ -346,6 +380,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SipHash.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Web3.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/secp256k1.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OHHTTPStubs.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -389,6 +424,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				E820CBFA20EE92AD005CCE05 /* MockAuthAgent.swift in Sources */,
+				E820CC0120EEAAEE005CCE05 /* MockBitskiProvider.swift in Sources */,
+				E820CBFC20EE9395005CCE05 /* MockBitski.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
