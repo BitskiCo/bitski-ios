@@ -19,6 +19,7 @@ Pod::Spec.new do |s|
   s.swift_version = '4.0'
 
   s.source_files = 'Bitski/Classes/**/*'
+  s.exclude_files = 'docs/**/*'
 
   s.dependency 'Web3', '~> 0.3.0'
   s.dependency 'Web3/ContractABI', '~> 0.3.0'
