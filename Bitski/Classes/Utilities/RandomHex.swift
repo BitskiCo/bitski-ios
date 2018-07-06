@@ -1,6 +1,6 @@
 //
 //  RandomHex.swift
-//  BitskiSDK
+//  Bitski
 //
 //  Created by Josh Pyles on 5/12/18.
 //  Copyright © 2018 Out There Labs. All rights reserved.

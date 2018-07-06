@@ -68,7 +68,7 @@ public class BitskiHTTPProvider: Web3Provider {
     private let decoder = JSONDecoder()
     
     /// The current BitskiAuthorizationAgent for requests requiring authorization (must be retained).
-    private var currentAuthAgent: AuthorizationAgent?
+    private var currentAuthAgent: BitskiAuthorizationAgent?
     
     /// Delegate to provide up to date access tokens for each request
     weak var authDelegate: BitskiAuthDelegate?
@@ -115,7 +115,7 @@ public class BitskiHTTPProvider: Web3Provider {
         }
     }
     
-    func createAuthorizationAgent(accessToken: String) -> AuthorizationAgent {
+    func createAuthorizationAgent(accessToken: String) -> BitskiAuthorizationAgent {
         return BitskiAuthorizationAgent(baseURL: webBaseURL, redirectURL: redirectURL, network: network, accessToken: accessToken)
     }
     
