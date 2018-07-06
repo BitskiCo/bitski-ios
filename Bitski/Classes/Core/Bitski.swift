@@ -135,9 +135,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     let redirectURL: URL
     
     /// Class to use for creating http providers
-    var providerClass: BitskiHTTPProvider.Type {
-        return BitskiHTTPProvider.self
-    }
+    var providerClass: BitskiHTTPProvider.Type = BitskiHTTPProvider.self
     
     static private let configurationKey: String = "BitskiOIDServiceConfiguration"
     static private let authStateKey: String = "BitskiAuthState"
@@ -158,7 +156,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     }
     
     /// Cached OpenID Configuration
-    private var configuration: OIDServiceConfiguration? {
+    var configuration: OIDServiceConfiguration? {
         get {
             if let data = UserDefaults.standard.data(forKey: Bitski.configurationKey) {
                 return NSKeyedUnarchiver.unarchiveObject(with: data) as? OIDServiceConfiguration

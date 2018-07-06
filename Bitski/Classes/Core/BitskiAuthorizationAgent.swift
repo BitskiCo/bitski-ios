@@ -9,11 +9,15 @@ import Foundation
 import SafariServices
 import Web3
 
-protocol AuthorizationAgent {
-    func requestAuthorization(method: String, body: Data, completion: @escaping (Data?, Swift.Error?) -> Void)
+protocol AuthorizationSessionProtocol {
+    init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void)
+    @discardableResult func start() -> Bool
+    func cancel()
 }
 
-class BitskiAuthorizationAgent: AuthorizationAgent {
+extension SFAuthenticationSession: AuthorizationSessionProtocol {}
+
+class BitskiAuthorizationAgent {
     
     var baseURL: URL
     var redirectURL: URL
@@ -25,14 +29,17 @@ class BitskiAuthorizationAgent: AuthorizationAgent {
         case missingData
     }
     
-    /// The current SFAuthenticationSession for requests requiring authorization (must be retained).
-    private var currentSession: SFAuthenticationSession?
+    var authorizationSessionType: AuthorizationSessionProtocol.Type
     
-    init(baseURL: URL, redirectURL: URL, network: Bitski.Network, accessToken: String) {
+    /// The current SFAuthenticationSession for requests requiring authorization (must be retained).
+    private var currentSession: AuthorizationSessionProtocol?
+    
+    init(baseURL: URL, redirectURL: URL, network: Bitski.Network, accessToken: String, authorizationClass: AuthorizationSessionProtocol.Type = SFAuthenticationSession.self) {
         self.baseURL = baseURL
         self.redirectURL = redirectURL
         self.network = network
         self.accessToken = accessToken
+        self.authorizationSessionType = authorizationClass
     }
     
     func requestAuthorization(method: String, body: Data, completion: @escaping (Data?, Swift.Error?) -> Void) {
@@ -59,7 +66,7 @@ class BitskiAuthorizationAgent: AuthorizationAgent {
         // UI work must happen on the main queue, rather than our internal queue
         DispatchQueue.main.async {
             //todo: ideally find a way to do this without relying on SFAuthenticationSession.
-            self.currentSession = SFAuthenticationSession(url: url, callbackURLScheme: self.redirectURL.scheme) { url, error in
+            self.currentSession = self.authorizationSessionType.init(url: url, callbackURLScheme: self.redirectURL.scheme) { url, error in
                 if error == nil, let url = url {
                     do {
                         let data = try self.parseResponse(url: url)

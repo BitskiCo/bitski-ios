@@ -11,8 +11,14 @@ import Foundation
 
 class MockBitskiProvider: BitskiHTTPProvider {
     
-    override func createAuthorizationAgent(accessToken: String) -> AuthorizationAgent {
-        return MockAuthorizationAgent()
+    required init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession) {
+        super.init(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, session: session)
+    }
+    
+    override func createAuthorizationAgent(accessToken: String) -> BitskiAuthorizationAgent {
+        let agent = super.createAuthorizationAgent(accessToken: accessToken)
+        agent.authorizationSessionType = MockTransactionWebSession.self
+        return agent
     }
     
 }

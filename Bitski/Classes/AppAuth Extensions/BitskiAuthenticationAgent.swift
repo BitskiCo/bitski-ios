@@ -15,11 +15,14 @@ import AppAuth
 /// in iOS 11+ is discarded. This class is a workaround to prevent that requirement.
 class BitskiAuthenticationAgent: NSObject, OIDExternalUserAgent {
 
-    private var authenticationSession: SFAuthenticationSession?
+    private var authenticationSession: AuthorizationSessionProtocol?
     private var authorizationFlowInProgress: Bool = false
     private weak var session: OIDExternalUserAgentSession?
+    
+    var authenticationSessionType: AuthorizationSessionProtocol.Type
 
-    override init() {
+    init(authenticationSessionType: AuthorizationSessionProtocol.Type = SFAuthenticationSession.self) {
+        self.authenticationSessionType = authenticationSessionType
         super.init()
     }
 
@@ -35,7 +38,7 @@ class BitskiAuthenticationAgent: NSObject, OIDExternalUserAgent {
         authorizationFlowInProgress = true
         self.session = session
 
-        let session = SFAuthenticationSession(url: requestURL, callbackURLScheme: redirectScheme) { (callbackURL, error) in
+        let session = authenticationSessionType.init(url: requestURL, callbackURLScheme: redirectScheme) { (callbackURL, error) in
             if let callbackURL = callbackURL {
                 self.session?.resumeExternalUserAgentFlow(with: callbackURL)
             } else {

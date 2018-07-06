@@ -13,17 +13,12 @@ import AppAuth
 /// Mock Bitski that injects our mock auth agent
 class MockBitski: Bitski {
     
-    override var providerClass: BitskiHTTPProvider.Type {
-        return MockBitskiProvider.self
+    override init(clientID: String, redirectURL: URL) {
+        super.init(clientID: clientID, redirectURL: redirectURL)
+        self.providerClass = MockBitskiProvider.self
     }
     
     override func signIn(configuration: OIDServiceConfiguration, agent: OIDExternalUserAgent, completion: @escaping ((Error?) -> Void)) {
-        super.signIn(configuration: configuration, agent: MockAuthAgent(), completion: completion)
+        super.signIn(configuration: configuration, agent: BitskiAuthenticationAgent(authenticationSessionType: MockAuthenticationWebSession.self), completion: completion)
     }
-    
-    override func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void) {
-        //TODO: Respond with access token
-        completion("test-access-token", nil)
-    }
-    
 }

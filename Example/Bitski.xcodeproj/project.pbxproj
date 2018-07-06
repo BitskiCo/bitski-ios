@@ -24,6 +24,13 @@
 		E820CC0920EEBE2E005CCE05 /* eth-accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = E820CC0820EEBE2E005CCE05 /* eth-accounts.json */; };
 		E85B785E20D2EF8D0069E3B4 /* LoggedOutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B785D20D2EF8D0069E3B4 /* LoggedOutViewController.swift */; };
 		E85B786020D2EF9B0069E3B4 /* LoggedInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E85B785F20D2EF9B0069E3B4 /* LoggedInViewController.swift */; };
+		E893FEEA20EFEA9F0065F964 /* get-block-3.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEE620EFEA9E0065F964 /* get-block-3.json */; };
+		E893FEEB20EFEA9F0065F964 /* get-block-2.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEE720EFEA9E0065F964 /* get-block-2.json */; };
+		E893FEEC20EFEA9F0065F964 /* get-block-1.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEE820EFEA9E0065F964 /* get-block-1.json */; };
+		E893FEED20EFEA9F0065F964 /* get-transaction-receipt.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEE920EFEA9E0065F964 /* get-transaction-receipt.json */; };
+		E893FEEF20F009EB0065F964 /* OHHTTPStubs+Bitski.swift in Sources */ = {isa = PBXBuildFile; fileRef = E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */; };
+		E893FEF120F00CF00065F964 /* error.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEF020F00CF00065F964 /* error.json */; };
+		E893FEF320F012600065F964 /* empty.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEF220F012600065F964 /* empty.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +72,13 @@
 		E820CC0820EEBE2E005CCE05 /* eth-accounts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "eth-accounts.json"; sourceTree = "<group>"; };
 		E85B785D20D2EF8D0069E3B4 /* LoggedOutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedOutViewController.swift; sourceTree = "<group>"; };
 		E85B785F20D2EF9B0069E3B4 /* LoggedInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInViewController.swift; sourceTree = "<group>"; };
+		E893FEE620EFEA9E0065F964 /* get-block-3.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "get-block-3.json"; sourceTree = "<group>"; };
+		E893FEE720EFEA9E0065F964 /* get-block-2.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "get-block-2.json"; sourceTree = "<group>"; };
+		E893FEE820EFEA9E0065F964 /* get-block-1.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "get-block-1.json"; sourceTree = "<group>"; };
+		E893FEE920EFEA9E0065F964 /* get-transaction-receipt.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "get-transaction-receipt.json"; sourceTree = "<group>"; };
+		E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OHHTTPStubs+Bitski.swift"; sourceTree = "<group>"; };
+		E893FEF020F00CF00065F964 /* error.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = error.json; sourceTree = "<group>"; };
+		E893FEF220F012600065F964 /* empty.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = empty.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +173,7 @@
 				607FACEA1AFB9204008FA782 /* Info.plist */,
 				E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */,
 				E820CBFB20EE9395005CCE05 /* MockBitski.swift */,
+				E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */,
 				E820CC0020EEAAEE005CCE05 /* MockBitskiProvider.swift */,
 			);
 			name = "Supporting Files";
@@ -187,7 +202,13 @@
 			isa = PBXGroup;
 			children = (
 				E820CC0320EEB801005CCE05 /* send-transaction.json */,
+				E893FEE820EFEA9E0065F964 /* get-block-1.json */,
+				E893FEE720EFEA9E0065F964 /* get-block-2.json */,
+				E893FEE620EFEA9E0065F964 /* get-block-3.json */,
+				E893FEE920EFEA9E0065F964 /* get-transaction-receipt.json */,
 				E820CC0620EEBB66005CCE05 /* openid-configuration.json */,
+				E893FEF020F00CF00065F964 /* error.json */,
+				E893FEF220F012600065F964 /* empty.json */,
 				E820CC0820EEBE2E005CCE05 /* eth-accounts.json */,
 				E820CC0220EEB801005CCE05 /* token.json */,
 			);
@@ -291,8 +312,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E893FEF120F00CF00065F964 /* error.json in Resources */,
+				E893FEF320F012600065F964 /* empty.json in Resources */,
+				E893FEED20EFEA9F0065F964 /* get-transaction-receipt.json in Resources */,
 				E820CC0720EEBB66005CCE05 /* openid-configuration.json in Resources */,
+				E893FEEA20EFEA9F0065F964 /* get-block-3.json in Resources */,
 				E820CC0520EEB801005CCE05 /* send-transaction.json in Resources */,
+				E893FEEC20EFEA9F0065F964 /* get-block-1.json in Resources */,
+				E893FEEB20EFEA9F0065F964 /* get-block-2.json in Resources */,
 				E820CC0420EEB801005CCE05 /* token.json in Resources */,
 				E820CC0920EEBE2E005CCE05 /* eth-accounts.json in Resources */,
 			);
@@ -426,6 +453,7 @@
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 				E820CBFA20EE92AD005CCE05 /* MockAuthAgent.swift in Sources */,
 				E820CC0120EEAAEE005CCE05 /* MockBitskiProvider.swift in Sources */,
+				E893FEEF20F009EB0065F964 /* OHHTTPStubs+Bitski.swift in Sources */,
 				E820CBFC20EE9395005CCE05 /* MockBitski.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
