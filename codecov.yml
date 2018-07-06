@@ -1,6 +1,6 @@
 ignore:
   - "Example"
-  - "Classes/Core/Bitski+OIDAuthStateDelegate.swift"
+  - "Bitski/Classes/Core/Bitski+OIDAuthStateDelegate.swift"
 comment:
   layout: "diff, flags, files"
   require_changes: true
