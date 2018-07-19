@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'Bitski'
-  s.version          = '0.4.0'
+  s.version          = '0.4.1'
   s.summary          = 'Bitski SDK for iOS. Interact with Ethereum wallets using simple OpenID auth.'
 
   s.description      = <<-DESC

@@ -40,7 +40,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         /// Whether or not Bitski currently supports this network
         var isSupported: Bool {
             switch self {
-            case .kovan, .rinkeby, .development:
+            case .mainnet, .kovan, .rinkeby, .development:
                 return true
             default:
                 return false
@@ -222,7 +222,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     ///
     /// - Parameter network: Ethereum network to use. Currently .development, .kovan, and .rinkeby are the only accepted values.
     /// - Returns: Web3Provider instance configured for Bitski.
-    public func getProvider(network: Network) -> Web3Provider {
+    public func getProvider(network: Network = .mainnet) -> Web3Provider {
         if let provider = providers[network] {
             return provider;
         }
@@ -240,7 +240,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     ///
     /// - Parameter network: Ethereum network to use. Currently only "kovan" and "rinkeby" are accepted values.
     /// - Returns: `Web3` object ready to use.
-    public func getWeb3(network: Network) -> Web3 {
+    public func getWeb3(network: Network = .mainnet) -> Web3 {
         return Web3(provider: getProvider(network: network))
     }
     
