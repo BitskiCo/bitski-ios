@@ -34,8 +34,9 @@ pod 'Bitski'
 
 ### Initialization
 
-First, request a client ID by signing up [here](https://developer.bitski.com). Make sure you request an offline scope so that your access tokens can be refreshed.
-You'll also need to associate the redirectURL you use with your client id in the developer portal. This ensures that only urls that you trust can be used with your client id.
+First, get a client ID by creating an app [here](https://developer.bitski.com). Make sure you select 'Native App' for App Type.
+
+You'll also need to add the `redirectURL` you use in the app under Redirect URLs in the developer portal. This ensures that only urls that you trust can be used with your client id.
 
 In your app, you'll initialize an instance of Bitski:
 
@@ -52,7 +53,7 @@ Once you have an instance of `Bitski` configured, you can check the signed in st
 
 ```swift
 if Bitski.shared?.isLoggedIn == true {
-    self.web3 = Bitski.shared?.getWeb3(network: .kovan)
+    self.web3 = Bitski.shared?.getWeb3()
     // show logged in state
 } else {
     // show logged out state
@@ -63,9 +64,9 @@ To sign in, simply call `signIn()` (this will open a browser window):
 
 ```swift
 Bitski.shared?.signIn() { error in
-    // Once signed in, get an instance of Web3 for the network you want
-    // Currently we only support kovan and rinkeby. mainnet coming soon.
-    self.web3 = Bitski.shared?.getWeb3(network: .kovan)
+    // Once signed in, get an instance of Web3
+    self.web3 = Bitski.shared?.getWeb3()
+    // or, specify a network with getWeb3(network:)
 }
 ```
 

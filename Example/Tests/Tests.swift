@@ -93,17 +93,26 @@ class Tests: XCTestCase {
         let mainnet = Bitski.Network.mainnet
         let development = Bitski.Network.development(url: "http://localhost:9545")
         
+        XCTAssertTrue(mainnet.isSupported, "mainnet should be supported")
         XCTAssertTrue(kovan.isSupported, "Kovan should be supported")
         XCTAssertTrue(rinkeby.isSupported, "Rinkeby should be supported")
         XCTAssertTrue(development.isSupported, "Development should be supported")
         
         XCTAssertFalse(ropsten.isSupported, "Ropsten should not be supported")
-        XCTAssertFalse(mainnet.isSupported, "mainnet should not be supported")
     }
     
     func testNetworksRawValue() {
         let kovan = Bitski.Network(rawValue: Bitski.Network.kovan.rawValue)
         XCTAssertEqual(kovan, .kovan, "Network should be initialized with raw value")
+    }
+    
+    func testDefaultNetwork() {
+        let url = URL(string: "bitskiexample://application/callback")!
+        bitski = MockBitski(clientID: "test-id", redirectURL: url)
+        let web3 = bitski.getWeb3()
+        XCTAssertTrue(web3.provider is BitskiHTTPProvider, "Provider should be Web3HttpProvider")
+        let provider = web3.provider as? BitskiHTTPProvider
+        XCTAssertEqual(provider?.rpcURL.absoluteString, "https://api.bitski.com/v1/web3/mainnet", "Provider should have proper rpc url")
     }
     
     func testDevelopmentNetwork() {

@@ -135,8 +135,9 @@ it, simply add the following line to your Podfile:</p>
 <h2 id='usage' class='heading'>Usage</h2>
 <h3 id='initialization' class='heading'>Initialization</h3>
 
-<p>First, request a client ID by signing up <a href="https://developer.bitski.com">here</a>. Make sure you request an offline scope so that your access tokens can be refreshed.
-You&rsquo;ll also need to associate the redirectURL you use with your client id in the developer portal. This ensures that only urls that you trust can be used with your client id.</p>
+<p>First, get a client ID by creating an app <a href="https://developer.bitski.com">here</a>. Make sure you select &lsquo;Native App&rsquo; for App Type.</p>
+
+<p>You&rsquo;ll also need to add the <code>redirectURL</code> you use in the app under Redirect URLs in the developer portal. This ensures that only urls that you trust can be used with your client id.</p>
 
 <p>In your app, you&rsquo;ll initialize an instance of Bitski:</p>
 <pre class="highlight swift"><code><span class="c1">// Replace redirect URL with an url scheme that will hit your native app</span>
@@ -149,7 +150,7 @@ works best for you.</p>
 
 <p>Once you have an instance of <code><a href="Classes/Bitski.html">Bitski</a></code> configured, you can check the signed in status. The user will need to be logged in before making any Web3 calls.</p>
 <pre class="highlight swift"><code><span class="k">if</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="n">isLoggedIn</span> <span class="o">==</span> <span class="kc">true</span> <span class="p">{</span>
-    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">(</span><span class="nv">network</span><span class="p">:</span> <span class="o">.</span><span class="n">kovan</span><span class="p">)</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">()</span>
     <span class="c1">// show logged in state</span>
 <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
     <span class="c1">// show logged out state</span>
@@ -158,9 +159,9 @@ works best for you.</p>
 
 <p>To sign in, simply call <code>signIn()</code> (this will open a browser window):</p>
 <pre class="highlight swift"><code><span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">signIn</span><span class="p">()</span> <span class="p">{</span> <span class="n">error</span> <span class="k">in</span>
-    <span class="c1">// Once signed in, get an instance of Web3 for the network you want</span>
-    <span class="c1">// Currently we only support kovan and rinkeby. mainnet coming soon.</span>
-    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">(</span><span class="nv">network</span><span class="p">:</span> <span class="o">.</span><span class="n">kovan</span><span class="p">)</span>
+    <span class="c1">// Once signed in, get an instance of Web3</span>
+    <span class="k">self</span><span class="o">.</span><span class="n">web3</span> <span class="o">=</span> <span class="kt">Bitski</span><span class="o">.</span><span class="n">shared</span><span class="p">?</span><span class="o">.</span><span class="nf">getWeb3</span><span class="p">()</span>
+    <span class="c1">// or, specify a network with getWeb3(network:)</span>
 <span class="p">}</span>
 </code></pre>
 
