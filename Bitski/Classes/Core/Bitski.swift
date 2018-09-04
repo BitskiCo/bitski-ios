@@ -32,6 +32,9 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         /// ropsten test net
         case ropsten
         
+        /// custom network supported by Bitski (sidechains, etc)
+        case custom(name: String)
+        
         /// local development network
         case development(url: String)
         
@@ -40,7 +43,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         /// Whether or not Bitski currently supports this network
         var isSupported: Bool {
             switch self {
-            case .mainnet, .kovan, .rinkeby, .development:
+            case .mainnet, .kovan, .rinkeby, .custom, .development:
                 return true
             default:
                 return false
@@ -58,6 +61,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
                 return "web3/rinkeby"
             case .ropsten:
                 return "web3/ropsten"
+            case .custom(let name):
+                return "web3/\(name)"
             case .development(let url):
                 return url
             }
@@ -78,7 +83,11 @@ public class Bitski: NSObject, BitskiAuthDelegate {
             case "ropsten":
                 self = .ropsten
             default:
-                self = .development(url: rawValue)
+                if rawValue.starts(with: "http") {
+                    self = .development(url: rawValue)
+                } else {
+                    self = .custom(name: rawValue)
+                }
             }
         }
         
@@ -92,6 +101,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
                 return "rinkeby"
             case .ropsten:
                 return "ropsten"
+            case .custom(let name):
+                return name
             case .development(let url):
                 return url
             }

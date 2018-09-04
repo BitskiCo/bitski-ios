@@ -91,12 +91,14 @@ class Tests: XCTestCase {
         let rinkeby = Bitski.Network.rinkeby
         let ropsten = Bitski.Network.ropsten
         let mainnet = Bitski.Network.mainnet
+        let custom = Bitski.Network.custom(name: "springrole")
         let development = Bitski.Network.development(url: "http://localhost:9545")
         
         XCTAssertTrue(mainnet.isSupported, "mainnet should be supported")
         XCTAssertTrue(kovan.isSupported, "Kovan should be supported")
         XCTAssertTrue(rinkeby.isSupported, "Rinkeby should be supported")
         XCTAssertTrue(development.isSupported, "Development should be supported")
+        XCTAssertTrue(custom.isSupported, "Custom networks should be supported")
         
         XCTAssertFalse(ropsten.isSupported, "Ropsten should not be supported")
     }
@@ -110,15 +112,25 @@ class Tests: XCTestCase {
         let url = URL(string: "bitskiexample://application/callback")!
         bitski = MockBitski(clientID: "test-id", redirectURL: url)
         let web3 = bitski.getWeb3()
-        XCTAssertTrue(web3.provider is BitskiHTTPProvider, "Provider should be Web3HttpProvider")
+        XCTAssertTrue(web3.provider is BitskiHTTPProvider, "Provider should be BitskiHttpProvider")
         let provider = web3.provider as? BitskiHTTPProvider
         XCTAssertEqual(provider?.rpcURL.absoluteString, "https://api.bitski.com/v1/web3/mainnet", "Provider should have proper rpc url")
+    }
+    
+    func testCustomNetwork() {
+        let url = URL(string: "bitskiexample://application/callback")!
+        bitski = MockBitski(clientID: "test-id", redirectURL: url)
+        let network = Bitski.Network.custom(name: "springrole")
+        let web3 = bitski.getWeb3(network: network)
+        XCTAssertTrue(web3.provider is BitskiHTTPProvider, "Provider should be BitskiHTTPProvider")
+        let provider = web3.provider as? BitskiHTTPProvider
+        XCTAssertEqual(provider?.rpcURL.absoluteString, "https://api.bitski.com/v1/web3/springrole", "Provider should have proper rpc url")
     }
     
     func testDevelopmentNetwork() {
         let url = URL(string: "bitskiexample://application/callback")!
         bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        let web3 = bitski.getWeb3(network: .development(url: "http://localhost:9545"))
+        let web3 = bitski.getWeb3(network: Bitski.Network(rawValue: "http://localhost:9545")!)
         XCTAssertTrue(web3.provider is Web3HttpProvider, "Provider should be Web3HttpProvider")
         let provider = web3.provider as? Web3HttpProvider
         XCTAssertEqual(provider?.rpcURL, "http://localhost:9545", "Development provider should use provided url instead of bitski.com")

@@ -3,15 +3,15 @@ PODS:
   - BigInt (3.1.0):
     - SipHash (~> 1.2)
   - BigInt.swift (1.0.0)
-  - Bitski (0.4.0):
+  - Bitski (0.4.1):
     - AppAuth (~> 0.93)
     - BigInt.swift (~> 1.0)
     - PromiseKit/CorePromise (~> 6.0)
     - secp256k1.swift (~> 0.1)
-    - Web3 (~> 0.3.0)
-    - Web3/ContractABI (~> 0.3.0)
-    - Web3/PromiseKit (~> 0.3.0)
-  - CryptoSwift (0.10.0)
+    - Web3 (~> 0.3.1)
+    - Web3/ContractABI (~> 0.3.1)
+    - Web3/PromiseKit (~> 0.3.1)
+  - CryptoSwift (0.11.0)
   - OHHTTPStubs/Core (6.1.0)
   - OHHTTPStubs/Default (6.1.0):
     - OHHTTPStubs/Core
@@ -28,25 +28,25 @@ PODS:
   - PromiseKit/CorePromise (6.2.6)
   - secp256k1.swift (0.1.4)
   - SipHash (1.2.2)
-  - Web3 (0.3.0):
-    - Web3/Core (= 0.3.0)
-    - Web3/HTTPExtension (= 0.3.0)
-  - Web3/ContractABI (0.3.0):
+  - Web3 (0.3.1):
+    - Web3/Core (= 0.3.1)
+    - Web3/HTTPExtension (= 0.3.1)
+  - Web3/ContractABI (0.3.1):
     - Web3/Core
-  - Web3/Core (0.3.0):
+  - Web3/Core (0.3.1):
     - BigInt (~> 3.1)
     - CryptoSwift (~> 0.8)
     - secp256k1.swift (~> 0.1)
-  - Web3/HTTPExtension (0.3.0):
+  - Web3/HTTPExtension (0.3.1):
     - Web3/Core
-  - Web3/PromiseKit (0.3.0):
+  - Web3/PromiseKit (0.3.1):
     - PromiseKit/CorePromise (~> 6.0)
     - Web3/Core
 
 DEPENDENCIES:
   - Bitski (from `../`)
   - OHHTTPStubs/Swift
-  - Web3 (= 0.3.0)
+  - Web3 (= 0.3.1)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -68,14 +68,14 @@ SPEC CHECKSUMS:
   AppAuth: 1096c2ad48507c4a2a8c85c8a6ff065741ab9931
   BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
   BigInt.swift: 1e0ddf08d82166e72dfb0fa8d40301d273081afc
-  Bitski: 7f055c7757b1a092bba85e97be0e060e66c7a898
-  CryptoSwift: 6c778d69282bed3b4e975ff97a79d074f20bb011
+  Bitski: 0b51016da3ffc0e4938d7a710043c2784af3345f
+  CryptoSwift: ad5208dd2aae0a764ea4ce2c2d34bd067cae67f0
   OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
   PromiseKit: 8245cb2e3a8fe00453e580bd4aafb57e1671f501
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
   SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
-  Web3: 94f87f301a94cfb064d90baf25e2d3603c332551
+  Web3: e9be7ef88585e252df50abc28538d6e4691c786e
 
-PODFILE CHECKSUM: 8d7fa20899720d475a9c2931b146c00a23a7d37b
+PODFILE CHECKSUM: 00d9233794e154425b927c48e72e4abaccf65f21
 
 COCOAPODS: 1.5.3
