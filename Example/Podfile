@@ -3,11 +3,11 @@ use_frameworks!
 
 target 'Bitski_Example' do
   pod 'Bitski', :path => '../'
-  pod 'Web3', '0.3.0'
+  pod 'Web3', '0.3.1'
 end
 
 target 'Bitski_Tests' do
     pod 'Bitski', :path => '../'
-    pod 'Web3', '0.3.0'
+    pod 'Web3', '0.3.1'
     pod 'OHHTTPStubs/Swift'
 end
