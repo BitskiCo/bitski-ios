@@ -125,6 +125,9 @@ Our Web3 provider lets you send transactions to be signed, but the user must exp
 and will display as a browser modal above your application. Once the transaction has been approved or rejected, the modal will dismiss.
 For the best experience we recommend limiting the amount of transactions you send.
 
+## Report Vulnerabilities
+Bitski provides a “bug bounty” to engage with the security researchers in the community. If you have found a vulnerability in our product or service, please [submit a vulnerability report](https://www.bitski.com/bounty) to the Bitski security team.
+
 ## License
 
 Bitski is available under the MIT license. See the LICENSE file for more info.
