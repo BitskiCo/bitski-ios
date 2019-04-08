@@ -49,14 +49,14 @@ class ViewController: UIViewController {
     }
     
     func transitionTo(_ viewController: UIViewController) {
-        guard !childViewControllers.contains(viewController) else { return }
-        guard let currentChildViewController = childViewControllers.first else {
+        guard !children.contains(viewController) else { return }
+        guard let currentChildViewController = children.first else {
             showChildViewController(viewController)
             return
         }
         
-        currentChildViewController.willMove(toParentViewController: nil)
-        addChildViewController(viewController)
+        currentChildViewController.willMove(toParent: nil)
+        addChild(viewController)
         
         viewController.view.alpha = 0
         viewController.view.frame = view.frame
@@ -65,23 +65,23 @@ class ViewController: UIViewController {
             viewController.view.alpha = 1
             currentChildViewController.view.alpha = 0
         }) { _ in
-            currentChildViewController.removeFromParentViewController()
-            viewController.didMove(toParentViewController: self)
+            currentChildViewController.removeFromParent()
+            viewController.didMove(toParent: self)
         }
     }
     
     func showChildViewController(_ viewController: UIViewController) {
-        self.addChildViewController(viewController)
+        self.addChild(viewController)
         viewController.view.frame = view.frame
         view.addSubview(viewController.view)
-        viewController.didMove(toParentViewController: self)
+        viewController.didMove(toParent: self)
     }
     
     func removeChildViewController(_ viewController: UIViewController) {
-        if childViewControllers.contains(viewController) {
-            viewController.willMove(toParentViewController: nil)
+        if children.contains(viewController) {
+            viewController.willMove(toParent: nil)
             viewController.view.removeFromSuperview()
-            viewController.removeFromParentViewController()
+            viewController.removeFromParent()
         }
     }
 }

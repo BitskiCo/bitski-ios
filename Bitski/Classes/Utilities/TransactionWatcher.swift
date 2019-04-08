@@ -257,9 +257,15 @@ public class TransactionWatcher {
             guard let receiptBlockNumber = self.blockNumber else {
                 return assertionFailure()
             }
-            let confirmationCount = blockNumber.quantity - receiptBlockNumber.quantity
-            //todo: validate gasUsed
-            self.setConfirmationCount(Int(confirmationCount) + 1)
+            //1, 2
+            if blockNumber.quantity > receiptBlockNumber.quantity {
+                let confirmationCount = blockNumber.quantity - receiptBlockNumber.quantity
+                //todo: validate gasUsed
+                self.setConfirmationCount(Int(confirmationCount) + 1)
+            } else {
+                // Mined in a later block
+                self.setConfirmationCount(0)
+            }
         } else {
             print("Transaction reverted")
             self.status = .failed

@@ -13,7 +13,7 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		607FACEC1AFB9204008FA782 /* MiscTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* MiscTests.swift */; };
 		AB038E26F332FDEFD229CD17 /* Pods_Bitski_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */; };
 		E820CBFA20EE92AD005CCE05 /* MockAuthAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */; };
 		E820CBFC20EE9395005CCE05 /* MockBitski.swift in Sources */ = {isa = PBXBuildFile; fileRef = E820CBFB20EE9395005CCE05 /* MockBitski.swift */; };
@@ -31,6 +31,16 @@
 		E893FEEF20F009EB0065F964 /* OHHTTPStubs+Bitski.swift in Sources */ = {isa = PBXBuildFile; fileRef = E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */; };
 		E893FEF120F00CF00065F964 /* error.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEF020F00CF00065F964 /* error.json */; };
 		E893FEF320F012600065F964 /* empty.json in Resources */ = {isa = PBXBuildFile; fileRef = E893FEF220F012600065F964 /* empty.json */; };
+		E89F7CD2225BF1770017E822 /* create-transaction.json in Resources */ = {isa = PBXBuildFile; fileRef = E89F7CD1225BF1770017E822 /* create-transaction.json */; };
+		E89F7CD4225BF3E80017E822 /* block-number.json in Resources */ = {isa = PBXBuildFile; fileRef = E89F7CD3225BF3E80017E822 /* block-number.json */; };
+		E8D8CABF225D40D300AB575C /* BitskiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CABE225D40D300AB575C /* BitskiTests.swift */; };
+		E8D8CAC1225D40EA00AB575C /* BitskiProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAC0225D40EA00AB575C /* BitskiProviderTests.swift */; };
+		E8D8CAC3225D40FD00AB575C /* BitskiTransactionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAC2225D40FD00AB575C /* BitskiTransactionTests.swift */; };
+		E8D8CAC5225D422400AB575C /* Stubs.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAC4225D422400AB575C /* Stubs.swift */; };
+		E8D8CAC7225D5FCD00AB575C /* BitskiAuthorizationAgentTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAC6225D5FCD00AB575C /* BitskiAuthorizationAgentTests.swift */; };
+		E8D8CAC9225EA98C00AB575C /* MockAuthorizationAgent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAC8225EA98C00AB575C /* MockAuthorizationAgent.swift */; };
+		E8D8CAD3225EBD9400AB575C /* MockURLSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAD2225EBD9400AB575C /* MockURLSession.swift */; };
+		E8D8CAD7225EC62500AB575C /* NetworkClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D8CAD6225EC62500AB575C /* NetworkClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +67,7 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* Bitski_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Bitski_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
+		607FACEB1AFB9204008FA782 /* MiscTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiscTests.swift; sourceTree = "<group>"; };
 		627E7F951881880492F5040A /* Pods_Bitski_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitski_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		73A95D11A38B3B6CB8D843BA /* Pods_Bitski_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Bitski_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Bitski_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example.release.xcconfig"; sourceTree = "<group>"; };
@@ -79,6 +89,16 @@
 		E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OHHTTPStubs+Bitski.swift"; sourceTree = "<group>"; };
 		E893FEF020F00CF00065F964 /* error.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = error.json; sourceTree = "<group>"; };
 		E893FEF220F012600065F964 /* empty.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = empty.json; sourceTree = "<group>"; };
+		E89F7CD1225BF1770017E822 /* create-transaction.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "create-transaction.json"; sourceTree = "<group>"; };
+		E89F7CD3225BF3E80017E822 /* block-number.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "block-number.json"; sourceTree = "<group>"; };
+		E8D8CABE225D40D300AB575C /* BitskiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitskiTests.swift; sourceTree = "<group>"; };
+		E8D8CAC0225D40EA00AB575C /* BitskiProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitskiProviderTests.swift; sourceTree = "<group>"; };
+		E8D8CAC2225D40FD00AB575C /* BitskiTransactionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitskiTransactionTests.swift; sourceTree = "<group>"; };
+		E8D8CAC4225D422400AB575C /* Stubs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stubs.swift; sourceTree = "<group>"; };
+		E8D8CAC6225D5FCD00AB575C /* BitskiAuthorizationAgentTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitskiAuthorizationAgentTests.swift; sourceTree = "<group>"; };
+		E8D8CAC8225EA98C00AB575C /* MockAuthorizationAgent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockAuthorizationAgent.swift; sourceTree = "<group>"; };
+		E8D8CAD2225EBD9400AB575C /* MockURLSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLSession.swift; sourceTree = "<group>"; };
+		E8D8CAD6225EC62500AB575C /* NetworkClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,9 +180,14 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
+				607FACEB1AFB9204008FA782 /* MiscTests.swift */,
 				E820CBFD20EE9601005CCE05 /* Stubs */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				E8D8CABE225D40D300AB575C /* BitskiTests.swift */,
+				E8D8CAC0225D40EA00AB575C /* BitskiProviderTests.swift */,
+				E8D8CAC2225D40FD00AB575C /* BitskiTransactionTests.swift */,
+				E8D8CAC6225D5FCD00AB575C /* BitskiAuthorizationAgentTests.swift */,
+				E8D8CAD6225EC62500AB575C /* NetworkClientTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -172,9 +197,11 @@
 			children = (
 				607FACEA1AFB9204008FA782 /* Info.plist */,
 				E820CBF920EE92AD005CCE05 /* MockAuthAgent.swift */,
+				E8D8CAC8225EA98C00AB575C /* MockAuthorizationAgent.swift */,
 				E820CBFB20EE9395005CCE05 /* MockBitski.swift */,
 				E893FEEE20F009EB0065F964 /* OHHTTPStubs+Bitski.swift */,
 				E820CC0020EEAAEE005CCE05 /* MockBitskiProvider.swift */,
+				E8D8CAD2225EBD9400AB575C /* MockURLSession.swift */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -201,6 +228,7 @@
 		E820CBFD20EE9601005CCE05 /* Stubs */ = {
 			isa = PBXGroup;
 			children = (
+				E8D8CAC4225D422400AB575C /* Stubs.swift */,
 				E820CC0320EEB801005CCE05 /* send-transaction.json */,
 				E893FEE820EFEA9E0065F964 /* get-block-1.json */,
 				E893FEE720EFEA9E0065F964 /* get-block-2.json */,
@@ -211,6 +239,8 @@
 				E893FEF220F012600065F964 /* empty.json */,
 				E820CC0820EEBE2E005CCE05 /* eth-accounts.json */,
 				E820CC0220EEB801005CCE05 /* token.json */,
+				E89F7CD1225BF1770017E822 /* create-transaction.json */,
+				E89F7CD3225BF3E80017E822 /* block-number.json */,
 			);
 			path = Stubs;
 			sourceTree = "<group>";
@@ -269,6 +299,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = TM2623B5AA;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -283,6 +314,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -316,7 +348,9 @@
 				E893FEF320F012600065F964 /* empty.json in Resources */,
 				E893FEED20EFEA9F0065F964 /* get-transaction-receipt.json in Resources */,
 				E820CC0720EEBB66005CCE05 /* openid-configuration.json in Resources */,
+				E89F7CD2225BF1770017E822 /* create-transaction.json in Resources */,
 				E893FEEA20EFEA9F0065F964 /* get-block-3.json in Resources */,
+				E89F7CD4225BF3E80017E822 /* block-number.json in Resources */,
 				E820CC0520EEB801005CCE05 /* send-transaction.json in Resources */,
 				E893FEEC20EFEA9F0065F964 /* get-block-1.json in Resources */,
 				E893FEEB20EFEA9F0065F964 /* get-block-2.json in Resources */,
@@ -352,7 +386,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/BigInt.swift/BigInt.framework",
@@ -376,7 +410,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Bitski_Example/Pods-Bitski_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E3CF50BEDC84291487A2EADF /* [CP] Embed Pods Frameworks */ = {
@@ -385,7 +419,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/AppAuth/AppAuth.framework",
 				"${BUILT_PRODUCTS_DIR}/BigInt/BigInt.framework",
 				"${BUILT_PRODUCTS_DIR}/BigInt.swift/BigInt.framework",
@@ -411,7 +445,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Bitski_Tests/Pods-Bitski_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		F4C7D825A732DF6B24A28D64 /* [CP] Check Pods Manifest.lock */ = {
@@ -450,10 +484,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				E8D8CAD3225EBD9400AB575C /* MockURLSession.swift in Sources */,
+				E8D8CAC5225D422400AB575C /* Stubs.swift in Sources */,
+				E8D8CAC7225D5FCD00AB575C /* BitskiAuthorizationAgentTests.swift in Sources */,
+				E8D8CAD7225EC62500AB575C /* NetworkClientTests.swift in Sources */,
+				E8D8CAC1225D40EA00AB575C /* BitskiProviderTests.swift in Sources */,
+				607FACEC1AFB9204008FA782 /* MiscTests.swift in Sources */,
 				E820CBFA20EE92AD005CCE05 /* MockAuthAgent.swift in Sources */,
+				E8D8CAC9225EA98C00AB575C /* MockAuthorizationAgent.swift in Sources */,
 				E820CC0120EEAAEE005CCE05 /* MockBitskiProvider.swift in Sources */,
+				E8D8CABF225D40D300AB575C /* BitskiTests.swift in Sources */,
 				E893FEEF20F009EB0065F964 /* OHHTTPStubs+Bitski.swift in Sources */,
+				E8D8CAC3225D40FD00AB575C /* BitskiTransactionTests.swift in Sources */,
 				E820CBFC20EE9395005CCE05 /* MockBitski.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,6 +634,7 @@
 			baseConfigurationReference = 5B01EBB666A437DDE5606A35 /* Pods-Bitski_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TM2623B5AA;
 				INFOPLIST_FILE = Bitski/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -599,7 +642,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -608,6 +651,7 @@
 			baseConfigurationReference = B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = TM2623B5AA;
 				INFOPLIST_FILE = Bitski/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -615,7 +659,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};
@@ -636,7 +680,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Debug;
 		};
@@ -653,7 +697,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 			};
 			name = Release;
 		};

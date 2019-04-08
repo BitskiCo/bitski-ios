@@ -21,7 +21,9 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     }
     
     /// Represents distinct Ethereum Networks
-    public enum Network: RawRepresentable, Hashable {
+    ///
+    /// Note: Conforms to Hashable so that we can use these as a Dictionary key
+    public enum Network: Hashable {
         
         /// the default
         case mainnet
@@ -29,26 +31,14 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         case kovan
         /// rinkeby test net
         case rinkeby
-        /// ropsten test net
-        case ropsten
         
         /// custom network supported by Bitski (sidechains, etc)
-        case custom(name: String)
+        case custom(name: String, chainId: Int)
         
         /// local development network
-        case development(url: String)
+        case development(url: String, chainId: Int)
         
         // MARK: Instance Variables
-        
-        /// Whether or not Bitski currently supports this network
-        var isSupported: Bool {
-            switch self {
-            case .mainnet, .kovan, .rinkeby, .custom, .development:
-                return true
-            default:
-                return false
-            }
-        }
         
         /// JSON-RPC endpoint for the network, relative to base API URL
         var rpcURL: String {
@@ -59,52 +49,25 @@ public class Bitski: NSObject, BitskiAuthDelegate {
                 return "web3/kovan"
             case .rinkeby:
                 return "web3/rinkeby"
-            case .ropsten:
-                return "web3/ropsten"
-            case .custom(let name):
+            case .custom(let name, _):
                 return "web3/\(name)"
-            case .development(let url):
+            case .development(let url, _):
                 return url
             }
         }
         
-        // MARK: RawRepresentable
-        
-        public typealias RawValue = String
-        
-        public init?(rawValue: RawValue) {
-            switch rawValue {
-            case "mainnet":
-                self = .mainnet
-            case "kovan":
-                self = .kovan
-            case "rinkeby":
-                self = .rinkeby
-            case "ropsten":
-                self = .ropsten
-            default:
-                if rawValue.starts(with: "http") {
-                    self = .development(url: rawValue)
-                } else {
-                    self = .custom(name: rawValue)
-                }
-            }
-        }
-        
-        public var rawValue: String {
+        var chainId: Int {
             switch self {
             case .mainnet:
-                return "mainnet"
+                return 1
             case .kovan:
-                return "kovan"
+                return 42
             case .rinkeby:
-                return "rinkeby"
-            case .ropsten:
-                return "ropsten"
-            case .custom(let name):
-                return name
-            case .development(let url):
-                return url
+                return 4
+            case .custom(_, let chainId):
+                return chainId
+            case .development(_, let chainId):
+                return chainId
             }
         }
     }
@@ -137,7 +100,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     let apiBaseURL = URL(string: "https://api.bitski.com/v1/")!
     
     /// Base URL for Bitski's Web UI
-    let webBaseURL = URL(string: "https://www.bitski.com")!
+    let webBaseURL = URL(string: "https://sign.bitski.com")!
     
     /// Bitski Client ID. You can aqcuire one from the developer portal (https://developer.bitski.com)
     let clientID: String
@@ -147,6 +110,9 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     
     /// Class to use for creating http providers
     var providerClass: BitskiHTTPProvider.Type = BitskiHTTPProvider.self
+    
+    /// UserDefaults instance to use
+    var userDefaults: UserDefaults = UserDefaults.standard
     
     static private let configurationKey: String = "BitskiOIDServiceConfiguration"
     static private let authStateKey: String = "BitskiAuthState"
@@ -169,7 +135,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     /// Cached OpenID Configuration
     var configuration: OIDServiceConfiguration? {
         get {
-            if let data = UserDefaults.standard.data(forKey: Bitski.configurationKey) {
+            if let data = userDefaults.data(forKey: Bitski.configurationKey) {
                 return NSKeyedUnarchiver.unarchiveObject(with: data) as? OIDServiceConfiguration
             }
             return nil
@@ -179,8 +145,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
             if let authState = newValue {
                 data = NSKeyedArchiver.archivedData(withRootObject: authState)
             }
-            UserDefaults.standard.set(data, forKey: Bitski.configurationKey)
-            UserDefaults.standard.synchronize()
+            userDefaults.set(data, forKey: Bitski.configurationKey)
+            userDefaults.synchronize()
         }
     }
     
@@ -190,7 +156,6 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     ///
     /// - Parameters:
     ///   - clientID: Your client ID. From https://developer.bitski.com
-    ///   - clientSecret: Your client secret. From https://developer.bitski.com
     ///   - redirectURL: URI for redirects back to the app. This must be a URI your app can handle (ie. myapp://application/callback).
     public init(clientID: String, redirectURL: URL) {
         self.clientID = clientID
@@ -238,7 +203,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
             return provider;
         }
         switch network {
-        case .development(let url):
+        case .development(let url, _):
             let httpProvider = Web3HttpProvider(rpcURL: url)
             providers[network] = httpProvider
             return httpProvider
@@ -263,7 +228,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     /// - Returns: a configured instance of BitskiHTTPProvider
     private func createBitskiProvider(network: Network) -> BitskiHTTPProvider {
         let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
-        let httpProvider = providerClass.init(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL)
+        let httpProvider = providerClass.init(rpcURL: rpcURL, apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL)
         httpProvider.authDelegate = self
         
         setHeaders(provider: httpProvider)
@@ -332,8 +297,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         if let authState = authState {
             data = NSKeyedArchiver.archivedData(withRootObject: authState)
         }
-        UserDefaults.standard.set(data, forKey: Bitski.authStateKey)
-        UserDefaults.standard.synchronize()
+        userDefaults.set(data, forKey: Bitski.authStateKey)
+        userDefaults.synchronize()
     }
     
     /// Get auth state from memory or disk
@@ -343,7 +308,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         if let authState = authState {
             return authState
         }
-        if let data = UserDefaults.standard.data(forKey: Bitski.authStateKey) {
+        if let data = userDefaults.data(forKey: Bitski.authStateKey) {
             let decodedAuthState = NSKeyedUnarchiver.unarchiveObject(with: data) as? OIDAuthState
             decodedAuthState?.setNeedsTokenRefresh()
             self.authState = decodedAuthState

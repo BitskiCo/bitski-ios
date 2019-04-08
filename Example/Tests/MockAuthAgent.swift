@@ -38,14 +38,42 @@ class MockAuthenticationWebSession: AuthorizationSessionProtocol {
 
 class MockTransactionWebSession: AuthorizationSessionProtocol {
     
+    let handler: () -> Void
+    
     required init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void) {
         let path = OHPathForFile("send-transaction.json", type(of: self))!
         let data = try! Data.init(contentsOf: URL(fileURLWithPath: path))
         let url = URL(string: "bitskiexample://application/callback?result=\(data.base64EncodedString())")!
-        completionHandler(url, nil)
+        self.handler = {
+            completionHandler(url, nil)
+        }
     }
     
     func start() -> Bool {
+        handler()
+        return true
+    }
+    
+    func cancel() {
+        
+    }
+    
+}
+
+/// Mock agent that always returns an error
+class MockFailingWebSession: AuthorizationSessionProtocol {
+    
+    let handler: () -> Void
+    
+    required init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void) {
+        let error = NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "User cancelled"])
+        self.handler = {
+            completionHandler(nil, error)
+        }
+    }
+    
+    func start() -> Bool {
+        handler()
         return true
     }
     

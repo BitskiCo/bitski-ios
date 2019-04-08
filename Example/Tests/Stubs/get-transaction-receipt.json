@@ -2,7 +2,7 @@
     "jsonrpc": "2.0",
     "result": {
         "blockHash": "0x1c07704bda90fca959d6c4028162b69847b399406898fdaefd207810a738ee45",
-        "blockNumber": "0x01",
+        "blockNumber": "0x02",
         "contractAddress": null,
         "cumulativeGasUsed": "0x5687d",
         "gasUsed": "0x14b83",

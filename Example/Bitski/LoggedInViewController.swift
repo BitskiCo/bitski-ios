@@ -73,6 +73,23 @@ class LoggedInViewController: UIViewController {
         }
     }
     
+    func sendTestTransaction() {
+        guard let web3 = web3, let account = account else { return }
+        let to = try? EthereumAddress(hex: "0x8f83aadb8098a1b4509aaba77ba9d2cb1ac970ba", eip55: false)
+        let transaction = EthereumTransaction(nonce: nil, gasPrice: EthereumQuantity(quantity: 1.gwei), gas: EthereumQuantity(quantity: 5000), from: account, to: to, value: 0)
+        firstly {
+            web3.eth.sendTransaction(transaction: transaction)
+        }.done { transactionHash in
+            print(transactionHash)
+        }.catch { error in
+            print(error)
+        }
+    }
+    
+    @IBAction func sendTransaction() {
+        sendTestTransaction()
+    }
+    
     @IBAction func logOut() {
         Bitski.shared?.signOut()
     }

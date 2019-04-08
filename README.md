@@ -81,7 +81,7 @@ Bitski.shared?.signOut()
 If you're developing locally (like with truffle develop or ganache), you can use the development network instead.
 
 ```swift
-let network: Bitski.Network = .development(url: "http://localhost:9545") //or use your local IP if building for a device.
+let network: Bitski.Network = .development(url: "http://localhost:9545", chainId: 0) //or use your local IP if building for a device.
 let web3 = Bitski.getWeb3(network: network)
 ```
 
@@ -104,8 +104,8 @@ our API.
 firstly {
     web3.eth.accounts().firstValue
 }.then { account in
-    let to = EthereumAddress(hex: "SOME ADDRESS", eip55: false)
-    let transaction = EthereumTransaction(gasLimit: 21000, from: account, to: to, value: EthereumQuantity(quantity: 1.eth))
+    let to = try? EthereumAddress(hex: "SOME ADDRESS", eip55: false)
+    let transaction = EthereumTransaction(nonce: nil, gasPrice: EthereumQuantity(quantity: 1.gwei), gas: EthereumQuantity(quantity: 21.gwei), from: account, to: to, value: EthereumQuantity(quantity: 1.eth))
     return web3.eth.sendTransaction(transaction: transaction)
 }.then { transactionHash in
     web3.eth.getTransactionReceipt(transactionHash)

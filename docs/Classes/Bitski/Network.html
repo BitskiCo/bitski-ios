@@ -106,11 +106,13 @@
             <h1>Network</h1>
               <div class="declaration">
                 <div class="language">
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Network</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Network</span> <span class="p">:</span> <span class="kt">Hashable</span></code></pre>
 
                 </div>
               </div>
             <p>Represents distinct Ethereum Networks</p>
+
+<p>Note: Conforms to Hashable so that we can use these as a Dictionary key</p>
 
           </div>
         </section>
@@ -230,9 +232,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6BitskiAAC7NetworkO6customyADSS_tcADmF"></a>
-                    <a name="//apple_ref/swift/Element/custom(name:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6BitskiAAC7NetworkO6customyADSS_tcADmF">custom(name:)</a>
+                    <a name="/s:6BitskiAAC7NetworkO6customyADSS_SitcADmF"></a>
+                    <a name="//apple_ref/swift/Element/custom(name:chainId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6BitskiAAC7NetworkO6customyADSS_SitcADmF">custom(name:chainId:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -247,7 +249,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">custom</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">custom</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">chainId</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -257,9 +259,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:6BitskiAAC7NetworkO11developmentyADSS_tcADmF"></a>
-                    <a name="//apple_ref/swift/Element/development(url:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:6BitskiAAC7NetworkO11developmentyADSS_tcADmF">development(url:)</a>
+                    <a name="/s:6BitskiAAC7NetworkO11developmentyADSS_SitcADmF"></a>
+                    <a name="//apple_ref/swift/Element/development(url:chainId:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:6BitskiAAC7NetworkO11developmentyADSS_SitcADmF">development(url:chainId:)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -274,96 +276,7 @@
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">development</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-              </ul>
-            </div>
-            <div class="task-group">
-              <div class="task-name-container">
-                <a name="/RawRepresentable"></a>
-                <a name="//apple_ref/swift/Section/RawRepresentable" class="dashAnchor"></a>
-                <a href="#/RawRepresentable">
-                  <h3 class="section-name">RawRepresentable</h3>
-                </a>
-              </div>
-              <ul class="item-container">
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:SY8RawValueQa"></a>
-                    <a name="//apple_ref/swift/Alias/RawValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SY8RawValueQa">RawValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">typealias</span> <span class="kt">RawValue</span> <span class="o">=</span> <span class="kt">String</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:SY8rawValuexSg03RawB0Qz_tcfc"></a>
-                    <a name="//apple_ref/swift/Method/init(rawValue:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SY8rawValuexSg03RawB0Qz_tcfc">init(rawValue:)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">?(</span><span class="nv">rawValue</span><span class="p">:</span> <span class="kt"><a href="../../Classes/Bitski/Network.html#/s:SY8RawValueQa">RawValue</a></span><span class="p">)</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:SY8rawValue03RawB0Qzvp"></a>
-                    <a name="//apple_ref/swift/Property/rawValue" class="dashAnchor"></a>
-                    <a class="token" href="#/s:SY8rawValue03RawB0Qzvp">rawValue</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">rawValue</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">development</span><span class="p">(</span><span class="nv">url</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">chainId</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
