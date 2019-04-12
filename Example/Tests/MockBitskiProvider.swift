@@ -7,18 +7,31 @@
 //
 
 import Foundation
+import Web3
 @testable import Bitski
 
 class MockBitskiProvider: BitskiHTTPProvider {
     
-    required init(rpcURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession) {
-        super.init(rpcURL: rpcURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, session: session)
-    }
+    // Allows us to simulate a failed encoding
+    var shouldEncode: Bool = true
     
-    override func createAuthorizationAgent(accessToken: String) -> BitskiAuthorizationAgent {
-        let agent = super.createAuthorizationAgent(accessToken: accessToken)
-        agent.authorizationSessionType = MockTransactionWebSession.self
+    var authAgentType: AuthorizationSessionProtocol.Type = MockTransactionWebSession.self
+    
+    required init(rpcURL: URL, apiBaseURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession) {
+        super.init(rpcURL: rpcURL, apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, session: session)
+    }
+
+    override func createAuthorizationAgent() -> BitskiAuthorizationAgent {
+        let agent = super.createAuthorizationAgent()
+        agent.authorizationSessionType = authAgentType
         return agent
     }
     
+    override func encode<T: Encodable>(body: T, withPrefix prefix: String? = nil, completion: @escaping (Data?, Swift.Error?) -> Void) {
+        if shouldEncode {
+            super.encode(body: body, withPrefix: prefix, completion: completion)
+        } else {
+            completion(nil, NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "Encoding failed"]))
+        }
+    }
 }

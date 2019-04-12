@@ -1,0 +1,27 @@
+{
+    "clients": [{
+        "client_id": "ae94eec9-2af0-405c-bc42-1e909f3b5190",
+        "client_name": "Bitski Example DApp",
+        "client_uri": "https://example-dapp-1.bitski.com",
+        "logo_uri": "https://example-dapp-1.bitski.com/assets/character-5.png",
+        "policy_uri": "",
+        "tos_uri": ""
+    }],
+    "transaction": {
+        "clientId": "ae94eec9-2af0-405c-bc42-1e909f3b5190",
+        "context": {
+            "chainId": 4
+        },
+        "id": "16a82f91-ff87-42d5-bbca-0c5cc2e24982",
+        "kind": "ETH_SEND_TRANSACTION",
+        "payload": {
+            "data": "0x50bb4e7f000000000000000000000000c20c5ccb44e6092c712a1b895df6d72ea53b40f5005c45d755946622678db45c9d893c1264a6965ccbe908b1f993c688cacf2dea0000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000000000007868747470733a2f2f6578616d706c652d646170702d312d6170692e626974736b692e636f6d2f746f6b656e732f3136333033313935353835383636353932383639393839363338343332323934333130333534353735363239363334383034373237333331303639323038393336323535373930363431300000000000000000",
+            "from": "0xc20c5ccb44e6092c712a1b895df6d72ea53b40f5",
+            "gas": "0xaae60",
+            "gasPrice": "0x3b9aca00",
+            "nonce": "0x77",
+            "to": "0x8f83aadb8098a1b4509aaba77ba9d2cb1ac970ba"
+        },
+        "submitterId": "5ee5dabd-d5ac-4a4f-ae85-b4301a8bbad2"
+    }
+}

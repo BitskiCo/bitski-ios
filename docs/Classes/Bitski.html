@@ -162,13 +162,15 @@
                       <div class="abstract">
                         <p>Represents distinct Ethereum Networks</p>
 
+<p>Note: Conforms to Hashable so that we can use these as a Dictionary key</p>
+
                         <a href="../Classes/Bitski/Network.html" class="slightly-smaller">See more</a>
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Network</span> <span class="p">:</span> <span class="kt">RawRepresentable</span><span class="p">,</span> <span class="kt">Hashable</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">Network</span> <span class="p">:</span> <span class="kt">Hashable</span></code></pre>
 
                         </div>
                       </div>
@@ -353,18 +355,6 @@
                               <td>
                                 <div>
                                   <p>Your client ID. From <a href="https://developer.bitski.com">https://developer.bitski.com</a></p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>clientSecret</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Your client secret. From <a href="https://developer.bitski.com">https://developer.bitski.com</a></p>
                                 </div>
                               </td>
                             </tr>

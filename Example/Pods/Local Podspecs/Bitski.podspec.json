@@ -18,7 +18,7 @@
   "platforms": {
     "ios": "11.0"
   },
-  "swift_version": "4.0",
+  "swift_versions": "4.0",
   "source_files": "Bitski/Classes/**/*",
   "exclude_files": "docs/**/*",
   "dependencies": {

@@ -13,14 +13,13 @@ import Bitski
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // UPDATE THIS WITH YOUR CLIENT ID
-        Bitski.shared = Bitski(clientID: "CLIENTID", redirectURL: URL(string: "yourapp://application/callback")!)
+    
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+         //UPDATE THIS WITH YOUR CLIENT ID
+        Bitski.shared = Bitski(clientID: "70ea4028-efd2-4db4-b9de-4ccdc3c6acb6", redirectURL: URL(string: "yourapp://application/callback")!)
         return true
     }
-
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

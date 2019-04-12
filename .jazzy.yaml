@@ -1,8 +1,9 @@
 author: Bitski
 author_url: https://docs.bitski.com
-copyright: Copyright © 2018 Out There Labs, Inc
+copyright: Copyright © 2019 Out There Labs, Inc
 readme: README.md
 podspec: Bitski.podspec
+swift_version: 4.0
 github_url: https://github.com/BitskiCo/bitski-ios
 theme: fullwidth
 clean: true
@@ -26,4 +27,3 @@ custom_categories:
     - name: Utilities
       children:
         - randomHex(bytesCount:)
-

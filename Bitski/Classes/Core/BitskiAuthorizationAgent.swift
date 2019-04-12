@@ -21,8 +21,6 @@ class BitskiAuthorizationAgent {
     
     var baseURL: URL
     var redirectURL: URL
-    var network: Bitski.Network
-    var accessToken: String
     
     enum Error: Swift.Error {
         case invalidRequest
@@ -34,26 +32,28 @@ class BitskiAuthorizationAgent {
     /// The current SFAuthenticationSession for requests requiring authorization (must be retained).
     private var currentSession: AuthorizationSessionProtocol?
     
-    init(baseURL: URL, redirectURL: URL, network: Bitski.Network, accessToken: String, authorizationClass: AuthorizationSessionProtocol.Type = SFAuthenticationSession.self) {
+    /// Create a new instance of BitskiAuthorizationAgent
+    ///
+    /// - Parameters:
+    ///   - baseURL: The base url of the website to display urls for
+    ///   - redirectURL: The URL that we will use to pass the response
+    ///   - authorizationClass: A class to use for authorization that conforms to AuthorizationSessionProtocol. Defaults to SFAuthenticationSession.
+    init(baseURL: URL, redirectURL: URL, authorizationClass: AuthorizationSessionProtocol.Type = SFAuthenticationSession.self) {
         self.baseURL = baseURL
         self.redirectURL = redirectURL
-        self.network = network
-        self.accessToken = accessToken
         self.authorizationSessionType = authorizationClass
     }
     
-    func requestAuthorization(method: String, body: Data, completion: @escaping (Data?, Swift.Error?) -> Void) {
-        // Get base URL depending on the request
-        guard let methodURL = self.urlForMethod(methodName: method, baseURL: baseURL) else {
+    /// Display the transaction approval screen for a given transaction id
+    ///
+    /// - Parameters:
+    ///     - transactionId: the id of the transaction (submitted the the API)
+    ///     - completion: a completion handler for the response
+    func requestAuthorization(transactionId: String, completion: @escaping (Data?, Swift.Error?) -> Void) {
+        guard let url = self.urlForTransaction(transactionId: transactionId, baseURL: baseURL) else {
             completion(nil, Error.invalidRequest)
             return
         }
-        // Encode the request data into the url query params
-        guard let url = queryEncodedRequestURL(methodURL: methodURL, body: body) else {
-            completion(nil, Error.invalidRequest)
-            return
-        }
-        // Send via web
         sendViaWeb(url: url, completion: completion)
     }
     
@@ -102,46 +102,17 @@ class BitskiAuthorizationAgent {
         return data
     }
     
-    /// Get the web URL for a given JSON-RPC method
+    /// Generates the web url for the transaction
     ///
     /// - Parameters:
-    ///   - methodName: name of the method to check
-    ///   - baseURL: the web base url the result should be relative to
-    /// - Returns: A web URL for the JSON-RPC method, or nil if one is not available
-    private func urlForMethod(methodName: String, baseURL: URL) -> URL? {
-        switch methodName {
-        case "eth_sendTransaction":
-            return URL(string: "/eth-send-transaction", relativeTo: baseURL)
-        default:
-            return nil
-        }
-    }
-    
-    /// Creates a URL with query params that represent the RPCRequest
-    ///
-    /// - Parameters:
-    ///   - methodURL: The base URL for the request
-    ///   - body: JSON-RPC request serialized as Data
-    /// - Returns: Web URL with necessary query parameters
-    private func queryEncodedRequestURL(methodURL: URL, body: Data) -> URL? {
-        guard var urlComponents = URLComponents(url: methodURL, resolvingAgainstBaseURL: true) else {
-            return nil
-        }
-        
-        var queryItems = urlComponents.queryItems ?? []
-        
-        queryItems += [
-            URLQueryItem(name: "network", value: network.rawValue),
-            URLQueryItem(name: "payload", value: body.base64EncodedString()),
-            URLQueryItem(name: "referrerAccessToken", value: accessToken)
-        ]
-        
+    ///   - transactionId: transaction id
+    ///   - baseURL: url for the website to build against
+    /// - Returns: A URL for the transaction, if one could be generated
+    private func urlForTransaction(transactionId: String, baseURL: URL) -> URL? {
+        var urlString = "/transactions/\(transactionId)"
         if let encodedRedirectURI = redirectURL.absoluteString.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            queryItems += [URLQueryItem(name: "redirectURI", value: encodedRedirectURI)]
+            urlString += "?redirectURI=\(encodedRedirectURI)"
         }
-        
-        urlComponents.queryItems = queryItems
-        return urlComponents.url
+        return URL(string: urlString, relativeTo: baseURL)
     }
-    
 }
