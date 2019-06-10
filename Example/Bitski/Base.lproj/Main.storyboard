@@ -6,6 +6,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -122,20 +123,32 @@
                                     </label>
                                 </subviews>
                             </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pbi-aq-CuC">
-                                <rect key="frame" x="127" y="376" width="120" height="30"/>
-                                <state key="normal" title="Send Transaction"/>
-                                <connections>
-                                    <action selector="sendTransaction" destination="iMY-1i-Z5W" eventType="touchUpInside" id="H8s-lF-Yed"/>
-                                </connections>
-                            </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="8ez-BV-H78">
+                                <rect key="frame" x="127.5" y="376" width="120" height="68"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="N7K-dO-FY8">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="30"/>
+                                        <state key="normal" title="Sign Data"/>
+                                        <connections>
+                                            <action selector="signData" destination="iMY-1i-Z5W" eventType="touchUpInside" id="nty-ko-NLR"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pbi-aq-CuC">
+                                        <rect key="frame" x="0.0" y="38" width="120" height="30"/>
+                                        <state key="normal" title="Send Transaction"/>
+                                        <connections>
+                                            <action selector="sendTransaction" destination="iMY-1i-Z5W" eventType="touchUpInside" id="H8s-lF-Yed"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="wby-A0-n50" firstAttribute="centerY" secondItem="ExZ-22-1W0" secondAttribute="centerY" id="27Q-ZG-MOJ"/>
-                            <constraint firstItem="pbi-aq-CuC" firstAttribute="centerX" secondItem="ExZ-22-1W0" secondAttribute="centerX" id="BfL-iP-zKI"/>
-                            <constraint firstItem="pbi-aq-CuC" firstAttribute="top" secondItem="2fc-Ne-jL1" secondAttribute="bottom" constant="20" id="Xbo-NP-0fs"/>
                             <constraint firstItem="wby-A0-n50" firstAttribute="centerX" secondItem="ExZ-22-1W0" secondAttribute="centerX" id="bGx-xX-qdD"/>
+                            <constraint firstItem="8ez-BV-H78" firstAttribute="centerX" secondItem="ExZ-22-1W0" secondAttribute="centerX" id="mn2-O0-DcB"/>
+                            <constraint firstItem="8ez-BV-H78" firstAttribute="top" secondItem="wby-A0-n50" secondAttribute="bottom" constant="20" id="voC-mM-UnS"/>
                         </constraints>
                     </view>
                     <connections>

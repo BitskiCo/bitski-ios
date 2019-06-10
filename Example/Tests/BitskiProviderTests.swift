@@ -13,7 +13,7 @@ import OHHTTPStubs
 
 class BitskiProviderTests: XCTestCase {
     
-    var bitski: Bitski!
+    private var authDelegate: BitskiAuthDelegate?
     
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -22,11 +22,24 @@ class BitskiProviderTests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         OHHTTPStubs.removeAllStubs()
-        bitski?.signOut()
+        authDelegate = nil
+    }
+    
+    func createTestProvider(isLoggedIn: Bool = true, signer: TransactionSigner? = nil) -> BitskiHTTPProvider {
+        let authDelegate =  MockAuthDelegate()
+        // Retain auth delegate
+        self.authDelegate = authDelegate
+        authDelegate.isLoggedIn = isLoggedIn
+        let signer = signer ?? TransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = BitskiHTTPProvider(rpcURL: URL(string: "https://api.bitski.com/v1/web3/kovan")!, network: .kovan, signer: signer)
+        provider.authDelegate = authDelegate
+        signer.authDelegate = authDelegate
+        return provider
     }
 
     func testProviderNoDelegate() {
-        let provider = BitskiHTTPProvider(rpcURL: URL(string: "https://api.bitski.com/v1/web3/kovan")!, apiBaseURL: URL(string: "https://api.bitski.com/v1")!, webBaseURL: URL(string: "https://test.bitski.com")!, network: .kovan, redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = createTestProvider()
+        provider.authDelegate = nil
         let web3 = Web3(provider: provider)
         web3.eth.accounts { response in
             switch response.error {
@@ -44,10 +57,8 @@ class BitskiProviderTests: XCTestCase {
     }
     
     func testNotLoggedIn() {
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        XCTAssertFalse(bitski.isLoggedIn)
-        let web3 = bitski.getWeb3(network: .kovan)
+        let provider = createTestProvider(isLoggedIn: false)
+        let web3 = Web3(provider: provider)
         web3.eth.accounts { response in
             switch response.error {
             case Web3Response<[EthereumAddress]>.Error.requestFailed(let underlyingError)?:
@@ -64,173 +75,125 @@ class BitskiProviderTests: XCTestCase {
     }
     
     func testGetAccounts() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubAccounts()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        bitski.configuration = nil
-        XCTAssertFalse(bitski.isLoggedIn, "Should not already be logged in")
-        let logInExpectation = expectation(description: "Should be able to log in")
+        let provider = createTestProvider()
+        let web3 = Web3(provider: provider)
         let accountsExpectation = expectation(description: "Should get accounts")
-        bitski.signIn() { error in
-            XCTAssertEqual(self.bitski.isLoggedIn, true, "Should be logged in now")
-            logInExpectation.fulfill()
-            XCTAssertNil(error, "Log in should not return an error")
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            web3.eth.accounts(response: { (response) in
-                switch response.status {
-                case .success(let accounts):
-                    let expected = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-                    XCTAssertTrue(accounts.contains(expected), "Account should be properly parsed")
-                case .failure(let error):
-                    XCTFail((error as NSError).debugDescription)
-                }
-                accountsExpectation.fulfill()
-            })
-        }
+        web3.eth.accounts(response: { (response) in
+            switch response.status {
+            case .success(let accounts):
+                let expected = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
+                XCTAssertTrue(accounts.contains(expected), "Account should be properly parsed")
+            case .failure(let error):
+                XCTFail((error as NSError).debugDescription)
+            }
+            accountsExpectation.fulfill()
+        })
         waitForExpectations(timeout: 10, handler: nil)
     }
     
+    // Tests that methods that require authorization go through the signer
     func testAuthorization() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubTransactionAPI()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        XCTAssertFalse(bitski.isLoggedIn, "Should not already be logged in")
-        let logInExpectation = expectation(description: "Should be able to log in")
+        let signer = StubbedTransactionSigner()
+        let provider = createTestProvider(signer: signer)
+        let web3 = Web3(provider: provider)
         let sendTransactionExpectation = expectation(description: "Should send a transaction")
-        bitski.signIn() { error in
-            logInExpectation.fulfill()
-            XCTAssertNil(error, "Log in should not return an error")
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-            let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
-            web3.eth.sendTransaction(transaction: transaction) { response in
-                switch response.status {
-                case .success(let result):
-                    let expectedHash = try! EthereumData(ethereumValue: "0x0e670ec64341771606e55d6b4ca35a1a6b75ee3d5145a99d05921026d1527331")
-                    XCTAssertEqual(result, expectedHash, "Transaction hash should match stubbed response")
-                case .failure(let error):
-                    XCTFail((error as NSError).debugDescription)
-                }
-                sendTransactionExpectation.fulfill()
-            }
+        let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        web3.eth.sendTransaction(transaction: transaction) { response in
+            XCTAssertNotNil(signer.lastSignTransactionRequest)
+            sendTransactionExpectation.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testRPCErrors() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubError()
-        bitski = MockBitski(clientID: "test-id", redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = createTestProvider()
+        let web3 = Web3(provider: provider)
         let promise = expectation(description: "Should get response")
-        bitski.signIn() { error in
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            web3.eth.accounts(response: { (response) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not be successful")
-                case .failure(let error):
-                    XCTAssertTrue(error is RPCResponse<[EthereumAddress]>.Error, "Error should be passed from RPCResponse directly")
-                    let rpcError = error as! RPCResponse<[EthereumAddress]>.Error
-                    XCTAssertEqual(rpcError.localizedDescription, "RPC Error (401) Not Authorized")
-                }
-                promise.fulfill()
-            })
-        }
+        web3.eth.accounts(response: { (response) in
+            switch response.status {
+            case .success:
+                XCTFail("Should not be successful")
+            case .failure(let error):
+                XCTAssertTrue(error is RPCResponse<[EthereumAddress]>.Error, "Error should be passed from RPCResponse directly")
+                let rpcError = error as! RPCResponse<[EthereumAddress]>.Error
+                XCTAssertEqual(rpcError.localizedDescription, "RPC Error (401) Not Authorized")
+            }
+            promise.fulfill()
+        })
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testDecodeErrors() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubEmptyResponse()
-        
-        bitski = MockBitski(clientID: "test-id", redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = createTestProvider()
+        let web3 = Web3(provider: provider)
         let promise = expectation(description: "Should get response")
-        bitski.signIn() { error in
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            web3.eth.accounts(response: { (response) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not be successful")
-                case .failure(let error):
-                    switch error {
-                    case BitskiHTTPProvider.ProviderError.decodingFailed:
-                        break
-                    default:
-                        XCTFail("Should be instance of BitskiHTTPProvider.Error.decodingFailed")
-                    }
-                }
-                promise.fulfill()
-            })
+        web3.eth.accounts { response in
+            switch response.status {
+            case .success:
+                XCTFail("Should not be successful")
+            case .failure:
+                break
+            }
+            promise.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testMissingResult() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubNoResult()
-        
-        bitski = MockBitski(clientID: "test-id", redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = createTestProvider()
+        let web3 = Web3(provider: provider)
         let promise = expectation(description: "Should get response")
-        bitski.signIn() { error in
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            web3.eth.accounts(response: { (response) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not be successful")
-                case .failure(let error):
-                    switch error {
-                    case BitskiHTTPProvider.ProviderError.missingData:
-                        break
-                    default:
-                        XCTFail("Should be instance of BitskiHTTPProvider.Error.missingData")
-                    }
-                }
-                promise.fulfill()
-            })
+        web3.eth.accounts { response in
+            switch response.status {
+            case .success:
+                XCTFail("Should not be successful")
+            case .failure:
+                break
+            }
+            promise.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testInvalidResponseCode() {
-        BitskiTestStubs.stubLogin()
         BitskiTestStubs.stubInvalidCode()
-        
-        bitski = MockBitski(clientID: "test-id", redirectURL: URL(string: "bitskiexample://application/callback")!)
+        let provider = createTestProvider()
+        let web3 = Web3(provider: provider)
         let promise = expectation(description: "Should get response")
-        bitski.signIn() { error in
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            web3.eth.accounts(response: { (response) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not be successful")
-                case .failure(let error):
-                    switch error {
-                    case Web3Response<[EthereumAddress]>.Error.serverError(let underlyingError):
-                        switch underlyingError {
-                        case NetworkClient.Error.invalidResponseCode?:
-                            break
-                        default:
-                            XCTFail("Underlying error should be BitskiHTTPProvider.Error.invalidResponseCode")
-                        }
+        web3.eth.accounts(response: { (response) in
+            switch response.status {
+            case .success:
+                XCTFail("Should not be successful")
+            case .failure(let error):
+                switch error {
+                case Web3Response<[EthereumAddress]>.Error.serverError(let underlyingError):
+                    switch underlyingError {
+                    case NetworkClient.Error.invalidResponseCode?:
+                        break
                     default:
-                        XCTFail("Should be instance of Web3Response.Error.serverError")
+                        XCTFail("Underlying error should be BitskiHTTPProvider.Error.invalidResponseCode")
                     }
+                default:
+                    XCTFail("Should be instance of Web3Response.Error.serverError")
                 }
-                promise.fulfill()
-            })
-        }
+            }
+            promise.fulfill()
+        })
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     func testInvalidResponse() {
-        let rpcURL = URL(string: "https://api.bitski.com/v1/web3/mainnet")!
-        let webURL = URL(string: "https://sign.bitski.com")!
         let session = MockURLSession()
-        let provider = MockBitskiProvider(rpcURL: rpcURL, apiBaseURL: rpcURL, webBaseURL: webURL, network: .mainnet, redirectURL: URL(string: "bitskiexample://application/callback")!, session: session)
-        let promise = expectation(description: "Callback is called")
+        let signer = StubbedTransactionSigner()
+        let provider = MockBitskiProvider(rpcURL: URL(string: "https://api.bitski.com/v1/web3/mainnet")!, network: .mainnet, signer: signer, session: session)
         let request = RPCRequest(id: 0, jsonrpc: "2.0", method: "eth_blockNumber", params: [EthereumValue]())
+        let promise = expectation(description: "Callback is called")
         provider.send(request: request) { (response: Web3Response<[EthereumAddress]>) in
             switch response.status {
             case .success:
@@ -244,12 +207,11 @@ class BitskiProviderTests: XCTestCase {
     }
     
     func testInvalidPayloadBody() {
-        let rpcURL = URL(string: "https://api.bitski.com/v1/web3/mainnet")!
-        let webURL = URL(string: "https://sign.bitski.com")!
         let session = MockURLSession()
-        let provider = MockBitskiProvider(rpcURL: rpcURL, apiBaseURL: rpcURL, webBaseURL: webURL, network: .mainnet, redirectURL: URL(string: "bitskiexample://application/callback")!, session: session)
-        let promise = expectation(description: "Callback is called")
+        let signer = StubbedTransactionSigner()
+        let provider = MockBitskiProvider(rpcURL: URL(string: "https://api.bitski.com/v1/web3/mainnet")!, network: .mainnet, signer: signer, session: session)
         let request = RPCRequest(id: 0, jsonrpc: "2.0", method: "eth_blockNumber", params: [Double.nan])
+        let promise = expectation(description: "Callback is called")
         provider.send(request: request) { (response: Web3Response<[EthereumAddress]>) in
             switch response.status {
             case .success:
@@ -261,137 +223,136 @@ class BitskiProviderTests: XCTestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
     }
-
-    func testTransactionError() {
-        BitskiTestStubs.stubLogin()
-        BitskiTestStubs.stubTransactionAPIError()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        XCTAssertFalse(bitski.isLoggedIn, "Should not already be logged in")
-        let logInExpectation = expectation(description: "Should be able to log in")
-        let sendTransactionExpectation = expectation(description: "Should send a transaction")
-        bitski.signIn() { error in
-            logInExpectation.fulfill()
-            XCTAssertNil(error, "Log in should not return an error")
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-            let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
-            web3.eth.sendTransaction(transaction: transaction) { response in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not succeed")
-                case .failure(let error):
-                    XCTAssertTrue(error is Web3Response<EthereumData>.Error)
-                }
-                sendTransactionExpectation.fulfill()
-            }
-        }
-        waitForExpectations(timeout: 10, handler: nil)
-    }
     
-    func testTransactionInvalidResponse() {
-        BitskiTestStubs.stubLogin()
-        BitskiTestStubs.stubTransactionAPIInvalid()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        XCTAssertFalse(bitski.isLoggedIn, "Should not already be logged in")
-        let logInExpectation = expectation(description: "Should be able to log in")
-        let sendTransactionExpectation = expectation(description: "Should send a transaction")
-        bitski.signIn() { error in
-            logInExpectation.fulfill()
-            XCTAssertNil(error, "Log in should not return an error")
-            let web3 = self.bitski.getWeb3(network: .kovan)
-            let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-            let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
-            web3.eth.sendTransaction(transaction: transaction) { response in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not succeed")
-                case .failure(let error):
-                    XCTAssertTrue(error is Web3Response<EthereumData>.Error)
-                }
-                sendTransactionExpectation.fulfill()
+    /// Simulates a payload that cannot be made into a BitskiTransaction
+    func testNonTransactionParams() {
+        let provider = createTestProvider()
+        let request = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: "hello world")
+        
+        let promise = expectation(description: "Should be able to log in")
+        provider.send(request: request) { (response: Web3Response<EthereumValue>) in
+            switch response.status {
+            case .success:
+                XCTFail("Should fail")
+            case .failure(let error):
+                XCTAssertNotNil(error)
             }
+            promise.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
     
     /// Simulates a payload that cannot be made into a BitskiTransaction
-    func testNonTransactionParams() {
-        BitskiTestStubs.stubLogin()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
+    func testEmptyTransactionParams() {
+        let provider = createTestProvider()
+        let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: [])
+        
         let promise = expectation(description: "Should be able to log in")
-        bitski.signIn() { error in
-            XCTAssertNil(error, "Log in should not return an error")
-            let provider = self.bitski.getProvider()
-            let request = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: "hello world")
-            provider.send(request: request) { (response: Web3Response<EthereumValue>) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should fail")
-                case .failure(let error):
-                    XCTAssertNotNil(error)
-                }
-                promise.fulfill()
+        provider.send(request: request) { (response: Web3Response<EthereumValue>) in
+            switch response.status {
+            case .success:
+                XCTFail("Should fail")
+            case .failure(let error):
+                XCTAssertNotNil(error)
             }
+            promise.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }
     
-    /// Simulates a case where the transacation fails to be encoded
-    func testTransactionEncodingFailed() {
-        BitskiTestStubs.stubLogin()
-        let redirectURL = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: redirectURL)
-        let rpcURL = URL(string: "https://api.bitski.com/v1/web3/mainnet")!
-        let webURL = URL(string: "https://sign.bitski.com")!
-        let session = MockURLSession()
-        let provider = MockBitskiProvider(rpcURL: rpcURL, apiBaseURL: rpcURL, webBaseURL: webURL, network: .mainnet, redirectURL: redirectURL, session: session)
-        provider.authDelegate = bitski
-        provider.shouldEncode = false
-        let promise = expectation(description: "Callback is called")
+    func testInvalidMessageParams() {
+        let provider = createTestProvider()
+        let promise1 = expectation(description: "Should complete first request")
+        let request1 = RPCRequest<String>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: "")
+        provider.send(request: request1) { (response: Web3Response<EthereumValue>) in
+            XCTAssertNotNil(response.error)
+            promise1.fulfill()
+        }
+        
+        let promise2 = expectation(description: "Should complete second request")
+        let request2 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: EthereumData(bytes: []).ethereumValue())
+        provider.send(request: request2) { (response: Web3Response<EthereumValue>) in
+            XCTAssertNotNil(response.error)
+            promise2.fulfill()
+        }
+        
+        let promise3 = expectation(description: "Should complete third request")
+        let request3 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [EthereumData(bytes: [])])
+        provider.send(request: request3) { (response: Web3Response<EthereumValue>) in
+            XCTAssertNotNil(response.error)
+            promise3.fulfill()
+        }
+        
+        let promise4 = expectation(description: "Should complete fourth request")
+        let request4 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [true, true])
+        provider.send(request: request4) { (response: Web3Response<EthereumValue>) in
+            XCTAssertNotNil(response.error)
+            promise4.fulfill()
+        }
+        
+        let promise5 = expectation(description: "Should complete fifth request")
+        let request5 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [true, EthereumData(bytes: [])])
+        provider.send(request: request5) { (response: Web3Response<EthereumValue>) in
+            XCTAssertNotNil(response.error)
+            promise5.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testEthSign() {
+        BitskiTestStubs.stubSignTransactionAPI()
+        let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
+        signer.authAgentType = MockTransactionWebSession.self
+        let provider = createTestProvider(signer: signer)
+        
+        let address = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
+        let message = EthereumData(bytes: [])
+        
+        let request = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [address, message])
+        let promise = expectation(description: "Completed sign request")
+        provider.send(request: request) { (response: Web3Response<EthereumData>) in
+            XCTAssertNil(response.error)
+            XCTAssertNotNil(response.result)
+            promise.fulfill()
+        }
+        waitForExpectations(timeout: 10, handler: nil)
+    }
+    
+    func testEthSendTransaction() {
+        BitskiTestStubs.stubTransactionAPI()
+        BitskiTestStubs.stubSendRawTransaction()
+        let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
+        signer.authAgentType = MockTransactionWebSession.self
+        let provider = createTestProvider(signer: signer)
+        
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
         let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
-        let request = RPCRequest(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: [transaction])
-        bitski.signIn() { error in
-            XCTAssertNil(error)
-            provider.send(request: request) { (response: Web3Response<EthereumData>) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not succeed")
-                case .failure(let error):
-                    XCTAssertNotNil(error)
-                }
-                promise.fulfill()
-            }
+        let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: [transaction])
+        
+        let promise = expectation(description: "Completed sign request")
+        provider.send(request: request) { (response: Web3Response<EthereumData>) in
+            XCTAssertNil(response.error)
+            XCTAssertNotNil(response.result)
+            promise.fulfill()
         }
-        waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: 10, handler: nil)
     }
-
     
-    func testTransactionUserCancelled() {
-        BitskiTestStubs.stubLogin()
+    func testEthSignTransaction() {
         BitskiTestStubs.stubTransactionAPI()
-        let url = URL(string: "bitskiexample://application/callback")!
-        bitski = MockBitski(clientID: "test-id", redirectURL: url)
-        let promise = expectation(description: "Should be able to log in")
-        bitski.signIn() { error in
-            XCTAssertNil(error, "Log in should not return an error")
-            let provider = self.bitski.getProvider() as! MockBitskiProvider
-            provider.authAgentType = MockFailingWebSession.self
-            let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-            let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
-            let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: [transaction])
-            provider.send(request: request) { (response: Web3Response<EthereumData>) in
-                switch response.status {
-                case .success:
-                    XCTFail("Should not succeed")
-                case .failure(let error):
-                    XCTAssertNotNil(error)
-                }
-                promise.fulfill()
-            }
+        let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
+        signer.authAgentType = MockTransactionWebSession.self
+        let provider = createTestProvider(signer: signer)
+        
+        let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_signTransaction", params: [transaction])
+        
+        let promise = expectation(description: "Completed sign request")
+        provider.send(request: request) { (response: Web3Response<EthereumData>) in
+            XCTAssertNil(response.error)
+            XCTAssertNotNil(response.result)
+            promise.fulfill()
         }
         waitForExpectations(timeout: 10, handler: nil)
     }

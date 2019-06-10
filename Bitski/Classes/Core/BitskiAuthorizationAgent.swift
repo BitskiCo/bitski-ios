@@ -49,12 +49,15 @@ class BitskiAuthorizationAgent {
     /// - Parameters:
     ///     - transactionId: the id of the transaction (submitted the the API)
     ///     - completion: a completion handler for the response
-    func requestAuthorization(transactionId: String, completion: @escaping (Data?, Swift.Error?) -> Void) {
+    func requestAuthorization(transactionId: String) -> Promise<Data> {
         guard let url = self.urlForTransaction(transactionId: transactionId, baseURL: baseURL) else {
-            completion(nil, Error.invalidRequest)
-            return
+            return Promise(error: Error.invalidRequest)
         }
-        sendViaWeb(url: url, completion: completion)
+        return firstly {
+            sendViaWeb(url: url)
+        }.map { url in
+            try self.parseResponse(url: url)
+        }
     }
     
     /// Send the current RPC method via the web when authorization is required
@@ -62,24 +65,28 @@ class BitskiAuthorizationAgent {
     /// - Parameters:
     ///   - url: The web authorization url
     ///   - completion: a completion handler for the response
-    private func sendViaWeb(url: URL, completion: @escaping (Data?, Swift.Error?) -> Void) {
-        // UI work must happen on the main queue, rather than our internal queue
-        DispatchQueue.main.async {
-            //todo: ideally find a way to do this without relying on SFAuthenticationSession.
-            self.currentSession = self.authorizationSessionType.init(url: url, callbackURLScheme: self.redirectURL.scheme) { url, error in
-                if error == nil, let url = url {
-                    do {
-                        let data = try self.parseResponse(url: url)
-                        completion(data, nil)
-                    } catch {
-                        completion(nil, error)
+    private func sendViaWeb(url: URL) -> Promise<URL> {
+        return Promise { resolver in
+            // UI work must happen on the main queue, rather than our internal queue
+            DispatchQueue.main.async {
+                //todo: ideally find a way to do this without relying on SFAuthenticationSession.
+                self.currentSession = self.authorizationSessionType.init(url: url, callbackURLScheme: self.redirectURL.scheme) { url, error in
+                    defer {
+                        self.currentSession = nil
                     }
-                } else {
-                    completion(nil, error)
+                    
+                    if let url = url {
+                        return resolver.fulfill(url)
+                    }
+                    
+                    if let error = error {
+                        return resolver.reject(error)
+                    }
+                    
+                    resolver.reject(Error.missingData)
                 }
-                self.currentSession = nil
+                self.currentSession?.start()
             }
-            self.currentSession?.start()
         }
     }
     

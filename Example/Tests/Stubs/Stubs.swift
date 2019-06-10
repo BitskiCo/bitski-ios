@@ -82,6 +82,12 @@ class BitskiTestStubs {
         }
     }
     
+    static func stubSignTransactionAPI() {
+        stub(condition: isHost("api.bitski.com") && isPath("/v1/transactions")) { request -> OHHTTPStubsResponse in
+            return OHHTTPStubsResponse(jsonFileNamed: "create-sign-transaction.json")
+        }
+    }
+    
     static func stubTransactionAPIError() {
         stub(condition: isHost("api.bitski.com") && isPath("/v1/transactions")) { request -> OHHTTPStubsResponse in
             return OHHTTPStubsResponse(jsonFileNamed: "error.json", statusCode: 401, headers: ["Content-Type": "application/json"])
@@ -91,6 +97,12 @@ class BitskiTestStubs {
     static func stubTransactionAPIInvalid() {
         stub(condition: isHost("api.bitski.com") && isPath("/v1/transactions")) { request -> OHHTTPStubsResponse in
             return OHHTTPStubsResponse(jsonFileNamed: "empty.json")
+        }
+    }
+    
+    static func stubSendRawTransaction() {
+        stub(condition: isHost("api.bitski.com") && isPath("/v1/web3/kovan") && isMethod("eth_sendRawTransaction")) { request -> OHHTTPStubsResponse in
+            return OHHTTPStubsResponse(jsonFileNamed: "send-transaction.json")
         }
     }
 

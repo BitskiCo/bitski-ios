@@ -33,44 +33,4 @@ class BitskiTransactionTests: XCTestCase {
         let arbitraryKind = BitskiTransaction<String>.Kind(methodName: "eth_accounts")
         XCTAssertNil(arbitraryKind)
     }
-
-    func testCreateSignPayload() {
-        do {
-            let address = try EthereumAddress(hex: "0xF4A2CB946f72e1460C490bF490E73d81295130cd", eip55: false)
-            let data = EthereumData(bytes: "hello world".bytes)
-            let message = MessageSignatureObject(from: address, message: data)
-            XCTAssertEqual(message.from, address)
-            XCTAssertEqual(message.message, data)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-    
-    func testCreateSignPayloadFromParams() {
-        do {
-            let address = try EthereumAddress(hex: "0xF4A2CB946f72e1460C490bF490E73d81295130cd", eip55: false)
-            let data = EthereumData(bytes: "hello world".bytes)
-            let values: EthereumValue = [address, data]
-            let message = MessageSignatureObject(params: [values])
-            XCTAssertEqual(message?.from, address)
-            XCTAssertEqual(message?.message, data)
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-    
-    func testCreateSignPayloadFromInvalidParams() {
-        do {
-            let address = try EthereumAddress(hex: "0xF4A2CB946f72e1460C490bF490E73d81295130cd", eip55: false)
-            let data = EthereumData(bytes: "hello world".bytes)
-            let values: EthereumValue = [data, address]
-            let message = MessageSignatureObject(params: [values])
-            XCTAssertNil(message, "The message is not created when values do not match expected input")
-            let message2 = MessageSignatureObject(params: [])
-            XCTAssertNil(message2, "The message is not created when passing an empty array")
-        } catch {
-            XCTFail(error.localizedDescription)
-        }
-    }
-
 }

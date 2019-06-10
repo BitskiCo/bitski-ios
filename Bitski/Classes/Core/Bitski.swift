@@ -117,6 +117,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     static private let configurationKey: String = "BitskiOIDServiceConfiguration"
     static private let authStateKey: String = "BitskiAuthState"
     
+    private let signer: TransactionSigner
+    
     /// Active authorization session
     private var authorizationFlowSession: OIDExternalUserAgentSession?
     
@@ -160,7 +162,9 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     public init(clientID: String, redirectURL: URL) {
         self.clientID = clientID
         self.redirectURL = redirectURL
+        self.signer = TransactionSigner(apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, redirectURL: redirectURL)
         super.init()
+        self.signer.authDelegate = self
         // Read access token from cache if still authorized
         _ = getAuthState()
     }
@@ -228,7 +232,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     /// - Returns: a configured instance of BitskiHTTPProvider
     private func createBitskiProvider(network: Network) -> BitskiHTTPProvider {
         let rpcURL = URL(string: network.rpcURL, relativeTo: apiBaseURL)!
-        let httpProvider = providerClass.init(rpcURL: rpcURL, apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL)
+        let httpProvider = providerClass.init(rpcURL: rpcURL, network: network, signer: signer)
         httpProvider.authDelegate = self
         
         setHeaders(provider: httpProvider)
@@ -333,5 +337,33 @@ public class Bitski: NSObject, BitskiAuthDelegate {
                 completion(nil, error)
             }
         }
+    }
+}
+
+// MARK: - Signing
+
+public extension Bitski {
+    /// Ask the user to sign a transaction. A modal window will be presented to the user, and they will
+    /// see your transaction on bitski.com.
+    ///
+    /// Once you have the signed data, you can call `web3.eth.sendRawTransaction()` to submit it to the network.
+    ///
+    /// - Parameters:
+    ///   - transaction: EthereumTransaction to sign
+    ///   - network: Bitski.Network to sign with. The chain id will be used to prevent replay attacks. Defaults to mainnet.
+    /// - Returns: A Promise that resolves with the raw transaction data as EthereumData
+    func sign(transaction: EthereumTransaction, network: Network = .mainnet) -> Promise<EthereumData> {
+        return signer.sign(transaction: transaction, network: network)
+    }
+    
+    /// Ask the user to sign a message. A modal window will be presented to the user, and they will
+    /// see the contents of the message on bitski.com.
+    ///
+    /// - Parameters:
+    ///   - from: EthereumAddress to sign from. This must be an account the user owns.
+    ///   - message: EthereumData representing the message to sign.
+    /// - Returns: A Promise that resolves with the raw transaction data as EthereumData.
+    func sign(from: EthereumAddress, message: EthereumData) -> Promise<EthereumData> {
+        return signer.sign(from: from, message: message)
     }
 }

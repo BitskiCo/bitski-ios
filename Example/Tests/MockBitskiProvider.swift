@@ -10,28 +10,55 @@ import Foundation
 import Web3
 @testable import Bitski
 
+class StubbedTransactionSigner: TransactionSigner {
+    
+    var lastSignRequest: (EthereumAddress, EthereumData)? = nil
+    
+    var injectedSignResponse: EthereumData?
+    
+    var lastSignTransactionRequest: (EthereumTransaction, Bitski.Network)? = nil
+
+    var injectedSignTransactionResponse: EthereumData?
+    
+    init(session: URLSession = URLSession(configuration: .default)) {
+        let apiBaseURL = URL(string: "https://api.bitski.com/v1")!
+        let webBaseURL = URL(string: "https://sign.bitski.com")!
+        let redirectURL = URL(string: "exampleapp://application/redirect")!
+        super.init(apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, redirectURL: redirectURL, session: session)
+    }
+    
+    required init(apiBaseURL: URL, webBaseURL: URL, redirectURL: URL, session: URLSession = URLSession(configuration: .default)) {
+        fatalError("Not implemented")
+    }
+    
+    override func sign<Result>(transaction: EthereumTransaction, network: Bitski.Network = .mainnet) -> Promise<Result> where Result : Codable {
+        lastSignTransactionRequest = (transaction, network)
+        if let response = injectedSignResponse as? Result {
+            return Promise.value(response)
+        }
+        return Promise(error: NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "User rejected"]))
+    }
+    
+    override func sign<Result>(from: EthereumAddress, message: EthereumData) -> Promise<Result> where Result : Codable {
+        lastSignRequest = (from, message)
+        if let response = injectedSignTransactionResponse as? Result {
+            return Promise.value(response)
+        }
+        return Promise(error: NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "User rejected"]))
+    }
+    
+}
+
 class MockBitskiProvider: BitskiHTTPProvider {
     
     // Allows us to simulate a failed encoding
     var shouldEncode: Bool = true
     
-    var authAgentType: AuthorizationSessionProtocol.Type = MockTransactionWebSession.self
-    
-    required init(rpcURL: URL, apiBaseURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession) {
-        super.init(rpcURL: rpcURL, apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, network: network, redirectURL: redirectURL, session: session)
-    }
-
-    override func createAuthorizationAgent() -> BitskiAuthorizationAgent {
-        let agent = super.createAuthorizationAgent()
-        agent.authorizationSessionType = authAgentType
-        return agent
-    }
-    
-    override func encode<T: Encodable>(body: T, withPrefix prefix: String? = nil, completion: @escaping (Data?, Swift.Error?) -> Void) {
+    override func encode<T: Encodable>(body: T, withPrefix prefix: String? = nil) -> Promise<Data> {
         if shouldEncode {
-            super.encode(body: body, withPrefix: prefix, completion: completion)
+            return super.encode(body: body, withPrefix: prefix)
         } else {
-            completion(nil, NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "Encoding failed"]))
+            return Promise(error: NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "Encoding failed"]))
         }
     }
 }
