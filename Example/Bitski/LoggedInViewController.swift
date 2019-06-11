@@ -73,12 +73,37 @@ class LoggedInViewController: UIViewController {
         }
     }
     
+    // Fill in all the details of the transaction, like the nonce, gas and gasPrice
+    func createTransaction(web3: Web3, from: EthereumAddress, to: EthereumAddress) -> Promise<EthereumTransaction> {
+        var txn = EthereumTransaction()
+        txn.from = from
+        txn.to = to
+        txn.value = 0
+        
+        return firstly {
+            web3.eth.getTransactionCount(address: from, block: .pending)
+        }.then { txnCount -> Promise<EthereumQuantity> in
+            txn.nonce = txnCount
+            return web3.eth.gasPrice()
+        }.then { gasPrice -> Promise<EthereumQuantity> in
+            txn.gasPrice = gasPrice
+            let call = EthereumCall(from: from, to: to, gas: nil, gasPrice: nil, value: 0, data: nil)
+            return web3.eth.estimateGas(call: call)
+        }.map { gas -> EthereumTransaction in
+            txn.gas = gas
+            return txn
+        }
+    }
+    
     func sendTestTransaction() {
-        guard let web3 = web3, let account = account else { return }
-        let to = try? EthereumAddress(hex: "0x8f83aadb8098a1b4509aaba77ba9d2cb1ac970ba", eip55: false)
-        let transaction = EthereumTransaction(nonce: nil, gasPrice: EthereumQuantity(quantity: 1.gwei), gas: EthereumQuantity(quantity: 5000), from: account, to: to, value: 0)
+        guard let web3 = web3, let bitski = Bitski.shared, let account = account else { return }
+        let to = try! EthereumAddress(hex: "0x10F2d4c3E0A850857E5D65B1F352Dc757dD986e4", eip55: false)
         firstly {
-            web3.eth.sendTransaction(transaction: transaction)
+            self.createTransaction(web3: web3, from: account, to: to)
+        }.then { transaction in
+            bitski.sign(transaction: transaction, network: .rinkeby) // Sign the transaction via Bitski
+        }.then { rawTransaction in
+            web3.eth.sendRawTransaction(rawTransaction) // Send the transaction to the network
         }.done { transactionHash in
             print(transactionHash)
         }.catch { error in
@@ -86,8 +111,24 @@ class LoggedInViewController: UIViewController {
         }
     }
     
+    func signTestData() {
+        guard let bitski = Bitski.shared, let account = account else { return }
+        let data = try! EthereumData(bytes: "Hello World".data(using: .utf8)!)
+        firstly {
+            bitski.sign(from: account, message: data)
+        }.done { data in
+            print(data)
+        }.catch { error in
+            print(error)
+        }
+    }
+    
     @IBAction func sendTransaction() {
         sendTestTransaction()
+    }
+    
+    @IBAction func signData() {
+        signTestData()
     }
     
     @IBAction func logOut() {

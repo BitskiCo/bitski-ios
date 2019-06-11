@@ -7,7 +7,6 @@
 //
 
 import Web3
-import SafariServices
 
 protocol BitskiAuthDelegate: NSObjectProtocol {
     func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void)
@@ -27,6 +26,8 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
         case encodingFailed(Swift.Error?)
         /// Decoding the JSON-RPC request failed
         case decodingFailed(Swift.Error?)
+        /// The request is missing critical data
+        case invalidRequest
         /// The transaction was canceled by the user
         case requestCancelled
         /// The JSON-RPC request is missing a result
@@ -44,20 +45,10 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
     /// URL for JSON-RPC requests
     let rpcURL: URL
     
-    /// Base URL for Bitski's custom APIs, such as the transaction API
-    let apiBaseURL: URL
-    
-    /// Base URL for Bitski's web interface. Used for requests that require authorization.
-    let webBaseURL: URL
-    
-    /// URL for redirecting back into the app
-    let redirectURL: URL
-    
     /// Ethereum network to use
     let network: Bitski.Network
     
-    /// The current BitskiAuthorizationAgent for requests requiring authorization (must be retained).
-    private var currentAuthAgent: BitskiAuthorizationAgent?
+    private let signer: TransactionSigner
     
     /// Delegate to provide up to date access tokens for each request
     weak var authDelegate: BitskiAuthDelegate?
@@ -71,12 +62,10 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
     ///   - webBaseURL: The base URL for all web UI requests
     ///   - redirectURL: The URL to redirect back to after authorization requests
     ///   - session: URLSession to use. Defaults to a new default URLSession
-    required public init(rpcURL: URL, apiBaseURL: URL, webBaseURL: URL, network: Bitski.Network, redirectURL: URL, session: URLSession = URLSession(configuration: .default)) {
+    required public init(rpcURL: URL, network: Bitski.Network, signer: TransactionSigner, session: URLSession = URLSession(configuration: .default)) {
         self.rpcURL = rpcURL
-        self.apiBaseURL = apiBaseURL
-        self.webBaseURL = webBaseURL
         self.network = network
-        self.redirectURL = redirectURL
+        self.signer = signer
         super.init(session: session)
     }
     
@@ -142,52 +131,28 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
     ///   - accessToken: The access token for the current user (optional)
     ///   - response: The completion handler to call when finished
     private func sendRPCRequest<Params, Result>(request: RPCRequest<Params>, accessToken: String?, response: @escaping Web3ResponseCompletion<Result>) {
-        encode(body: request) { (body, error) in
-            guard let body = body, error == nil else {
-                let err: Web3Response<Result>.Error = .requestFailed(ProviderError.encodingFailed(error))
-                response(Web3Response<Result>(error: err))
-                return
-            }
-            
-            self.sendRequest(url: self.rpcURL, accessToken: accessToken, method: "POST", body: body) { (data, error) in
-                if let error = error {
-                    switch error {
-                    case .invalidResponseCode:
-                        // This is a non typical rpc error response and should be considered a server error.
-                        let err: Web3Response<Result>.Error = .serverError(error)
-                        response(Web3Response(error: err))
-                    case .unexpectedResponse:
-                        // Missing data or error sending the request
-                        let err: Web3Response<Result>.Error = .requestFailed(error)
-                        response(Web3Response(error: err))
-                    }
-                } else if let data = data {
-                    let res: Web3Response<Result> = self.parseRPCResponse(data: data)
-                    response(res)
-                }
-            }
+        firstly {
+            self.sendRPCRequest(request: request, accessToken: accessToken)
+        }.done { (rpcResponse: RPCResponse<Result>) in
+            let result = Web3Response<Result>(rpcResponse: rpcResponse)
+            response(result)
+        }.catch { error in
+            let err: Web3Response<Result>.Error = .serverError(error)
+            response(Web3Response<Result>(error: err))
+        }
+    }
+    
+    private func sendRPCRequest<Params, Result: Codable>(request: RPCRequest<Params>, accessToken: String?) -> Promise<RPCResponse<Result>> {
+        return firstly {
+            encode(body: request)
+        }.then { body in
+            self.sendRequest(url: self.rpcURL, accessToken: accessToken, method: "POST", body: body)
+        }.map { data in
+            try self.decoder.decode(RPCResponse<Result>.self, from: data)
         }
     }
     
     // MARK: - Authorization
-    
-    /// Creates a BitskiAuthorizationAgent
-    /// Note: This is used in the tests to create a mock agent
-    func createAuthorizationAgent() -> BitskiAuthorizationAgent {
-        return BitskiAuthorizationAgent(baseURL: self.webBaseURL, redirectURL: self.redirectURL)
-    }
-    
-    /// Convenient method to create a BitskiTransaction object with a given payload
-    ///
-    /// - Parameters:
-    ///   - methodName: The RPC method requested (this will be used to determine the kind)
-    ///   - payload: The payload to embed (Should be either EthereumTransactionObject or MessageSignatureObject)
-    /// - Returns: A new BitskiTransaction instance if possible with the given params
-    private func createTransaction<Payload>(methodName: String, payload: Payload) -> BitskiTransaction<Payload>? {
-        guard let kind = BitskiTransaction<Payload>.Kind(methodName: methodName) else { return nil }
-        let context = BitskiTransaction<Payload>.Context(chainId: network.chainId)
-        return BitskiTransaction(id: UUID(), payload: payload, kind: kind, context: context)
-    }
     
     /// Requests authorization from the user for the given request
     ///
@@ -196,102 +161,98 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
     ///   - accessToken: The user's current access token
     ///   - response: Callback to be called upon completion
     private func requestAuthorization<Params, Result>(request: RPCRequest<Params>, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
-        // Inspect the params and create a transaction object for it
-        if let params = request.params as? [EthereumTransaction], let payload = params.first, let transaction = createTransaction(methodName: request.method, payload: payload) {
-            requestAuthorization(transaction: transaction, accessToken: accessToken, response: response)
-        } else {
-            // A transaction cannot be derived from the request
-            let err: Web3Response<Result>.Error = .requestFailed(ProviderError.encodingFailed(nil))
+        firstly {
+            self.forwardRequest(request: request, accessToken: accessToken)
+        }.done { (data: Result) in
+            let wrapped = RPCResponse(id: request.id, jsonrpc: "2.0", result: data, error: nil)
+            response(Web3Response(rpcResponse: wrapped))
+        }.catch { error in
+            let err: Web3Response<Result>.Error = .serverError(error)
             response(Web3Response(error: err))
-            return
         }
     }
     
-    /// Requests authorization from the user for a given transaction
-    /// Will persist the transaction to the server, then open a url on bitski.com to
-    /// allow the user to review and approve / reject the transaction.
+    /// Forwards signature requests to the TransactionSigner instance
     ///
     /// - Parameters:
-    ///   - transaction: BitskiTransaction to request authorization for
-    ///   - accessToken: The current access token for the user
-    ///   - response: completion handler for this request
-    private func requestAuthorization<Payload, Result>(transaction: BitskiTransaction<Payload>, accessToken: String, response: @escaping Web3ResponseCompletion<Result>) {
-        self.submitTransaction(transaction: transaction, accessToken: accessToken) { (transaction, error) in
-            if let error = error {
-                let err: Web3Response<Result>.Error = .serverError(error)
-                response(Web3Response(error: err))
-                return
-            } else if let transaction = transaction {
-                // Retain an instance of our authorization agent
-                self.currentAuthAgent = self.createAuthorizationAgent()
-                
-                // Request authorization from user
-                self.currentAuthAgent?.requestAuthorization(transactionId: transaction.id.uuidString) { data, error in
-                    if let data = data {
-                        let res: Web3Response<Result> = self.parseRPCResponse(data: data)
-                        response(res)
-                    } else if let error = error {
-                        let err: Web3Response<Result>.Error = .serverError(error)
-                        response(Web3Response(error: err))
-                    } else {
-                        let err: Web3Response<Result>.Error = .requestFailed(nil)
-                        response(Web3Response(error: err))
-                    }
-                    // Release the instance of authorization agent
-                    self.currentAuthAgent = nil
-                }
+    ///   - request: RPCRequest to sign
+    ///   - accessToken: The user's current access token
+    /// - Returns: A Promise resolving with the result from the signer
+    private func forwardRequest<Params, Result: Codable>(request: RPCRequest<Params>, accessToken: String) -> Promise<Result> {
+        switch request.method {
+        case "eth_signTransaction":
+            // Simply sign
+            return signer.signTransaction(request: request, network: network)
+        case "eth_sendTransaction":
+            // Sign then send
+            return firstly {
+                self.signer.signTransaction(request: request, network: network)
+            }.then { (data: EthereumData) -> Promise<RPCResponse<Result>> in
+                // We must forward the transaction when doing eth_sendTransaction
+                let request = RPCRequest(id: 0, jsonrpc: "2.0", method: "eth_sendRawTransaction", params: [data])
+                return self.sendRPCRequest(request: request, accessToken: accessToken)
+            }.compactMap { (rpcResponse: RPCResponse<Result>) -> Result? in
+                return rpcResponse.result
             }
+        case "eth_sign":
+            // Simply sign
+            return signer.signMessage(request: request)
+        default:
+            // Should never happen.
+            return Promise(error: ProviderError.invalidRequest)
         }
     }
+}
+
+extension TransactionSigner {
     
-    /// Persists the transaction to Bitski via http request
+    /// Extracts the parameters from the RPCRequest and forwards them to the signer to sign
     ///
     /// - Parameters:
-    ///   - transaction: BitskiTransaction to persist
-    ///   - accessToken: The current access token for the user
-    ///   - response: completion handler with either the persisted transaction, or an error if the request was not successful
-    private func submitTransaction<T>(transaction: BitskiTransaction<T>, accessToken: String, response: @escaping (BitskiTransaction<T>?, Swift.Error?) -> Void) {
-        encode(body: transaction, withPrefix: "transaction") { (data, error) in
-            guard let body = data, error == nil else {
-                response(nil, ProviderError.encodingFailed(error))
-                return
-            }
-            
-            let url = URL(string: "transactions", relativeTo: self.apiBaseURL)!
-            self.sendRequest(url: url, accessToken: accessToken, method: "POST", body: body) { (data, error) in
-                if let error = error {
-                    response(nil, error)
-                } else if let data = data {
-                    do {
-                        let parsedResponse = try JSONDecoder().decode(BitskiTransactionResponse<T>.self, from: data)
-                        response(parsedResponse.transaction, nil)
-                    } catch {
-                        response(nil, error)
-                    }
-                }
-            }
+    ///   - request: RPCRequest with transaction parameters
+    ///   - network: The network to sign for.
+    /// - Returns: A Promise resolving with the result from the signer
+    func signTransaction<Params, Result: Codable>(request: RPCRequest<Params>, network: Bitski.Network) -> Promise<Result> {
+        guard let params = request.params as? [EthereumTransaction] else {
+            // Wrong type of params
+            return Promise(error: SignerError.missingData)
         }
+        
+        guard let payload = params.first else {
+            // Missing transaction
+            return Promise(error: SignerError.missingData)
+        }
+        
+        return sign(transaction: payload, network: network)
     }
     
-    // MARK: - Decoding
-    
-    /// Decodes a Web3Response from given data
+    /// Extracts the parameters from the RPCRequest and forwards them to the signer to sign
     ///
-    /// - Parameter data: Data received from HTTP response
-    /// - Returns: Web3Response object decoded from the data
-    private func parseRPCResponse<T>(data: Data) -> Web3Response<T> {
+    /// - Parameter request: RPCRequest with the correct format for eth_sign
+    /// - Returns: A Promise resolving with the result from the signer
+    func signMessage<Params, Result: Codable>(request: RPCRequest<Params>) -> Promise<Result> {
+        guard let value = request.params as? EthereumValue else {
+            // Params are unexpected format
+            return Promise(error: SignerError.missingData)
+        }
+        
+        guard let params = value.array, params.count > 1 else {
+            // Params are missing values or not an array
+            return Promise(error: SignerError.missingData)
+        }
+        
+        guard let message = params[1].ethereumData else {
+            // Message param is not valid
+            return Promise(error: SignerError.missingData)
+        }
+        
         do {
-            let rpcResponse = try self.decoder.decode(RPCResponse<T>.self, from: data)
-            // We got the Response object
-            if let result = rpcResponse.result {
-                return Web3Response(status: .success(result))
-            } else if let error = rpcResponse.error {
-                return Web3Response(error: error)
-            }
-            return Web3Response(error: ProviderError.missingData)
+            let from = try EthereumAddress(ethereumValue: params[0])
+            return sign(from: from, message: message)
         } catch {
-            // We don't have the response we expected...
-            return Web3Response<T>(error: ProviderError.decodingFailed(error))
+            // Some error forming an address from the params
+            return Promise(error: error)
         }
     }
+    
 }

@@ -18,8 +18,9 @@ class NetworkClientTests: XCTestCase {
     func testEncodingFailedCallback() {
         let exp = expectation(description: "Callback is called")
         let client = NetworkClient(session: .shared)
-        client.encode(body: Float.nan) { data, error in
-            XCTAssertNil(data)
+        client.encode(body: Float.nan).done { data in
+            XCTFail()
+        }.catch { error in
             XCTAssertNotNil(error)
             exp.fulfill()
         }
@@ -35,11 +36,11 @@ class NetworkClientTests: XCTestCase {
         let response = URLResponse(url: url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
         session.response = response
         let client = NetworkClient(session: session)
-        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil) { data, error in
-            XCTAssertNil(data)
-            XCTAssertNotNil(error)
+        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil).done { data in
+            XCTFail()
+        }.catch { error in
             switch error {
-            case NetworkClient.Error.unexpectedResponse?:
+            case NetworkClient.Error.unexpectedResponse:
                 break
             default:
                 XCTFail("Wrong error received")
@@ -57,11 +58,11 @@ class NetworkClientTests: XCTestCase {
         let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)
         session.response = response
         let client = NetworkClient(session: session)
-        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil) { data, error in
-            XCTAssertNil(data)
-            XCTAssertNotNil(error)
+        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil).done { data in
+            XCTFail()
+        }.catch { error in
             switch error {
-            case NetworkClient.Error.unexpectedResponse?:
+            case NetworkClient.Error.unexpectedResponse:
                 break
             default:
                 XCTFail("Wrong error received")
@@ -82,11 +83,11 @@ class NetworkClientTests: XCTestCase {
         session.error = testError
         session.response = response
         let client = NetworkClient(session: session)
-        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil) { data, error in
-            XCTAssertNil(data)
-            XCTAssertNotNil(error)
+        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil).done { data in
+            XCTFail()
+        }.catch { error in
             switch error {
-            case NetworkClient.Error.unexpectedResponse(let underlyingError)?:
+            case NetworkClient.Error.unexpectedResponse(let underlyingError):
                 XCTAssertEqual(underlyingError?.localizedDescription, testError.localizedDescription)
                 break
             default:
@@ -106,11 +107,11 @@ class NetworkClientTests: XCTestCase {
         session.data = Data(bytes: [])
         session.response = response
         let client = NetworkClient(session: session)
-        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil) { data, error in
-            XCTAssertNil(data)
-            XCTAssertNotNil(error)
+        client.sendRequest(url: url, accessToken: nil, method: "POST", body: nil).done { data in
+            XCTFail()
+        }.catch { error in
             switch error {
-            case NetworkClient.Error.invalidResponseCode?:
+            case NetworkClient.Error.invalidResponseCode:
                 break
             default:
                 XCTFail("Wrong error received")

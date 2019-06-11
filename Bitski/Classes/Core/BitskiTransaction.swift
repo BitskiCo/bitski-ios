@@ -80,20 +80,12 @@ struct MessageSignatureObject: Codable {
         self.from = address
         self.message = message
     }
+}
+
+extension BitskiTransaction {
     
-    /// Creates an instance from an array of boxed ethereum values
-    
-    /// - Parameters:
-    ///   - params: An array of EthereumValues in the format:
-    ///     - index 0: EthereumAddress
-    ///     - index 1: EthereumData
-    init?(params: [EthereumValue]) {
-        guard let firstValue = params.first, let values = firstValue.array, values.count >= 2 else { return nil }
-        if let address = try? EthereumAddress(ethereumValue: values[0]), let data = values[1].ethereumData {
-            self.from = address
-            self.message = data
-        } else {
-            return nil
-        }
+    init(payload: Payload, kind: BitskiTransaction.Kind, chainId: Int) {
+        self.init(id: UUID(), payload: payload, kind: kind, context: Context(chainId: chainId))
     }
+    
 }

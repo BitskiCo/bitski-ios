@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import PromiseKit
 
 /// A base networking class that can send http requests
 public class NetworkClient {
@@ -46,19 +47,21 @@ public class NetworkClient {
     /// - Parameters:
     ///   - body: Object to encode. Must be Encodable.
     ///   - prefix: Optional string to prefix the body with
-    ///   - completion: Completion handler to call when the operation is complete
-    func encode<T: Encodable>(body: T, withPrefix prefix: String? = nil, completion: @escaping (Data?, Swift.Error?) -> Void) {
-        queue.async {
-            do {
-                let encoded: Data
-                if let prefix = prefix {
-                    encoded = try self.encoder.encode([prefix: body])
-                } else {
-                    encoded = try self.encoder.encode(body)
+    /// - Returns: Promise resolving with the encoded Data
+    func encode<T: Encodable>(body: T, withPrefix prefix: String? = nil) -> Promise<Data> {
+        return Promise { resolver in
+            queue.async {
+                do {
+                    let encoded: Data
+                    if let prefix = prefix {
+                        encoded = try self.encoder.encode([prefix: body])
+                    } else {
+                        encoded = try self.encoder.encode(body)
+                    }
+                    resolver.fulfill(encoded)
+                } catch {
+                    resolver.reject(error)
                 }
-                completion(encoded, nil)
-            } catch {
-                completion(nil, error)
             }
         }
     }
@@ -73,38 +76,40 @@ public class NetworkClient {
     ///   - accessToken: Optional access token to be appended as a header if included
     ///   - method: HTTP method to use
     ///   - body: Optional request body to include
-    ///   - completion: Completion handler for this request
-    func sendRequest(url: URL, accessToken: String?, method: String, body: Data?, completion: @escaping (Data?, Error?) -> Void) {
-        queue.async {
-            var req = URLRequest(url: url)
-            req.httpMethod = method
-            req.httpBody = body
-            
-            // Add default headers
-            for (k, v) in self.headers {
-                req.addValue(v, forHTTPHeaderField: k)
-            }
-            
-            // Add access token if present
-            if let accessToken = accessToken {
-                req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-            }
-            
-            // Create the URLSessionTask
-            let task = self.session.dataTask(with: req) { data, urlResponse, error in
-                guard let urlResponse = urlResponse as? HTTPURLResponse, let data = data, error == nil else {
-                    completion(nil, .unexpectedResponse(error))
-                    return
+    /// - Returns: Promise resolving with Data from the response if it's successful
+    func sendRequest(url: URL, accessToken: String?, method: String, body: Data?) -> Promise<Data> {
+        return Promise { resolver in
+            queue.async {
+                var req = URLRequest(url: url)
+                req.httpMethod = method
+                req.httpBody = body
+                
+                // Add default headers
+                for (k, v) in self.headers {
+                    req.addValue(v, forHTTPHeaderField: k)
                 }
                 
-                guard urlResponse.statusCode >= 200 && urlResponse.statusCode < 300 else {
-                    completion(nil, .invalidResponseCode)
-                    return
+                // Add access token if present
+                if let accessToken = accessToken {
+                    req.addValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
                 }
                 
-                completion(data, nil)
+                // Create the URLSessionTask
+                let task = self.session.dataTask(with: req) { data, urlResponse, error in
+                    guard let urlResponse = urlResponse as? HTTPURLResponse, let data = data, error == nil else {
+                        resolver.reject(Error.unexpectedResponse(error))
+                        return
+                    }
+                    
+                    guard urlResponse.statusCode >= 200 && urlResponse.statusCode < 300 else {
+                        resolver.reject(Error.invalidResponseCode)
+                        return
+                    }
+                    
+                   resolver.fulfill(data)
+                }
+                task.resume()
             }
-            task.resume()
         }
     }
     

@@ -16,8 +16,9 @@ class BitskiAuthorizationAgentTests: XCTestCase {
         let authorizationExpectation = expectation(description: "Should recieve a callback")
         let url = URL(string: "https://sign.bitski.com")!
         let authAgent = BitskiAuthorizationAgent(baseURL: url, redirectURL: url)
-        authAgent.requestAuthorization(transactionId: "😏") { data, error in
-            XCTAssertNil(data)
+        authAgent.requestAuthorization(transactionId: "😏").done { data in
+            XCTFail()
+        }.catch { error in
             XCTAssertNotNil(error)
             authorizationExpectation.fulfill()
         }
@@ -28,8 +29,9 @@ class BitskiAuthorizationAgentTests: XCTestCase {
         let authorizationExpectation = expectation(description: "Should recieve a callback")
         let url = URL(string: "https://sign.bitski.com")!
         let authAgent = BitskiAuthorizationAgent(baseURL: url, redirectURL: url, authorizationClass: MockEmptyURLAuthorizationSession.self)
-        authAgent.requestAuthorization(transactionId: UUID().uuidString) { data, error in
-            XCTAssertNil(data)
+        authAgent.requestAuthorization(transactionId: UUID().uuidString).done { data in
+            XCTFail()
+        }.catch { error in
             XCTAssertNotNil(error)
             authorizationExpectation.fulfill()
         }
@@ -40,8 +42,9 @@ class BitskiAuthorizationAgentTests: XCTestCase {
         let authorizationExpectation = expectation(description: "Should recieve a callback")
         let url = URL(string: "https://sign.bitski.com")!
         let authAgent = BitskiAuthorizationAgent(baseURL: url, redirectURL: url, authorizationClass: MockAuthorizationSession.self)
-        authAgent.requestAuthorization(transactionId: UUID().uuidString) { data, error in
-            XCTAssertNil(data)
+        authAgent.requestAuthorization(transactionId: UUID().uuidString).done { data in
+            XCTFail()
+        }.catch { error in
             XCTAssertNotNil(error)
             authorizationExpectation.fulfill()
         }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OHHTTPStubs
 @testable import Bitski
 
 class MockAuthorizationSession: AuthorizationSessionProtocol {
@@ -42,10 +43,77 @@ class MockAuthorizationSession: AuthorizationSessionProtocol {
     }
 }
 
-class MockEmptyURLAuthorizationSession: MockAuthorizationSession {
-    required init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void) {
-        super.init(url: url, callbackURLScheme: callbackURLScheme, completionHandler: completionHandler)
-        let url = URL(string: "example://application/callback")
-        result = (url, nil)
+class MockJSONStubWebSession: AuthorizationSessionProtocol {
+    
+    class var stubName: String {
+        return ""
     }
+    
+    let handler: () -> Void
+    
+    required init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void) {
+        let path = OHPathForFile(type(of: self).stubName, type(of: self))!
+        let data = try! Data.init(contentsOf: URL(fileURLWithPath: path))
+        let url = URL(string: "bitskiexample://application/callback?result=\(data.base64EncodedString())")!
+        self.handler = {
+            completionHandler(url, nil)
+        }
+    }
+    
+    func start() -> Bool {
+        handler()
+        return true
+    }
+    
+    func cancel() {
+        
+    }
+    
+}
+
+class MockTransactionWebSession: MockJSONStubWebSession {
+    
+    override class var stubName: String {
+        return "send-transaction.json"
+    }
+    
+}
+
+class MockTransactionRPCErrorWebSession: MockJSONStubWebSession {
+    
+    override class var stubName: String {
+        return "error.json"
+    }
+    
+}
+
+class MockTransactionRPCEmptyResponseSession: MockJSONStubWebSession {
+    
+    override class var stubName: String {
+        return "empty.json"
+    }
+    
+}
+
+/// Mock agent that always returns an error
+class MockCancelledWebSession: AuthorizationSessionProtocol {
+    
+    let handler: () -> Void
+    
+    required init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void) {
+        let error = NSError(domain: "com.bitski.bitski_tests", code: 500, userInfo: [NSLocalizedDescriptionKey: "User cancelled"])
+        self.handler = {
+            completionHandler(nil, error)
+        }
+    }
+    
+    func start() -> Bool {
+        handler()
+        return true
+    }
+    
+    func cancel() {
+        
+    }
+    
 }
