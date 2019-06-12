@@ -311,7 +311,6 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = TM2623B5AA;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -650,7 +649,7 @@
 			baseConfigurationReference = 5B01EBB666A437DDE5606A35 /* Pods-Bitski_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TM2623B5AA;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Bitski/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -667,7 +666,7 @@
 			baseConfigurationReference = B743ED0B6EE095E7DBB68242 /* Pods-Bitski_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TM2623B5AA;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Bitski/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
