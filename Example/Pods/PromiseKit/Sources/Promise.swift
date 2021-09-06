@@ -5,7 +5,7 @@ import Dispatch
  A `Promise` is a functional abstraction around a failable asynchronous operation.
  - See: `Thenable`
  */
-public class Promise<T>: Thenable, CatchMixin {
+public final class Promise<T>: Thenable, CatchMixin {
     let box: Box<Result<T>>
 
     fileprivate init(box: SealedBox<Result<T>>) {
@@ -38,7 +38,7 @@ public class Promise<T>: Thenable, CatchMixin {
               return .value(bar)
           }
      */
-    public class func value(_ value: T) -> Promise<T> {
+    public static func value(_ value: T) -> Promise<T> {
         return Promise(box: SealedBox(value: .fulfilled(value)))
     }
 
@@ -103,23 +103,13 @@ public class Promise<T>: Thenable, CatchMixin {
 
 public extension Promise {
     /**
-     Immutably and asynchronously inspect the current `Result`:
-
-         promise.tap{ print($0) }.then{ /*…*/ }
-     */
-    func tap(_ body: @escaping(Result<T>) -> Void) -> Promise {
-        pipe(to: body)
-        return self
-    }
-
-    /**
      Blocks this thread, so—you know—don’t call this on a serial thread that
      any part of your chain may use. Like the main thread for example.
      */
     func wait() throws -> T {
 
         if Thread.isMainThread {
-            Swift.print("PromiseKit: warning: `wait()` called on main thread!")
+            conf.logHandler(LogEvent.waitOnMainThread)
         }
 
         var result = self.result
@@ -145,6 +135,11 @@ extension Promise where T == Void {
     /// Initializes a new promise fulfilled with `Void`
     public convenience init() {
         self.init(box: SealedBox(value: .fulfilled(Void())))
+    }
+
+    /// Returns a new promise fulfilled with `Void`
+    public static var value: Promise<Void> {
+        return .value(Void())
     }
 }
 #endif

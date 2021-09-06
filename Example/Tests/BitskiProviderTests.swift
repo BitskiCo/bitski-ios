@@ -100,7 +100,7 @@ class BitskiProviderTests: XCTestCase {
         let web3 = Web3(provider: provider)
         let sendTransactionExpectation = expectation(description: "Should send a transaction")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         web3.eth.sendTransaction(transaction: transaction) { response in
             XCTAssertNotNil(signer.lastSignTransactionRequest)
             sendTransactionExpectation.fulfill()
@@ -270,14 +270,14 @@ class BitskiProviderTests: XCTestCase {
         }
         
         let promise2 = expectation(description: "Should complete second request")
-        let request2 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: EthereumData(bytes: []).ethereumValue())
+        let request2 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: EthereumData([]).ethereumValue())
         provider.send(request: request2) { (response: Web3Response<EthereumValue>) in
             XCTAssertNotNil(response.error)
             promise2.fulfill()
         }
         
         let promise3 = expectation(description: "Should complete third request")
-        let request3 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [EthereumData(bytes: [])])
+        let request3 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [EthereumData([])])
         provider.send(request: request3) { (response: Web3Response<EthereumValue>) in
             XCTAssertNotNil(response.error)
             promise3.fulfill()
@@ -291,7 +291,7 @@ class BitskiProviderTests: XCTestCase {
         }
         
         let promise5 = expectation(description: "Should complete fifth request")
-        let request5 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [true, EthereumData(bytes: [])])
+        let request5 = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [true, EthereumData([])])
         provider.send(request: request5) { (response: Web3Response<EthereumValue>) in
             XCTAssertNotNil(response.error)
             promise5.fulfill()
@@ -306,7 +306,7 @@ class BitskiProviderTests: XCTestCase {
         let provider = createTestProvider(signer: signer)
         
         let address = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let message = EthereumData(bytes: [])
+        let message = EthereumData([])
         
         let request = RPCRequest<EthereumValue>(id: 0, jsonrpc: "2.0", method: "eth_sign", params: [address, message])
         let promise = expectation(description: "Completed sign request")
@@ -326,7 +326,7 @@ class BitskiProviderTests: XCTestCase {
         let provider = createTestProvider(signer: signer)
         
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_sendTransaction", params: [transaction])
         
         let promise = expectation(description: "Completed sign request")
@@ -345,7 +345,7 @@ class BitskiProviderTests: XCTestCase {
         let provider = createTestProvider(signer: signer)
         
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         let request = RPCRequest<[EthereumTransaction]>(id: 0, jsonrpc: "2.0", method: "eth_signTransaction", params: [transaction])
         
         let promise = expectation(description: "Completed sign request")
