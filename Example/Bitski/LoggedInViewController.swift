@@ -113,7 +113,7 @@ class LoggedInViewController: UIViewController {
     
     func signTestData() {
         guard let bitski = Bitski.shared, let account = account else { return }
-        let data = try! EthereumData(bytes: "Hello World".data(using: .utf8)!)
+        let data = try! EthereumData("Hello World".data(using: .utf8)!)
         firstly {
             bitski.sign(from: account, message: data)
         }.done { data in

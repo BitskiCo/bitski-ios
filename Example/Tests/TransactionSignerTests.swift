@@ -31,16 +31,13 @@ class TransactionSignerTests: XCTestCase {
         let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
         signer.authDelegate = authDelegate
         let address = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let message = EthereumData(bytes: [])
+        let message = EthereumData([])
         let promise = expectation(description: "Promise should resolve")
         firstly {
             signer.sign(from: address, message: message)
         }.done { (result: EthereumData) in
             // assertions
             XCTAssertNotNil(result)
-            promise.fulfill()
-        }.catch { error in
-            XCTFail("Should not error: \(error.localizedDescription)")
             promise.fulfill()
         }
         waitForExpectations(timeout: 5, handler: nil)
@@ -51,7 +48,7 @@ class TransactionSignerTests: XCTestCase {
         let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
         signer.authDelegate = authDelegate
         let address = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: address, to: address, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: address, to: address, value: 0, data: EthereumData([]))
         let promise = expectation(description: "Promise should resolve")
         firstly {
             signer.sign(transaction: transaction)
@@ -70,7 +67,7 @@ class TransactionSignerTests: XCTestCase {
         let signer = MockTransactionSigner(apiBaseURL: URL(string: "https://api.bitski.com/v1/")!, webBaseURL: URL(string: "https://sign.bitski.com")!, redirectURL: URL(string: "bitskiexample://application/callback")!)
         let promise = expectation(description: "Should send a transaction")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -93,7 +90,7 @@ class TransactionSignerTests: XCTestCase {
         signer.authDelegate = authDelegate
         let promise = expectation(description: "Should send a transaction")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -111,7 +108,7 @@ class TransactionSignerTests: XCTestCase {
         signer.authDelegate = authDelegate
         let promise = expectation(description: "Should send a transaction")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -130,7 +127,7 @@ class TransactionSignerTests: XCTestCase {
         signer.shouldEncode = false
         let promise = expectation(description: "Callback is called")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -150,7 +147,7 @@ class TransactionSignerTests: XCTestCase {
         signer.authAgentType = MockCancelledWebSession.self
         let promise = expectation(description: "Callback is called")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -169,7 +166,7 @@ class TransactionSignerTests: XCTestCase {
         signer.authAgentType = MockTransactionRPCErrorWebSession.self
         let promise = expectation(description: "Callback is called")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in
@@ -188,7 +185,7 @@ class TransactionSignerTests: XCTestCase {
         signer.authAgentType = MockTransactionRPCEmptyResponseSession.self
         let promise = expectation(description: "Callback is called")
         let testAddress = try! EthereumAddress(hex: "0x9F2c4Ea0506EeAb4e4Dc634C1e1F4Be71D0d7531", eip55: false)
-        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData(bytes: []))
+        let transaction = EthereumTransaction(nonce: 0, gasPrice: 0, gas: 0, from: testAddress, to: testAddress, value: 0, data: EthereumData([]))
         firstly {
             signer.sign(transaction: transaction)
         }.done { (result: EthereumData) in

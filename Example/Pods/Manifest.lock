@@ -1,17 +1,16 @@
 PODS:
   - AppAuth (0.93.0)
-  - BigInt (3.1.0):
-    - SipHash (~> 1.2)
+  - BigInt (4.0.0)
   - BigInt.swift (1.0.0)
-  - Bitski (0.4.2):
+  - Bitski (0.5.1):
     - AppAuth (~> 0.93)
     - BigInt.swift (~> 1.0)
     - PromiseKit/CorePromise (~> 6.0)
     - secp256k1.swift (~> 0.1)
-    - Web3 (~> 0.3.1)
-    - Web3/ContractABI (~> 0.3.1)
-    - Web3/PromiseKit (~> 0.3.1)
-  - CryptoSwift (0.11.0)
+    - Web3 (~> 0.4.2)
+    - Web3/ContractABI (~> 0.4.2)
+    - Web3/PromiseKit (~> 0.4.2)
+  - CryptoSwift (1.4.1)
   - OHHTTPStubs/Core (6.1.0)
   - OHHTTPStubs/Default (6.1.0):
     - OHHTTPStubs/Core
@@ -25,31 +24,30 @@ PODS:
   - OHHTTPStubs/OHPathHelpers (6.1.0)
   - OHHTTPStubs/Swift (6.1.0):
     - OHHTTPStubs/Default
-  - PromiseKit/CorePromise (6.2.6)
+  - PromiseKit/CorePromise (6.15.3)
   - secp256k1.swift (0.1.4)
-  - SipHash (1.2.2)
-  - Web3 (0.3.1):
-    - Web3/Core (= 0.3.1)
-    - Web3/HTTPExtension (= 0.3.1)
-  - Web3/ContractABI (0.3.1):
+  - Web3 (0.4.2):
+    - Web3/Core (= 0.4.2)
+    - Web3/HTTPExtension (= 0.4.2)
+  - Web3/ContractABI (0.4.2):
     - Web3/Core
-  - Web3/Core (0.3.1):
-    - BigInt (~> 3.1)
-    - CryptoSwift (~> 0.8)
+  - Web3/Core (0.4.2):
+    - BigInt (~> 4.0)
+    - CryptoSwift (~> 1.0)
     - secp256k1.swift (~> 0.1)
-  - Web3/HTTPExtension (0.3.1):
+  - Web3/HTTPExtension (0.4.2):
     - Web3/Core
-  - Web3/PromiseKit (0.3.1):
+  - Web3/PromiseKit (0.4.2):
     - PromiseKit/CorePromise (~> 6.0)
     - Web3/Core
 
 DEPENDENCIES:
   - Bitski (from `../`)
   - OHHTTPStubs/Swift
-  - Web3 (= 0.3.1)
+  - Web3 (= 0.4.2)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  trunk:
     - AppAuth
     - BigInt
     - BigInt.swift
@@ -57,7 +55,6 @@ SPEC REPOS:
     - OHHTTPStubs
     - PromiseKit
     - secp256k1.swift
-    - SipHash
     - Web3
 
 EXTERNAL SOURCES:
@@ -66,16 +63,15 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AppAuth: 1096c2ad48507c4a2a8c85c8a6ff065741ab9931
-  BigInt: 76b5dfdfa3e2e478d4ffdf161aeede5502e2742f
+  BigInt: 2aad1a9942dc932ec8b84290d2c564a3d76f97ab
   BigInt.swift: 1e0ddf08d82166e72dfb0fa8d40301d273081afc
-  Bitski: 43246a10e2b243ddbf7694c63f6a6de6bd9405e0
-  CryptoSwift: ad5208dd2aae0a764ea4ce2c2d34bd067cae67f0
+  Bitski: 465e731736eb3e7009e0b883fc210de3ed2d76a5
+  CryptoSwift: 0bc800a7e6a24c4fc9ebeab97d44b0d5f73a78bd
   OHHTTPStubs: 1e21c7d2c084b8153fc53d48400d8919d2d432d0
-  PromiseKit: 8245cb2e3a8fe00453e580bd4aafb57e1671f501
+  PromiseKit: 3b2b6995e51a954c46dbc550ce3da44fbfb563c5
   secp256k1.swift: a7e7a214f6db6ce5db32cc6b2b45e5c4dd633634
-  SipHash: fad90a4683e420c52ef28063063dbbce248ea6d4
-  Web3: e9be7ef88585e252df50abc28538d6e4691c786e
+  Web3: 7b2c30f98f24cc290bc671ab525d7a30a2afbc73
 
-PODFILE CHECKSUM: b3f9a158a972b381254b7830074172f8292399f4
+PODFILE CHECKSUM: 343de0bb6760ede826f65858ae1fcd5af5b9cbaf
 
-COCOAPODS: 1.7.0.beta.3
+COCOAPODS: 1.10.2
