@@ -58,13 +58,3 @@ public extension Web3.Eth {
     }
     
 }
-
-public extension RPCResponse {
-    
-    init(id: Int = 0, jsonrpc: String = "2.0", result: Result?, error: Error? = nil) {
-        self.id = id
-        self.jsonrpc = jsonrpc
-        self.result = result
-        self.error = error
-    }
-}

@@ -198,7 +198,7 @@ public class TransactionWatcher {
         let timer = Timer(timeInterval: pollInterval, repeats: true, block: { [weak self] _ in
             self?.checkForBlocks()
         })
-        RunLoop.main.add(timer, forMode: .commonModes)
+        RunLoop.main.add(timer, forMode: RunLoop.Mode.common)
         self.timer = timer
         delegate?.transactionWatcher(self, didReceiveReceipt: receipt)
         checkForMatchingEvents(logs: receipt.logs)
