@@ -164,8 +164,8 @@ public class BitskiHTTPProvider: NetworkClient, Web3Provider {
         firstly {
             self.forwardRequest(request: request, accessToken: accessToken)
         }.done { (data: Result) in
-            let wrapped = RPCResponse(id: request.id, jsonrpc: "2.0", result: data, error: nil)
-            response(Web3Response(rpcResponse: wrapped))
+            
+            response(Web3Response(status: .success(data)))
         }.catch { error in
             let err: Web3Response<Result>.Error = .serverError(error)
             response(Web3Response(error: err))

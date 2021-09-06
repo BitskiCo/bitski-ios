@@ -11,7 +11,7 @@ import OHHTTPStubs
 
 public func isMethod(_ method: String) -> OHHTTPStubsTestBlock {
     return { request in
-        if let body = request.ohhttpStubs_httpBody, let jsonBody = try? JSONSerialization.jsonObject(with: body, options: []) as? [String: Any], let requestMethod = jsonBody?["method"] as? String {
+        if let body = request.ohhttpStubs_httpBody, let jsonBody = ((try? JSONSerialization.jsonObject(with: body, options: []) as? [String: Any]) as [String : Any]??), let requestMethod = jsonBody?["method"] as? String {
             return requestMethod == method
         }
         return false
