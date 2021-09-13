@@ -93,6 +93,11 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         return false
     }
     
+    // AccessToken for clients
+    public var authToken: String {
+       return _authToken
+    }
+    
     /// OpenID Authority
     let issuer = URL(string: "https://account.bitski.com")!
     
@@ -118,6 +123,8 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     static private let authStateKey: String = "BitskiAuthState"
     
     private let signer: TransactionSigner
+    
+    private var _authToken: String
     
     /// Active authorization session
     private var authorizationFlowSession: OIDExternalUserAgentSession?
@@ -163,6 +170,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
         self.clientID = clientID
         self.redirectURL = redirectURL
         self.signer = TransactionSigner(apiBaseURL: apiBaseURL, webBaseURL: webBaseURL, redirectURL: redirectURL)
+        self._authToken = ""
         super.init()
         self.signer.authDelegate = self
         // Read access token from cache if still authorized
@@ -329,8 +337,13 @@ public class Bitski: NSObject, BitskiAuthDelegate {
             completion(nil, AuthenticationError.notLoggedIn)
             return
         }
-        authState.performAction { (accessToken, _, error) in
+        authState.performAction { [weak self](accessToken, _, error) in
+            guard let self = self else {
+                completion(nil, error)
+                return
+            }
             if let accessToken = accessToken {
+                self._authToken = accessToken
                 completion(accessToken, nil)
             } else {
                 self.signOut()
