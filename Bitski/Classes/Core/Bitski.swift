@@ -105,7 +105,7 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     let apiBaseURL = URL(string: "https://api.bitski.com/v1/")!
     
     /// Base URL for Bitski's Web UI
-    let webBaseURL = URL(string: "https://sign.bitski.com")!
+    let webBaseURL = URL(string: "https://signer-next.bitski.com")!
     
     /// Bitski Client ID. You can aqcuire one from the developer portal (https://developer.bitski.com)
     let clientID: String
