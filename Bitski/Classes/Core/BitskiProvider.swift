@@ -7,8 +7,10 @@
 //
 
 import Web3
+import Foundation
+import PromiseKit   
 
-protocol BitskiAuthDelegate: NSObjectProtocol {
+protocol BitskiAuthDelegate: NSObject {
     func getCurrentAccessToken(completion: @escaping (String?, Error?) -> Void)
 }
 
