@@ -8,6 +8,173 @@
 
 import AppAuth
 import Web3
+import PromiseKit
+
+public enum RPCServer: Hashable {
+    case mainnet
+    case kovan
+    case ropsten
+    case rinkeby
+    case poa
+    case sokol
+    case classic
+    case xDai
+    
+    case polygon
+    case optimism
+    case arbitrum
+    case celo
+    
+    case development(url: String, chainId: Int)
+
+    public enum EtherscanCompatibleType: String, Codable {
+        case etherscan
+        case blockscout
+        case unknown
+    }
+
+    public var chainId: Int {
+        switch self {
+        case .mainnet: return 1
+        case .kovan: return 42
+        case .ropsten: return 3
+        case .rinkeby: return 4
+        case .poa: return 99
+        case .sokol: return 77
+        case .classic: return 61
+        case .xDai: return 100
+            
+        // Side chains:
+        case .polygon: return 137
+        case .optimism: return 10
+        case .arbitrum: return 42161
+        case .celo: return 42220
+        case .development(url: _, chainId: let chainId): return chainId
+        }
+    }
+    
+    public var chainID: Int {
+        return self.chainId
+    }
+    
+    public var chainIdHex: String {
+        String(format:"0x%02X", self.chainId)
+    }
+    
+    public var name: String {
+        switch self {
+        case .mainnet:
+            return "ethereum"
+        case .kovan:
+            return "kovan"
+        case .ropsten:
+            return "ropsten"
+        case .rinkeby:
+            return "rinkeby"
+        case .poa:
+            return "poa"
+        case .sokol:
+            return "sokol"
+        case .classic:
+            return "ethclassic"
+        case .xDai:
+            return "xDai"
+            
+        case .polygon:
+            return "polygon"
+        case .optimism:
+            return "optimism"
+        case .arbitrum:
+            return "arbitrum"
+        case .celo:
+            return "celo"
+        case .development(url: let url, chainId: _):
+            return url
+        }
+    }
+
+    public var symbol: String {
+        switch self {
+        case .mainnet: return "ETH"
+        case .classic: return "ETC"
+        case .kovan, .ropsten, .rinkeby: return "ETH"
+        case .poa, .sokol: return "POA"
+        case .xDai: return "xDai"
+        case .polygon: return "MATIC"
+        case .optimism: return "ETH"
+        case .arbitrum: return "ETH"
+        case .celo: return "CELO"
+        case .development(url: _, chainId: let chainId): return "test_\(chainId)"
+        }
+    }
+    
+    /// JSON-RPC endpoint for the network, relative to base API URL
+    public var rpcURL: String {
+        switch self {
+        case .mainnet:
+            return "web3/mainnet"
+        case .kovan:
+            return "web3/kovan"
+        case .rinkeby:
+            return "web3/rinkeby"
+        case .polygon:
+            return "web3/polygon"
+        case .optimism:
+            return "web3/10"
+        case .arbitrum:
+            return "web3/42161"
+        case .celo:
+            return "web3/celo"
+        case .development(let url, _):
+            return url
+        default:
+            return "web3/\(self.name)"
+        }
+    }
+
+    public var cryptoCurrencyName: String {
+        switch self {
+        case .mainnet, .classic, .kovan, .ropsten, .rinkeby, .poa, .sokol, .development, .arbitrum, .optimism:
+            return "Ether"
+        case .xDai:
+            return "xDai"
+        case .polygon:
+            return "MATIC"
+        case .celo:
+            return "CELO"
+        }
+    }
+
+    public var decimals: Int {
+        return 18
+    }
+    
+    public init?(hex: String) {
+        guard let value = UInt32(hex.dropFirst(2), radix: 16) else {
+            return nil
+        }
+        
+        self.init(chainId: Int(value))
+    }
+    
+    public init(chainId: Int) {
+        switch chainId {
+        case 1: self = .mainnet
+        case 42: self = .kovan
+        case 3: self = .ropsten
+        case 4: self = .rinkeby
+        case 99: self = .poa
+        case 77: self = .sokol
+        case 61: self = .classic
+        case 100: self = .xDai
+        case 137: self = .polygon
+        case 10: self = .optimism
+        case 42161: self = .arbitrum
+        case 42220: self = .celo
+        default: self = .mainnet
+        }
+    }
+}
 
 /// An instance of the Bitski SDK
 public class Bitski: NSObject, BitskiAuthDelegate {
@@ -121,6 +288,12 @@ public class Bitski: NSObject, BitskiAuthDelegate {
     
     static private let configurationKey: String = "BitskiOIDServiceConfiguration"
     static private let authStateKey: String = "BitskiAuthState"
+    
+    public var selectedAccount: EthereumAddress? {
+           didSet {
+               self.signer.selectedAccount = selectedAccount
+           }
+       }
     
     private let signer: TransactionSigner
     
