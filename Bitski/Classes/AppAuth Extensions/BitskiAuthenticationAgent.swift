@@ -7,6 +7,7 @@
 
 import Foundation
 import SafariServices
+
 import AppAuth
 
 /// A UICoordinator that only uses SFAuthenticationSession.
