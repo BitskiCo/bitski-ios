@@ -9,23 +9,25 @@
 import Foundation
 import PromiseKit
 import Web3
+import Web3ContractABI
+import Web3PromiseKit
 
 /// A class that will receive updates about a transaction.
-public protocol TransactionWatcherDelegate: class {
+public protocol TransactionWatcherDelegate: AnyObject {
     /// Called when the transaction's status changes
     ///
     /// - Parameters:
     ///   - transactionWatcher: the instance of TransactionWatcher that triggered this event
     ///   - status: the new status of the transaction
     func transactionWatcher(_ transactionWatcher: TransactionWatcher, didUpdateStatus status: TransactionWatcher.Status)
-    
+
     /// Called when the transaction receipt is receieved
     ///
     /// - Parameters:
     ///   - transactionWatcher: the instance of TransactionWatcher that triggered this event
     ///   - receipt: the receipt object of the transaction
     func transactionWatcher(_ transactionWatcher: TransactionWatcher, didReceiveReceipt receipt: EthereumTransactionReceiptObject)
-    
+
     /// Called when an instance of an event being watched is received
     ///
     /// - Parameters:
@@ -47,26 +49,26 @@ public protocol TransactionWatcherDelegate: class {
 /// }
 /// ```
 public class TransactionWatcher {
-    
+
     // MARK: - Notifications
-    
+
     /// Called when the transaction's status changes
     public static let StatusDidChangeNotification = Notification.Name("TransactionStatusDidChange")
-    
+
     /// Called when the TransactionWatcher receives an event
     public static let DidReceiveEvent = Notification.Name("TransactionDidReceiveEvent")
-    
+
     /// The user info key for the received event
     public static let MatchedEventKey = "MatchedEvent"
-    
+
     // MARK: - Errors
-    
+
     enum Error: Swift.Error {
         case receiptNotFound
     }
-    
+
     // MARK: - Status
-    
+
     /// Represents various states of a transaction
     public enum Status: Equatable {
         /// A transaction that has not yet been mined
@@ -77,7 +79,7 @@ public class TransactionWatcher {
         case successful
         /// A transaction that could not be mined or was reverted
         case failed
-        
+
         public static func ==(lhs: TransactionWatcher.Status, rhs: TransactionWatcher.Status) -> Bool {
             switch (lhs, rhs) {
             case (.pending, .pending):
@@ -93,15 +95,15 @@ public class TransactionWatcher {
             }
         }
     }
-    
+
     // MARK: - Instance Variables
-    
+
     /// The transaction hash, received from submitting the transaction
     public let transactionHash: EthereumData
-    
+
     /// The receipt object of the transaction
     private(set) public var transactionReceipt: EthereumTransactionReceiptObject?
-    
+
     /// Status of this transaction
     private(set) public var status: Status = .pending {
         didSet {
@@ -111,32 +113,32 @@ public class TransactionWatcher {
             }
         }
     }
-    
+
     /// Block number the transaction was initially confirmed in
     private(set) public var blockNumber: EthereumQuantity?
-    
+
     /// Latest block number we've received
     private(set) public var currentBlock: EthereumQuantity?
-    
+
     /// Number of confirmations to require before marking as successful.
     /// Generally 3 is enough for low value transactions while 6 should be enough for higher values.
     /// The TransactionWatcher will automatically stop once the limit is reached.
     public var expectedConfirmations: Int = 6
-    
+
     /// How often to check for new blocks
     public var pollInterval: TimeInterval = 2.0
-    
+
     /// Class to receive updates
     public weak var delegate: TransactionWatcherDelegate?
-    
+
     /// Events that we are expecting may be returned
     private(set) public var watchedEvents = Set<SolidityEvent>()
-    
+
     private let web3: Web3
     private var timer: Timer?
-    
+
     // MARK: - Initialization
-    
+
     /// Initializes a new instance of TransactionWatcher
     ///
     /// - Parameters:
@@ -147,14 +149,14 @@ public class TransactionWatcher {
         self.web3 = web3
         getTransactionReceipt()
     }
-    
+
     // MARK: - Instance Methods
-    
+
     /// Stops watching the transaction
     public func stop() {
         resetTimer()
     }
-    
+
     /// Watches for a provided event from the receipt's logs
     ///
     /// - Parameter event: ABIEvent to watch for
@@ -164,34 +166,34 @@ public class TransactionWatcher {
             checkForMatchingEvents(logs: receipt.logs)
         }
     }
-    
+
     /// Stops watching for a provided event
     ///
     /// - Parameter event: ABIEvent to stop watching
     public func stopWatching(event: SolidityEvent) {
         watchedEvents.remove(event)
     }
-    
+
     // MARK: - Private Methods
-    
+
     private func getTransactionReceipt() {
         guard self.transactionReceipt == nil else { return }
         firstly {
             return web3.eth.getTransactionReceipt(transactionHash: transactionHash)
-            }.done { receipt in
-                if let receipt = receipt {
-                    self.setTransactionReceipt(receipt)
-                } else {
-                    throw Error.receiptNotFound
-                }
-            }.catch { error in
-                print("Error getting receipt", error)
-                after(seconds: self.pollInterval).done {
-                    self.getTransactionReceipt()
-                }
+        }.done { receipt in
+            if let receipt = receipt {
+                self.setTransactionReceipt(receipt)
+            } else {
+                throw Error.receiptNotFound
+            }
+        }.catch { error in
+            print("Error getting receipt", error)
+            after(seconds: self.pollInterval).done {
+                self.getTransactionReceipt()
+            }
         }
     }
-    
+
     private func setTransactionReceipt(_ receipt: EthereumTransactionReceiptObject) {
         self.transactionReceipt = receipt
         self.blockNumber = receipt.blockNumber
@@ -203,7 +205,7 @@ public class TransactionWatcher {
         delegate?.transactionWatcher(self, didReceiveReceipt: receipt)
         checkForMatchingEvents(logs: receipt.logs)
     }
-    
+
     private func checkForMatchingEvents(logs: [EthereumLogObject]) {
         for event in watchedEvents {
             if event.anonymous {
@@ -221,7 +223,7 @@ public class TransactionWatcher {
             }
         }
     }
-    
+
     private func parseEvent(_ event: SolidityEvent, from log: EthereumLogObject) {
         if let values = try? ABI.decodeLog(event: event, from: log) {
             let eventInstance = SolidityEmittedEvent(name: event.name, values: values)
@@ -232,7 +234,7 @@ public class TransactionWatcher {
             print("Could not parse event \(event) from log \(log)")
         }
     }
-    
+
     private func checkForBlocks() {
         firstly {
             web3.eth.blockNumber()
@@ -251,7 +253,7 @@ public class TransactionWatcher {
             print("Error loading block number", error)
         }
     }
-    
+
     private func validateLatestReceipt(_ receipt: EthereumTransactionReceiptObject?, blockNumber: EthereumQuantity) {
         if let receipt = receipt, receipt.status == 1 {
             guard let receiptBlockNumber = self.blockNumber else {
@@ -272,7 +274,7 @@ public class TransactionWatcher {
             self.resetTimer()
         }
     }
-    
+
     private func setConfirmationCount(_ confirmations: Int) {
         if confirmations < expectedConfirmations {
             status = .approved(times: confirmations)
@@ -281,7 +283,7 @@ public class TransactionWatcher {
             resetTimer()
         }
     }
-    
+
     private func resetTimer() {
         timer?.invalidate()
         timer = nil

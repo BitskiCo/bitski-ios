@@ -71,6 +71,8 @@ public class TransactionSigner: NetworkClient {
         }
     }
     
+    public var selectedAccount: EthereumAddress? = nil
+    
     /// Signs a transaction from the given account
     ///
     /// - Parameters:

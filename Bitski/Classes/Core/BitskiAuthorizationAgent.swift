@@ -8,6 +8,7 @@
 import Foundation
 import SafariServices
 import Web3
+import PromiseKit
 
 protocol AuthorizationSessionProtocol {
     init(url: URL, callbackURLScheme: String?, completionHandler: @escaping (URL?, Error?) -> Void)
